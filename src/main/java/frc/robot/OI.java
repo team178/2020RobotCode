@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+
 /**
  * Add your docs here.
  */
@@ -103,7 +107,4 @@ public class OI {
 		System.out.println("Z channel: " + joystick.getZChannel());
 		System.out.println("Twist channel: " + joystick.getTwistChannel());
 	}
-}
-
-© 2020 GitHub, Inc.
 }
