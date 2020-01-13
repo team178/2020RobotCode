@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 
   public static DriveTrain drivetrain;
+  public static OI oi;
   // private static final String kDefaultAuto = "Default";
   // private static final String kCustomAuto = "My Auto";
   // private String m_autoSelected;
