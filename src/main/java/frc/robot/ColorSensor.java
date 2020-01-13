@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
 
@@ -46,10 +46,10 @@ public class ColorSensor extends TimedRobot {
      * Open Smart Dashboard or Shuffleboard to see the color detected by the 
      * sensor.
      */
-    Shuffleboard.putNumber("Red", detectedColor.red);
-    Shuffleboard.putNumber("Green", detectedColor.green);
-    Shuffleboard.putNumber("Blue", detectedColor.blue);
-    Shuffleboard.putNumber("IR", IR);
+    SmartDashboard.putNumber("Red", detectedColor.red);
+    SmartDashboard.putNumber("Green", detectedColor.green);
+    SmartDashboard.putNumber("Blue", detectedColor.blue);
+    SmartDashboard.putNumber("IR", IR);
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
@@ -64,7 +64,7 @@ public class ColorSensor extends TimedRobot {
      */
     final int proximity = m_colorSensor.getProximity();
 
-    Shuffleboard.putNumber("Proximity", proximity);
+    SmartDashboard.putNumber("Proximity", proximity);
 
   }
 }
