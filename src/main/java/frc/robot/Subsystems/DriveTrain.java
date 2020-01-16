@@ -8,8 +8,10 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
 import frc.robot.commands.JoystickDrive;
@@ -20,17 +22,21 @@ import frc.robot.commands.JoystickDrive;
 public class DriveTrain extends Subsystem {
   
   //DM declarations
-  public static VictorSPX left1;
+  public static TalonSRX left1;
   public static VictorSPX left2;
-  public static VictorSPX right1;
+  public static TalonSRX right1;
   public static VictorSPX right2;
-    
+  public static Encoder enc; 
+ 
   public DriveTrain() {
 	  //DM initializations
-	  left1 = new VictorSPX(RobotMap.DMTopLeft);
+	  left1 = new TalonSRX(RobotMap.DMTopLeft);
 	  left2 = new VictorSPX(RobotMap.DMBottomLeft);
-	  right1 = new VictorSPX(RobotMap.DMTopRight);
-	  right2 = new VictorSPX(RobotMap.DMBottomRight);
+	  right1 = new TalonSRX(RobotMap.DMTopRight);
+      right2 = new VictorSPX(RobotMap.DMBottomRight);
+      enc = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2);
+
+
   }
   
   public void drive(double leftPower, double rightPower) {
