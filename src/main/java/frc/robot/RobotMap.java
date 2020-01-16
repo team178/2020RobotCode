@@ -17,6 +17,8 @@ public class RobotMap
     public static int DMBottomLeft = 4;
     public static int Encoder1 = 5;
     public static int Encoder2 = 6;
+    public static int Encoder3 = 7;
+    public static int Encoder4 = 8;
 
     
     //Computer USB ports

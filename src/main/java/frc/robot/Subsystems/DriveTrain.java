@@ -25,7 +25,8 @@ public class DriveTrain extends Subsystem {
   public static VictorSPX left2;
   public static TalonSRX right1;
   public static VictorSPX right2;
-  public static Encoder enc; 
+  public static Encoder left; 
+  public static Encoder right;
  
   public DriveTrain() {
 	  //DM initializations
@@ -33,16 +34,22 @@ public class DriveTrain extends Subsystem {
 	  left2 = new VictorSPX(RobotMap.DMBottomLeft);
 	  right1 = new TalonSRX(RobotMap.DMTopRight);
       right2 = new VictorSPX(RobotMap.DMBottomRight);
-      enc = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2);
+        left = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2);
+        right = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4);
 
 
   }
 
-  public double getDistance()
+  public double getLeftDistance()
   {
-      return enc.getDistance();
+      return left.getDistance();
   }
   
+  public double getRightDistance()
+  {
+      return right.getDistance();
+  }
+  }
   
   public void drive(final double leftPower, final double rightPower) {
     left1.set(ControlMode.PercentOutput, -leftPower);
