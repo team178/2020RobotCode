@@ -34,8 +34,8 @@ public class DriveTrain extends Subsystem {
 	  left2 = new VictorSPX(RobotMap.DMBottomLeft);
 	  right1 = new TalonSRX(RobotMap.DMTopRight);
       right2 = new VictorSPX(RobotMap.DMBottomRight);
-        left = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2);
-        right = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4);
+      left = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2);
+      right = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4);
 
 
   }
@@ -49,7 +49,7 @@ public class DriveTrain extends Subsystem {
   {
       return right.getDistance();
   }
-  }
+  
   
   public void drive(final double leftPower, final double rightPower) {
     left1.set(ControlMode.PercentOutput, -leftPower);
