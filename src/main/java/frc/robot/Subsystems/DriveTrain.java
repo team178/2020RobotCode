@@ -38,8 +38,14 @@ public class DriveTrain extends Subsystem {
 
 
   }
+
+  public double getDistance()
+  {
+      return enc.getDistance();
+  }
   
-  public void drive(double leftPower, double rightPower) {
+  
+  public void drive(final double leftPower, final double rightPower) {
     left1.set(ControlMode.PercentOutput, -leftPower);
     left2.set(ControlMode.PercentOutput, -leftPower);
     right1.set(ControlMode.PercentOutput, rightPower);
