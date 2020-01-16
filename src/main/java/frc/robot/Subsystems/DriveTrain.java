@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -14,7 +14,6 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.RobotMap;
-import frc.robot.commands.JoystickDrive;
 
 /**
  * Add your docs here.
@@ -47,13 +46,13 @@ public class DriveTrain extends Subsystem {
   
   public void drive(final double leftPower, final double rightPower) {
     left1.set(ControlMode.PercentOutput, -leftPower);
-    left2.set(ControlMode.PercentOutput, -leftPower);
+    left2.set(ControlMode.Follower, RobotMap.DMTopLeft);
     right1.set(ControlMode.PercentOutput, rightPower);
-    right2.set(ControlMode.PercentOutput, rightPower);
+    right2.set(ControlMode.Follower, RobotMap.DMTopRight);
   }
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new JoystickDrive());
+
   }
 }
