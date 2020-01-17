@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
@@ -41,7 +41,7 @@ public class DriveTrain extends Subsystem {
   }
 
   @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new JoystickDrive());
+  public void initDefaultCommand() {      
+    //setDefaultCommand(new JoystickDrive());
   }
 }
