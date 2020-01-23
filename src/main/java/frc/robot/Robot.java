@@ -10,7 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+
 import frc.robot.Subsystems.DriveTrain;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,6 +25,7 @@ import frc.robot.Subsystems.DriveTrain;
 public class Robot extends TimedRobot {
 
   public static DriveTrain drivetrain;
+  public static ColorSensor colorSensor;
   public static OI oi;
    private static final String kDefaultAuto = "Default";
    private static final String kCustomAuto = "My Auto";
@@ -37,6 +41,7 @@ public class Robot extends TimedRobot {
   public void robotInit() 
   {
     drivetrain = new DriveTrain();
+    colorSensor = new ColorSensor();
     oi = new OI();
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
@@ -79,15 +84,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
+    
   }
 
   /**
