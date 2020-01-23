@@ -1,5 +1,4 @@
-package frc.robot.Subsystems;
-
+package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 
@@ -9,7 +8,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
-
+import com.revrobotics.ColorMatchResult;
+import com.revrobotics.ColorMatch;
 
 public class ColorSensor extends TimedRobot {
   /**
@@ -37,6 +37,7 @@ public class ColorSensor extends TimedRobot {
      * measurements and make it difficult to accurately determine its color.
      */
     final Color detectedColor = m_colorSensor.getColor();
+    public static final ColorMatcher m_colorSensor = new ColorMatch();
 
     /**
      * The sensor returns a raw IR value of the infrared light detected.
@@ -47,10 +48,17 @@ public class ColorSensor extends TimedRobot {
      * Open Smart Dashboard or Shuffleboard to see the color detected by the 
      * sensor.
      */
+
+     //put local tested color values in here to work with our robot
+    public static final Color blueColor = ColorMatch.makeColor();
+    public static final Color greenColor = ColorMatch.makeColor();
+    public static final Color redColor = ColorMatch.makeColor();
+    public static final Color yellowColor = ColorMatch.makeColor();
+
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("IR", IR);
+    SmartDashboard.putNumber("IR", IR); 
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
