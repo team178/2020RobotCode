@@ -26,9 +26,9 @@ gyro.getRate();
 }
 @Override
 public void teleopPeriodic() {
-
+ 
 //double angle = gyro.getAngle();
 SmartDashboard.putNumber("Gyro", angle.getAngle());
-
+System.out.println(angle.getAngle());
 }
 }
