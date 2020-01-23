@@ -5,10 +5,6 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-<<<<<<< HEAD
-=======
-
->>>>>>> a88ad89cddea912a6b7ff0d14af51e6ea052b440
 package frc.robot.Subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
