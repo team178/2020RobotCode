@@ -41,6 +41,16 @@ public class DriveTrain extends Subsystem {
 
   }
 
+  public int inchesToTicks(double inches) {
+    double tickPRotate = 1440;
+    double wheelDiameter = 6;
+    // the encoder wheel is in inches
+    double wheelCirc = wheelDiameter * Math.PI;
+
+    double rotations = inches / wheelCirc;
+    return (int) (rotations * tickPRotate);
+  }
+
   public double getLeftDistance()
   {
       return left.getDistance();

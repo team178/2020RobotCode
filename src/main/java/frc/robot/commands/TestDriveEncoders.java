@@ -30,21 +30,22 @@ public class TestDriveEncoders extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.getLeftDistance();
-    double tickPRotate = 1440;
-    double wheelDiameter = 6;
-    double wheelCirc = wheelDiameter * Math.PI;
-    double tickConvert = wheelCirc/tickPRotate;
+    driveTrain.drive(0.2, 0.2);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    driveTrain.drive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Math.abs(driveTrain.inchesToTicks(6) - driveTrain.getLeftDistance()) <= 5 &&
+    Math.abs(driveTrain.inchesToTicks(6) - driveTrain.getRightDistance()) <= 5) {
+      return true;
+    }
     return false;
   }
 }
