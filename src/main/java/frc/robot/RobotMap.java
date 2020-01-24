@@ -9,8 +9,7 @@ package frc.robot;
 /**
  * Add your docs here.
  */
-public class RobotMap 
-{
+public class RobotMap {
     public static int DMTopRight = 1;
     public static int DMBottomRight = 2;
     public static int DMTopLeft = 3;
