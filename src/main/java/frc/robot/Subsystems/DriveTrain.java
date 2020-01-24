@@ -28,11 +28,11 @@ public class DriveTrain extends Subsystem {
   
   //DM & encoder declarations
   public static TalonSRX leftMaster;
-  public static VictorSPX leftSlave;
-  public static Encoder leftEncoder;
-  
+  public static VictorSPX leftSlave; 
   public static TalonSRX rightMaster;
   public static VictorSPX rightSlave;
+  
+  public static Encoder leftEncoder;
   public static Encoder rightEncoder;
 
   //Autonomous path planning
