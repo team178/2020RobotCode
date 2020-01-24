@@ -7,28 +7,36 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.IterativeRobotBase;//temp
 public class GyroTest2 extends TimedRobot {
 
-    private final SPI.Port sPort = SPI.Port.kOnboardCS1;
+    private final SPI.Port sPort = SPI.Port.kOnboardCS0;
 
  final ADXRS450_Gyro gyro = new ADXRS450_Gyro(sPort);
-//public double angle = gyro.getAngle();
 
-    private ADXRS450_Gyro angle;
 
+    
+@Override
 public void robotInit() {
 
 
 
-gyro.reset();
 gyro.calibrate();
-gyro.getAngle();
-gyro.getRate();
 
 }
 @Override
-public void teleopPeriodic() {
+public void teleopInit() {
+
+
+    gyro.getAngle();
+gyro.reset();
  
 //double angle = gyro.getAngle();
-SmartDashboard.putNumber("Gyro", angle.getAngle());
-System.out.println(angle.getAngle());
+SmartDashboard.putNumber("Gyro", gyro.getAngle());
+System.out.println(gyro.getAngle());
+
+}
+
+@Override
+public void disabledInit() {
+    
+    super.disabledInit();
 }
 }

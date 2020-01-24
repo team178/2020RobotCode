@@ -37,7 +37,7 @@ public class ColorSensor extends TimedRobot {
      * measurements and make it difficult to accurately determine its color.
      */
     final Color detectedColor = m_colorSensor.getColor();
-    public static final ColorMatcher m_colorSensor = new ColorMatch();
+    //public static final ColorMatcher m_colorSensor = new ColorMatch();
 
     /**
      * The sensor returns a raw IR value of the infrared light detected.
@@ -50,7 +50,7 @@ public class ColorSensor extends TimedRobot {
      */
 
      //put local tested color values in here to work with our robot
-    public static final Color blueColor = ColorMatch.makeColor();
+    /*public static final Color blueColor = ColorMatch.makeColor();
     public static final Color greenColor = ColorMatch.makeColor();
     public static final Color redColor = ColorMatch.makeColor();
     public static final Color yellowColor = ColorMatch.makeColor();
@@ -58,7 +58,7 @@ public class ColorSensor extends TimedRobot {
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("IR", IR); 
+    SmartDashboard.putNumber("IR", IR); */
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
