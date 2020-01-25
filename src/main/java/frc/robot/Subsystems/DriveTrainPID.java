@@ -33,7 +33,7 @@ public class DriveTrainPID extends PIDSubsystem {
   final ADXRS450_Gyro gyro = new ADXRS450_Gyro(sPort);
 
   public DriveTrainPID() {
-    super(new PIDController(0, 0, 0));
+    super(new PIDController(0, 0, 0)); //We need to test and refine these values
 
     leftMaster = new TalonSRX(RobotMap.DMTopLeft);
     leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
