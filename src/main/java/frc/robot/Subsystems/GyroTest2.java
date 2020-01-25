@@ -13,13 +13,13 @@ public class GyroTest2 extends TimedRobot {
 
     final ADXRS450_Gyro gyro = new ADXRS450_Gyro(sPort);
 
-    @Override
-    public void robotInit() {
+ @Override
+public void robotInit() {
         gyro.calibrate();
         SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
     }
 @Override
-public void teleopInit() {
+public void teleopPeriodic() {
 
 
     gyro.getAngle();
@@ -33,7 +33,7 @@ System.out.println(gyro.getAngle());
 
 }
 
-
+//https://frc-pdr.readthedocs.io/en/latest/control/gyro.html
 }
 
 
