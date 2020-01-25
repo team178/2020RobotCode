@@ -10,8 +10,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-
 import frc.robot.Subsystems.DriveTrain;
 
 
@@ -38,8 +36,7 @@ public class Robot extends TimedRobot {
    */
   
   @Override
-  public void robotInit() 
-  {
+  public void robotInit() {
     drivetrain = new DriveTrain();
     colorSensor = new ColorSensor();
     oi = new OI();
