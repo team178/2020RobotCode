@@ -10,7 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Subsystems.DriveTrain;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.LawnMower;
 
 
 /**
@@ -23,6 +24,7 @@ import frc.robot.Subsystems.DriveTrain;
 public class Robot extends TimedRobot {
 
   public static DriveTrain drivetrain;
+  public static LawnMower lawnmower;
   public static ColorSensor colorSensor;
   public static OI oi;
    private static final String kDefaultAuto = "Default";
@@ -40,6 +42,7 @@ public class Robot extends TimedRobot {
     drivetrain = new DriveTrain();
     colorSensor = new ColorSensor();
     oi = new OI();
+    lawnmower = new LawnMower();
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -56,7 +59,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     drivetrain.calibrateGyro();
+
+
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
+    SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
+    SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
+    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
+    
     drivetrain.resetGyro();
   }
 
