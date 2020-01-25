@@ -7,68 +7,33 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.buttons.Button;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
-
-/**
- * Add your docs here.
- */
+import libs.IO.ThrustmasterJoystick;
+import libs.IO.XboxController;
 
 public class OI {
 
-    //JOYSTICK buttons
-	public static Joystick joystick = new Joystick(RobotMap.ActualJoystick);
-	public Button trigger = new JoystickButton(joystick, 1);
-	public Button headBottom = new JoystickButton(joystick, 2);
-	public Button headLeft = new JoystickButton(joystick, 3);
-	public Button headRight = new JoystickButton(joystick, 4);
-	public Button leftPadTop1 = new JoystickButton(joystick, 5);
-	public Button leftPadTop2 = new JoystickButton(joystick, 6);
-	public Button leftPadTop3 = new JoystickButton(joystick, 7);
-	public Button leftPadBottom3 = new JoystickButton(joystick, 8);
-	public Button leftPadBottom2  = new JoystickButton(joystick, 9);
-	public Button leftPadBottom1 = new JoystickButton(joystick, 10);
-	public Button rightPadTop3 = new JoystickButton(joystick, 11);
-	public Button rightPadTop2 = new JoystickButton(joystick, 12);
-	public Button rightPadTop1 = new JoystickButton(joystick, 13);
-	public Button rightPadBottom1 = new JoystickButton(joystick, 14);
-	public Button rightPadBottom2 = new JoystickButton(joystick, 15);
-    public Button rightPadBottom3 = new JoystickButton(joystick, 16);
-
-    //AUX XBOX controller buttons
-	public static Joystick xboxAux = new Joystick(RobotMap.JoystickPortXBoxAux); //Controller
-	public Button auxA = new JoystickButton(xboxAux, 1);
-	public Button auxB = new JoystickButton(xboxAux, 2);
-	public Button auxX = new JoystickButton(xboxAux, 3);
-	public Button auxY = new JoystickButton(xboxAux, 4);
-	public Button auxLeftBumper = new JoystickButton(xboxAux, 5);
-	public Button auxRightBumper = new JoystickButton(xboxAux, 6);
-	public Button auxBack = new JoystickButton(xboxAux, 7);
-	public Button auxStart = new JoystickButton(xboxAux, 8);
+	public static ThrustmasterJoystick joystick;
+	public static XboxController aux;
     
     public OI() {
-		//Setting JOYSTICK channels
-		joystick.setXChannel(3); //3
-		joystick.setYChannel(2); //2
-		joystick.setZChannel(0); //0
-        joystick.setTwistChannel(1); //1
-    }
+		joystick = new ThrustmasterJoystick(RobotMap.ActualJoystick);
+		aux = new XboxController(RobotMap.JoystickPortXBoxAux);
+	}
 
     //JOYSTICK accessor methods
     public double getX() 
     {
-		return joystick.getX(); //joystick.getRawAxis(0);
+		return joystick.getX();
 	}
 	
     public double getY() 
     {
-		return joystick.getTwist(); //joystick.getRawAxis(1);
+		return joystick.getTwist();
 	}
 
     public double getTwist() 
     {
-		return joystick.getY(); //joystick.getRawAxis(2);
+		return joystick.getY();
     }
     
     /**
@@ -76,35 +41,32 @@ public class OI {
 	 */
     public double getSlider() 
     {
-		return 1 - ((joystick.getRawAxis(3) + 1) / 2);
+		return joystick.getSlider();
 	}
 
     //AUX controller accessor methods
     public double getLeftStickYAux() 
     {
-		return xboxAux.getRawAxis(1);
+		return aux.getLeftStickYAux();
 	}
 	
     public double getRightStickYAux() 
     {
-		return xboxAux.getRawAxis(5);
+		return aux.getRightStickYAux();
 	}
 	
     public double getLeftTriggerAux() 
     {
-		return xboxAux.getRawAxis(2);
+		return aux.getLeftTriggerAux();
 	}
 	
     public double getRightTriggerAux() 
     {
-		return xboxAux.getRawAxis(3);
+		return aux.getRightTriggerAux();
 	}
 
     public void printJoystickChannels() 
     {
-		System.out.println("X channel: " + joystick.getXChannel());
-		System.out.println("Y channel: " + joystick.getYChannel());
-		System.out.println("Z channel: " + joystick.getZChannel());
-		System.out.println("Twist channel: " + joystick.getTwistChannel());
+		joystick.printJoystickChannels();
 	}
 }
