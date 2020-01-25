@@ -42,10 +42,12 @@ public class TestDriveEncoders extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (Math.abs(driveTrain.inchesToTicks(6) - driveTrain.getLeftDistance()) <= 5 &&
+  /*  if (Math.abs(driveTrain.inchesToTicks(6) - driveTrain.getLeftDistance()) <= 5 &&
     Math.abs(driveTrain.inchesToTicks(6) - driveTrain.getRightDistance()) <= 5) {
       return true;
     }
     return false;
-  }
+  } */
+  return false;
+}
 }
