@@ -19,6 +19,11 @@ public class RobotMap {
     public static int DMBottomRight = 4;
     public static int intake = 5;
 
+    public static int elevator = 6;
+    public static int winch1 = 7;
+    public static int winch2 = 8;
+    public static int leveler = 9;
+
     //idk what to do with these
     public static int Encoder1 = 5;
     public static int Encoder2 = 6;
