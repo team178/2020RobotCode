@@ -11,13 +11,13 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 
 import frc.robot.RobotMap;
-import frc.robot.OI;
-import frc.robot.Robot;
 
 public class DriveTrainPID extends PIDSubsystem {
   
@@ -29,10 +29,11 @@ public class DriveTrainPID extends PIDSubsystem {
   public static Encoder leftEncoder;
   public static Encoder rightEncoder;
 
-  public static OI oi;
+  private final SPI.Port sPort = SPI.Port.kOnboardCS0;
+  final ADXRS450_Gyro gyro = new ADXRS450_Gyro(sPort);
 
   public DriveTrainPID() {
-    super(new PIDController(0, 0, 0));
+    super(new PIDController(0, 0, 0)); //We need to test and refine these values
 
     leftMaster = new TalonSRX(RobotMap.DMTopLeft);
     leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
@@ -45,18 +46,17 @@ public class DriveTrainPID extends PIDSubsystem {
     rightSlave.set(ControlMode.Follower, RobotMap.DMTopRight);
     rightEncoder = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4);
     rightMaster.setInverted(false);
-
-    oi = Robot.oi;
   }
 
   @Override
   public void useOutput(double output, double setpoint) {
-    
+      leftMaster.set(ControlMode.PercentOutput, -output);
+      rightMaster.set(ControlMode.PercentOutput, output);
   }
 
   @Override
   public double getMeasurement() {
     // Return the process variable measurement here
-    return 0;
+    return gyro.getAngle();
   }
 }
