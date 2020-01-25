@@ -2,38 +2,11 @@ package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Sendable;
-import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class GyroTest2 extends TimedRobot {
-
-    private final SPI.Port sPort = SPI.Port.kMXP;
-
-    final ADXRS450_Gyro gyro = new ADXRS450_Gyro(sPort);
-
- @Override
-public void robotInit() {
-        gyro.calibrate();
-        SmartDashboard.putNumber("Gyro Value", gyro.getAngle());
-    }
-@Override
-public void teleopPeriodic() {
-
-
-    gyro.getAngle();
-gyro.reset();
-
-
- 
-//double angle = gyro.getAngle();
-
-System.out.println(gyro.getAngle());
-
-}
-
-//https://frc-pdr.readthedocs.io/en/latest/control/gyro.html
+public class GyroTest2 extends SubsystemBase {
+    //All of this code can now be found in the DriveTrain Subsystem
+    //https://frc-pdr.readthedocs.io/en/latest/control/gyro.html
 }
 
 

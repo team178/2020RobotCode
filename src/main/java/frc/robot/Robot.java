@@ -55,6 +55,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    drivetrain.calibrateGyro();
+    SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
+    drivetrain.resetGyro();
   }
 
   /**

@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -28,6 +29,8 @@ import frc.robot.RobotMap;
  * Add your docs here.
  */
 public class DriveTrain extends SubsystemBase {
+
+  private final SPI.Port sPort = SPI.Port.kMXP;
   
   //DM & encoder declarations
   public static TalonSRX leftMaster;
@@ -40,7 +43,7 @@ public class DriveTrain extends SubsystemBase {
   public static Encoder rightEncoder;
 
   //gyro
-  private final Gyro gyro = new ADXRS450_Gyro();
+  private final Gyro gyro = new ADXRS450_Gyro(sPort);
 
   //Autonomous path planning
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH_METERS);
@@ -126,6 +129,18 @@ public class DriveTrain extends SubsystemBase {
 
   public DifferentialDriveOdometry getOdometry() {
     return odometry;
+  }
+
+  public void resetGyro() {
+    gyro.reset();
+  }
+
+  public void calibrateGyro() {
+    gyro.calibrate();
+  }
+
+  public double getGyroReading() {
+    return gyro.getAngle();
   }
 
   @Override
