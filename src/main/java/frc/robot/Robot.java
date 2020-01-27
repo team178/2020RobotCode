@@ -8,8 +8,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 
@@ -23,14 +25,14 @@ import frc.robot.subsystems.LawnMower;
  */
 public class Robot extends TimedRobot {
 
+  //Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
   public static ColorSensor colorSensor;
   public static OI oi;
-   private static final String kDefaultAuto = "Default";
-   private static final String kCustomAuto = "My Auto";
-   private String m_autoSelected;
-   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  
+  //Declare autonomous command
+  private Command autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -59,8 +61,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     drivetrain.calibrateGyro();
-
-
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
@@ -82,10 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
-  m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    autonomousCommand = AutonomousSelector.getAutonomousCommand(false);
   }
 
   /**
@@ -93,22 +90,21 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    
+    CommandScheduler.getInstance().run();
   }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() 
-  {
+  public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   /**
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() 
-  {
+  public void testPeriodic() {
   }
 }
