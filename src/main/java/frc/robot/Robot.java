@@ -41,8 +41,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     drivetrain = new DriveTrain();
     colorSensor = new ColorSensor();
-    oi = new OI();
     lawnmower = new LawnMower();
+    oi = new OI();
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
-    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
+//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
     
     drivetrain.resetGyro();
   }

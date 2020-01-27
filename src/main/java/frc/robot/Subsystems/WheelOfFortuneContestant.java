@@ -14,7 +14,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
    * Creates a new WheelOfFortuneContestant.
    */
   public WheelOfFortuneContestant() {
-
+    
   }
 
   @Override

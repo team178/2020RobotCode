@@ -13,35 +13,35 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import libs.tof.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
-public class LawnMower extends Subsystem {
+public class LawnMower extends SubsystemBase {
   
   private static VictorSPX intake;
   private static DoubleSolenoid deployer;
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
-  private static TimeOfFlightSensor tof3;
+//  private static TimeOfFlightSensor tof3;
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
     deployer = new DoubleSolenoid(RobotMap.deployerForward, RobotMap.deployerReverse);
     tof1 = new TimeOfFlightSensor(0x621);
     tof2 = new TimeOfFlightSensor(0x622);
-    tof3 = new TimeOfFlightSensor(0x623);
+//    tof3 = new TimeOfFlightSensor(0x623);
   }
 
   public void intakeBall (double speed) {
     intake.set(ControlMode.PercentOutput, speed);
   }
 
-  public void extendIntake () {
+  public void extendIntake() {
     deployer.set(DoubleSolenoid.Value.kForward); // Might be kReverse, test
   }
 
-  public void retractIntake () {
+  public void retractIntake() {
     deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
   }
 
@@ -76,7 +76,7 @@ public class LawnMower extends Subsystem {
     }
   }
 
-  public double getTof3Distnace() {
+/*  public double getTof3Distnace() {
     // This method will be called once per scheduler run
     if(tof3.inRange()){
       System.out.println("distance: " + tof3.getDistance()+ " " + tof3.getError());
@@ -90,10 +90,5 @@ public class LawnMower extends Subsystem {
       System.out.println("out of range");
       return -1;
     }
-  }
-
-  @Override
-  protected void initDefaultCommand() {
-
-  }
+  } */
 }

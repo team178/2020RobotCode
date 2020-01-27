@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.Subsystems;
+package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -23,7 +23,7 @@ public class TOFprocess extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public boolean ballDetected(TOF) 
+  public boolean ballDetected(int TOF) 
   {
     boolean isBall = false;
 
