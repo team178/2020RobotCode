@@ -26,5 +26,5 @@ public class Constants {
     public static double MAX_ACCEL_MPSPS = 0;
     public static double RAMSETE_B = 0;
     public static double RAMSETE_ZETA = 0;
-    public static double OPTIMAL_KP = 0;
+    public static double OPTIMAL_DRIVE_KP = 0;
 }
