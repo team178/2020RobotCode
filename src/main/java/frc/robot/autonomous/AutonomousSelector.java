@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.Constants;
+
 
 /**
  * Add your docs here.
@@ -22,14 +24,49 @@ public class AutonomousSelector {
 
     private static DriveTrain driveTrain = Robot.drivetrain;
     
-    public static Command getAutonomousCommand(boolean presetMode) {
+    public static void getAutonomousCommand() {
+        
+    }
+    
+    public static Command getRamsetePath() {
+        //Create trajectory config w/ parameters
         TrajectoryConfig config = new TrajectoryConfig(Constants.MAX_VELOCITY_MPS, Constants.MAX_ACCEL_MPSPS)
             .setKinematics(driveTrain.getKinematics());
-        Trajectory trajetory;
-        if (presetMode) {
-            trajetory = TrajectoryGenerator.generateTrajectory(initial, interiorWaypoints, end, config);
-        } else {
-            trajetory = TrajectoryGenerator.generateTrajectory(initial, interiorWaypoints, end, config);
-        }
+        
+        //Nithin's test trajectory
+        Trajectory nithinsTestTrajectory = TrajectoryGenerator.generateTrajectory(
+            //Start pose
+            new Pose2d(0, 0, new Rotation2d(0)),
+            
+            //Interior waypoints
+            List.of(
+                new Translation2d(1, 1),
+                new Translation2d(-0.25, 4.5),
+                new Translation2d(-3, 4),
+                new Translation2d(-5, 7),
+                new Translation2d(-5.5, 7.25)
+            ),
+            
+            //End pose
+            new Pose2d(-6, 8, new Rotation2d(53.14)),
+            config;
+        );
+        
+        //Create ramsete command to drive path
+        RamseteCommand ramseteCommand = new RamseteController(
+            nithinsTestTrajectory,
+            driveTrain::getPose,
+            new RamseteController(Constants.RAMSETE_B, Constants.RAMSETE_ZETA),
+            driveTrain.getFeedForward(),
+            driveTrain.getKinematics(),
+            driveTrain::getWheelSpeeds,
+            driveTrain.getLeftPIDController(),
+            driveTrain.getRightPIDController(),
+            driveTrain::driveVolts,
+            driveTrain
+        );
+        
+        //Return ramsete command
+        return ramseteCommand;
     }
 }
