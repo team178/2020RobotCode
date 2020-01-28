@@ -79,6 +79,11 @@ public class DriveTrain extends SubsystemBase {
     rightMaster.set(ControlMode.PercentOutput, rightPower);
   }
 
+  public void driveVolts(double leftVolts, double rightVolts) {
+    leftMaster.set(ControlMode.PercentOutput, -leftVolts / 12);
+    rightMaster.set(ControlMode.PercentOutput, rightVolts / 12);
+  }
+
   /**
    * @return The current wheel speeds.
    */
