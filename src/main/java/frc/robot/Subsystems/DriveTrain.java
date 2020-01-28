@@ -44,18 +44,23 @@ public class DriveTrain extends SubsystemBase {
 
   //gyro
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
+	
+  //PID controllers
+  private final PIDController leftPIDController = new PIDController(CONSTANTS.OPTIMAL_DRIVE_KP, 0, 0);
+  private final PIDController rightPIDController = new PIDController(CONSTANTS.OPTIMAL_DRIVE_KP, 0, 0);
 
   //Autonomous path planning
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH_METERS);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
  
   public DriveTrain() {
-	  //DM initializations
-	  leftMaster = new TalonSRX(RobotMap.DMTopLeft);
+    //DM initializations
+    leftMaster = new TalonSRX(RobotMap.DMTopLeft);
     leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
     leftSlave.set(ControlMode.Follower, RobotMap.DMTopLeft);
     
-	  rightMaster = new TalonSRX(RobotMap.DMTopRight);
+    rightMaster = new TalonSRX(RobotMap.DMTopRight);
     rightSlave = new VictorSPX(RobotMap.DMBottomRight);
     rightSlave.set(ControlMode.Follower, RobotMap.DMTopRight);
 
@@ -127,6 +132,14 @@ public class DriveTrain extends SubsystemBase {
   public void resetHeading() {
     gyro.reset();
   }
+	
+  public void getLeftPIDController() {
+  	return leftPIDController();
+  }
+	
+  public void getRightPIDController() {
+  	return rightPIDController();
+  }
 
   public DifferentialDriveKinematics getKinematics() {
     return kinematics;
@@ -134,6 +147,10 @@ public class DriveTrain extends SubsystemBase {
 
   public DifferentialDriveOdometry getOdometry() {
     return odometry;
+  }
+	
+  public SimpleMotorFeedforward getFeedforward() {
+    return feedforward;
   }
 
   public void resetGyro() {
