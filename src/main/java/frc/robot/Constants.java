@@ -24,7 +24,12 @@ public class Constants {
     //Pathplanning constants
     public static double MAX_VELOCITY_MPS = 0;
     public static double MAX_ACCEL_MPSPS = 0;
+    public static double OPTIMAL_DRIVE_KP = 0;
+    
+    public static double kS = 0;
+    public static double kV = 0;
+    public static double kA = 0;
+    
     public static double RAMSETE_B = 0;
     public static double RAMSETE_ZETA = 0;
-    public static double OPTIMAL_DRIVE_KP = 0;
 }
