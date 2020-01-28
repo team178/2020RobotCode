@@ -68,7 +68,7 @@ public class AutonomousSelector {
         return nithinsTestTrajectory;
     }
     
-    public static Command getRamsetePath(Trajectory trajectory) {
+    public static Command getRamsetePath(Trajectory trajectory, boolean backwards) {
         //Create trajectory config w/ parameters
         TrajectoryConfig config = new TrajectoryConfig(Constants.MAX_VELOCITY_MPS, Constants.MAX_ACCEL_MPSPS)
             .setKinematics(driveTrain.getKinematics());
@@ -83,7 +83,7 @@ public class AutonomousSelector {
             driveTrain::getWheelSpeeds,
             driveTrain.getLeftPIDController(),
             driveTrain.getRightPIDController(),
-            driveTrain::driveVolts,
+            backwards ? driveTrain::driveVoltsBackwards : driveTrain::driveVolts,
             driveTrain
         );
         
