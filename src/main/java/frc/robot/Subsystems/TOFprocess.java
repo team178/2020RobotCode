@@ -13,8 +13,10 @@ public class TOFprocess extends SubsystemBase {
   /**
    * Creates a new TOFprocess.
    */
-  public TOFprocess() {
 
+   //basic boolean
+
+  public TOFprocess() {
   }
 
   @Override
@@ -23,7 +25,9 @@ public class TOFprocess extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public boolean ballDetected(int TOF) 
+  //units are mm
+
+  public boolean ballDetected(int TOF)
   {
     boolean isBall = false;
 
@@ -38,13 +42,22 @@ public class TOFprocess extends SubsystemBase {
   public int numberOfBalls() 
   {
 
-    int ballCount = 0;
+    //TOF1 is the first TOF sensor in the intake (faces up)
+    //TOF2 is very close to TOF1 and is also in the front of the intake (faces up)
+    //TOF3 is mounted in the back of the intake facing towards the power cells coming in
+    double ballRadiusMM = 88.9; 
 
     double TOF1 = 0;
     double TOF2 = 0;
     double TOF3 = 0;
-    double distanceMM = 457.2;
+    
+    int ballCount = 0;
+    
+    if(TOF1 == )
 
-    return ballCount;
+  }
   }
 }
+}
+
+
