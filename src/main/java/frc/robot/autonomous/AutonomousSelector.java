@@ -64,8 +64,10 @@ public class AutonomousSelector {
             ),
             
             //End pose
+            /*
             new Pose2d(-6, 8, new Rotation2d(53.14)),
             config;
+            */
         );
         
         //Return nithin's test trajectory

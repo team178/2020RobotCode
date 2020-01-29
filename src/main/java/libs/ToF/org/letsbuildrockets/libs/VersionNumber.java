@@ -1,4 +1,4 @@
-package libs.tof.org.letsbuildrockets.libs;
+package libs.ToF.org.letsbuildrockets.libs;
 
 /**
  * VersionNumber
