@@ -59,6 +59,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     final int proximity = m_colorSensor.getProximity();
 
     SmartDashboard.putNumber("Proximity", proximity);
+    //Proximity can be used to make sure consistant distances are being used when imputing blue values
     
     
   }
@@ -80,6 +81,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
       subRot /= 2;
       rot += subRot;
       subRot = 0;
+      //takes amount of time BLUE pops up, and creates a counter. Counter is then converted into revolutions of the wheel
     }
     }
    
