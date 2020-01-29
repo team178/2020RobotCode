@@ -17,8 +17,7 @@ public class Constants {
     //Drive constants
     public static double WHEEL_CIRCUMFRENCE = Units.inchesToMeters(6) * Math.PI;
     public static double ENCODER_TICKS = 1024;
-    public static double TRACK_WIDTH_INCHES = 23.75;
-    public static double TRACK_WIDTH_METERS = Units.inchesToMeters(TRACK_WIDTH_INCHES);
+    public static double TRACK_WIDTH_METERS = 7.239;
     public static double ENCODER_DPP = WHEEL_CIRCUMFRENCE / ENCODER_TICKS;
 
     //Pathplanning constants

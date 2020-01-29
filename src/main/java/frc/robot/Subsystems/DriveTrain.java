@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -46,8 +48,8 @@ public class DriveTrain extends SubsystemBase {
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
 	
   //PID controllers
-  private final PIDController leftPIDController = new PIDController(CONSTANTS.OPTIMAL_DRIVE_KP, 0, 0);
-  private final PIDController rightPIDController = new PIDController(CONSTANTS.OPTIMAL_DRIVE_KP, 0, 0);
+  private final PIDController leftPIDController = new PIDController(Constants.OPTIMAL_DRIVE_KP, 0, 0);
+  private final PIDController rightPIDController = new PIDController(Constants.OPTIMAL_DRIVE_KP, 0, 0);
 
   //Autonomous path planning
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH_METERS);
@@ -89,7 +91,7 @@ public class DriveTrain extends SubsystemBase {
     rightMaster.set(ControlMode.PercentOutput, rightVolts / 12);
   }
 	
-  public void driveVoltsBackwards(drive leftVolts, double RightVolts) {
+  public void driveVoltsBackwards(double leftVolts, double rightVolts) {
     leftMaster.set(ControlMode.PercentOutput, leftVolts / 12);
     rightMaster.set(ControlMode.PercentOutput, -rightVolts / 12);
   }
