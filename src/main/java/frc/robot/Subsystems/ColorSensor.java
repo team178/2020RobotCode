@@ -9,7 +9,8 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 
-
+//CODE HAS BEEN MOVED TO WheelOfFortuneContestant.java
+//DO NOT EDIT THIS CLASS, THEY MAY NOT BE USED
 
 public class ColorSensor extends TimedRobot {
   /**
