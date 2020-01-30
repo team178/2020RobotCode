@@ -43,6 +43,7 @@ public class Robot extends TimedRobot {
     colorSensor = new ColorSensor();
     lawnmower = new LawnMower();
     oi = new OI();
+    drivetrain.calibrateGyro();
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -58,13 +59,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    drivetrain.calibrateGyro();
 
 
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
 //    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
+    System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     
     drivetrain.resetGyro();
   }

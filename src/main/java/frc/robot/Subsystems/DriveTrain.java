@@ -30,7 +30,7 @@ import frc.robot.RobotMap;
  */
 public class DriveTrain extends SubsystemBase {
 
-  private final SPI.Port sPort = SPI.Port.kMXP;
+  private final SPI.Port sPort = SPI.Port.kOnboardCS0;
   
   //DM & encoder declarations
   public static TalonSRX leftMaster;
