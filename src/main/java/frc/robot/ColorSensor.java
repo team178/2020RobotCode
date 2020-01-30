@@ -24,6 +24,22 @@ public class ColorSensor extends TimedRobot {
    */
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
+  private final double BLUE = 0.4;
+  private final double RED = 0.4;
+  private final double GREEN = 0.4;
+  private final double YELLOWDISTINCT = 0.25;
+
+  private final String colorBlue = "Blue";
+  private final String colorGreen = "Green";
+  private final String colorRed = "Red";
+  private final String colorYellow = "Yellow";
+  private final String noColor = "No Color detected";
+
+  private int rot = 0;
+  private int subRot = 0;
+
+  private final Color detectedColor = m_colorSensor.getColor();
+
   @Override
   public void robotPeriodic() {
     /**
@@ -36,7 +52,7 @@ public class ColorSensor extends TimedRobot {
      * an object is the more light from the surroundings will bleed into the 
      * measurements and make it difficult to accurately determine its color.
      */
-    final Color detectedColor = m_colorSensor.getColor();
+    //    final Color detectedColor = m_colorSensor.getColor();
     //public static final ColorMatcher m_colorSensor = new ColorMatch();
 
     /**
@@ -49,16 +65,10 @@ public class ColorSensor extends TimedRobot {
      * sensor.
      */
 
-     //put local tested color values in here to work with our robot
-    /*public static final Color blueColor = ColorMatch.makeColor();
-    public static final Color greenColor = ColorMatch.makeColor();
-    public static final Color redColor = ColorMatch.makeColor();
-    public static final Color yellowColor = ColorMatch.makeColor();
-
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("IR", IR); */
+    SmartDashboard.putNumber("IR", IR); 
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
@@ -76,4 +86,39 @@ public class ColorSensor extends TimedRobot {
     SmartDashboard.putNumber("Proximity", proximity);
 
   }
+
+  public String getColor()
+  {
+    if(detectedColor.blue >= BLUE)
+    {
+      return colorBlue;
+    } else if(detectedColor.green >= GREEN)
+    {
+      return colorGreen;
+    } else if(detectedColor.red >= RED)
+    {
+      return colorRed;
+    } else if(detectedColor.green >= GREEN && detectedColor.red >= YELLOWDISTINCT) //conditioning for yellow color
+    {
+      return colorYellow;
+    } else
+    {
+      return noColor;
+    }
+  }
+
+  public void wheelRotations()
+  {
+    if(detectedColor.blue == BLUE)
+    {
+      rot++;
+    }
+
+    if(rot%2 == 0)
+    {
+      subRot += rot/2;
+      rot = 0;
+    }
+  }
 }
+  
