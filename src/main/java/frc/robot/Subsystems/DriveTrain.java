@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -44,18 +46,23 @@ public class DriveTrain extends SubsystemBase {
 
   //gyro
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
+	
+  //PID controllers
+  private final PIDController leftPIDController = new PIDController(Constants.OPTIMAL_DRIVE_KP, 0, 0);
+  private final PIDController rightPIDController = new PIDController(Constants.OPTIMAL_DRIVE_KP, 0, 0);
 
   //Autonomous path planning
   private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH_METERS);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
  
   public DriveTrain() {
-	  //DM initializations
-	  leftMaster = new TalonSRX(RobotMap.DMTopLeft);
+    //DM initializations
+    leftMaster = new TalonSRX(RobotMap.DMTopLeft);
     leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
     leftSlave.set(ControlMode.Follower, RobotMap.DMTopLeft);
     
-	  rightMaster = new TalonSRX(RobotMap.DMTopRight);
+    rightMaster = new TalonSRX(RobotMap.DMTopRight);
     rightSlave = new VictorSPX(RobotMap.DMBottomRight);
     rightSlave.set(ControlMode.Follower, RobotMap.DMTopRight);
 
@@ -77,6 +84,16 @@ public class DriveTrain extends SubsystemBase {
   public void drive(double leftPower, double rightPower) {
     leftMaster.set(ControlMode.PercentOutput, -leftPower);
     rightMaster.set(ControlMode.PercentOutput, rightPower);
+  }
+
+  public void driveVolts(double leftVolts, double rightVolts) {
+    leftMaster.set(ControlMode.PercentOutput, -leftVolts / 12);
+    rightMaster.set(ControlMode.PercentOutput, rightVolts / 12);
+  }
+	
+  public void driveVoltsBackwards(double leftVolts, double rightVolts) {
+    leftMaster.set(ControlMode.PercentOutput, leftVolts / 12);
+    rightMaster.set(ControlMode.PercentOutput, -rightVolts / 12);
   }
 
   /**
@@ -122,6 +139,14 @@ public class DriveTrain extends SubsystemBase {
   public void resetHeading() {
     gyro.reset();
   }
+	
+  public void getLeftPIDController() {
+  	return leftPIDController();
+  }
+	
+  public void getRightPIDController() {
+  	return rightPIDController();
+  }
 
   public DifferentialDriveKinematics getKinematics() {
     return kinematics;
@@ -129,6 +154,10 @@ public class DriveTrain extends SubsystemBase {
 
   public DifferentialDriveOdometry getOdometry() {
     return odometry;
+  }
+	
+  public SimpleMotorFeedforward getFeedforward() {
+    return feedforward;
   }
 
   public void resetGyro() {

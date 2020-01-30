@@ -7,11 +7,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
+
 
 
 /**
@@ -23,14 +28,20 @@ import frc.robot.subsystems.LawnMower;
  */
 public class Robot extends TimedRobot {
 
+  //Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
   public static ColorSensor colorSensor;
   public static OI oi;
-   private static final String kDefaultAuto = "Default";
-   private static final String kCustomAuto = "My Auto";
-   private String m_autoSelected;
-   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  public static AddressableLED LEDStrip1;
+  public static AddressableLED LEDStrip2;
+  public static AddressableLEDBuffer AddressableLEDBuffer1;
+  public static AddressableLEDBuffer AddressableLEDBuffer2;
+  public static int LEDCount1=10;
+  public static int LEDCount2=10;
+  
+  //Declare autonomous command
+  private Command autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -47,6 +58,20 @@ public class Robot extends TimedRobot {
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
+
+    //lights
+    LEDStrip1= new AddressableLED(9);
+    LEDStrip2= new AddressableLED(8);
+    AddressableLEDBuffer1= new AddressableLEDBuffer(LEDCount1);
+    AddressableLEDBuffer2= new AddressableLEDBuffer(LEDCount2);
+    LEDStrip1.setLength(AddressableLEDBuffer1.getLength());
+    LEDStrip2.setLength(AddressableLEDBuffer2.getLength());
+    LEDStrip1.setData(AddressableLEDBuffer1);
+    LEDStrip2.setData(AddressableLEDBuffer2);
+    LEDStrip1.start();
+    LEDStrip2.start();
+
+
   }
 
   /**
@@ -59,15 +84,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
-
+    drivetrain.calibrateGyro();
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
-//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
+    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
-    
     drivetrain.resetGyro();
+
+
+
+    //lights
+
   }
 
   /**
@@ -83,10 +111,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
-  m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    autonomousCommand = AutonomousSelector.getAutonomousCommand(false);
   }
 
   /**
@@ -94,22 +119,42 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    
+    CommandScheduler.getInstance().run();
   }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() 
-  {
+  public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   /**
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() 
-  {
+  public void testPeriodic() {
+  }
+
+
+  //lights
+  public void lightsaber(){
+    boolean isRed=false;
+    if(isRed==true){
+      for(var height=0; height<LEDCount1; height++){
+        AddressableLEDBuffer1.setRGB(height, 99,0,0);
+        //AddressableLEDBuffer1.delay(20);  FIND DELAY FUNCTION
+        LEDStrip1.setData(AddressableLEDBuffer1);
+      }
+    }
+    if(isRed==false){
+      for(var height=0; height<LEDCount1; height++){
+        AddressableLEDBuffer1.setRGB(height,31,235,253);
+        //FIND Delay Function
+        LEDStrip1.setData(AddressableLEDBuffer1);
+      }
+
+    }
   }
 }

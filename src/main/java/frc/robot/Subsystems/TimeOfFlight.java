@@ -1,7 +1,7 @@
-package frc.robot.subsystems;
+package frc.robot.Subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import libs.tof.org.letsbuildrockets.libs.TimeOfFlightSensor;
+import libs.ToF.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
 public class TimeOfFlight extends SubsystemBase {
 
