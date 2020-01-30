@@ -29,27 +29,12 @@ public class AutonomousSelector {
 
     private static DriveTrain driveTrain = Robot.drivetrain;
     
-    /**
-     * Used to generate an autonomous SequentialCommandGroup based off a shuffleboard created autonomous 
-     */
-    public static SequentialCommandGroup createShuffleboardAutonomous() {
-        //Replace all commands with shuffleboard commands
-        return new SequentialCommandGroup(
-            getRamsetePath(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)))),
-            //new ShootBallsLow(),
-            getRamsetePath(TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0))))
-        );
-    }
-    
-    /**
-     * Used to generate an autonomous SequentialCommandGroup based off a premade autonomous 
-     */
-    public static SequentialCommandGroup getPremadeAutonomousCommand(String path) {
-        
-    }
-    
-    public static Trajectory getTrajectory() {
-        //Nithin's test trajectory
+    public static Command getAutonomousCommand() {
+        //Create trajectory config w/ parameters
+        TrajectoryConfig config = new TrajectoryConfig(Constants.MAX_VELOCITY_MPS, Constants.MAX_ACCEL_MPSPS)
+            .setKinematics(driveTrain.getKinematics());
+
+            //Nithin's test trajectory
         Trajectory nithinsTestTrajectory = TrajectoryGenerator.generateTrajectory(
             //Start pose
             new Pose2d(0, 0, new Rotation2d(0)),
@@ -64,32 +49,21 @@ public class AutonomousSelector {
             ),
             
             //End pose
-            /*
             new Pose2d(-6, 8, new Rotation2d(53.14)),
-            config;
-            */
+            config
         );
-        
-        //Return nithin's test trajectory
-        return nithinsTestTrajectory;
-    }
-    
-    public static Command getRamsetePath(Trajectory trajectory, boolean backwards) {
-        //Create trajectory config w/ parameters
-        TrajectoryConfig config = new TrajectoryConfig(Constants.MAX_VELOCITY_MPS, Constants.MAX_ACCEL_MPSPS)
-            .setKinematics(driveTrain.getKinematics());
         
         //Create ramsete command to drive path
         RamseteCommand ramseteCommand = new RamseteCommand(
-            trajectory,
+            nithinsTestTrajectory,
             driveTrain::getPose,
             new RamseteController(Constants.RAMSETE_B, Constants.RAMSETE_ZETA),
-            driveTrain.getFeedForward(),
+            driveTrain.getFeedforward(),
             driveTrain.getKinematics(),
             driveTrain::getWheelSpeeds,
             driveTrain.getLeftPIDController(),
             driveTrain.getRightPIDController(),
-            backwards ? driveTrain::driveVoltsBackwards : driveTrain::driveVolts,
+            driveTrain::driveVolts,
             driveTrain
         );
         
