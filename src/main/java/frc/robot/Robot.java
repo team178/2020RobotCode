@@ -24,7 +24,7 @@ import frc.robot.subsystems.LawnMower;
  * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
- * project.
+ * project....
  */
 public class Robot extends TimedRobot {
 
@@ -88,7 +88,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
-    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
+//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
 
