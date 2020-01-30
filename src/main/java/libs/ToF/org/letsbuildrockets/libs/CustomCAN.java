@@ -1,4 +1,4 @@
-package libs.ToF.org.letsbuildrockets.libs;
+package libs.tof.org.letsbuildrockets.libs;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

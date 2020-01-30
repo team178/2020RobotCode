@@ -1,7 +1,7 @@
-package libs.ToF.org.letsbuildrockets.libs;
+package libs.tof.org.letsbuildrockets.libs;
 
-import libs.ToF.org.letsbuildrockets.libs.CustomCAN;
-import libs.ToF.org.letsbuildrockets.libs.VersionNumber;
+import libs.tof.org.letsbuildrockets.libs.CustomCAN;
+import libs.tof.org.letsbuildrockets.libs.VersionNumber;
 
 import edu.wpi.first.hal.util.UncleanStatusException;
 import edu.wpi.first.wpilibj.Timer;

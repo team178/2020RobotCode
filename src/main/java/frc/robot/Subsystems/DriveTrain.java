@@ -140,12 +140,12 @@ public class DriveTrain extends SubsystemBase {
     gyro.reset();
   }
 	
-  public void getLeftPIDController() {
-  	return leftPIDController();
+  public PIDController getLeftPIDController() {
+  	return leftPIDController;
   }
 	
-  public void getRightPIDController() {
-  	return rightPIDController();
+  public PIDController getRightPIDController() {
+  	return rightPIDController;
   }
 
   public DifferentialDriveKinematics getKinematics() {

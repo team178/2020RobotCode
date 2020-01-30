@@ -111,7 +111,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autonomousCommand = AutonomousSelector.getAutonomousCommand(false);
+    autonomousCommand = AutonomousSelector.getAutonomousCommand();
   }
 
   /**
