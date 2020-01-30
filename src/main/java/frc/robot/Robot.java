@@ -7,9 +7,11 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLED;//lights
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,12 +35,17 @@ public class Robot extends TimedRobot {
   public static LawnMower lawnmower;
   public static ColorSensor colorSensor;
   public static OI oi;
+
+  /* //moved to LightStrip subsystem 
+  //lights
+  public static DriverStation ds;
   public static AddressableLED LEDStrip1;
   public static AddressableLED LEDStrip2;
   public static AddressableLEDBuffer AddressableLEDBuffer1;
   public static AddressableLEDBuffer AddressableLEDBuffer2;
   public static int LEDCount1=10;
   public static int LEDCount2=10;
+  */
   
   //Declare autonomous command
   private Command autonomousCommand;
@@ -59,7 +66,9 @@ public class Robot extends TimedRobot {
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
 
+    /* //moved to LightStrip subsystem 
     //lights
+    ds = DriverStation.getInstance();
     LEDStrip1= new AddressableLED(9);
     LEDStrip2= new AddressableLED(8);
     AddressableLEDBuffer1= new AddressableLEDBuffer(LEDCount1);
@@ -70,8 +79,8 @@ public class Robot extends TimedRobot {
     LEDStrip2.setData(AddressableLEDBuffer2);
     LEDStrip1.start();
     LEDStrip2.start();
-
-
+    */
+    
   }
 
   /**
@@ -88,7 +97,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
-//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
+//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
 
@@ -137,24 +146,25 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-
+  /* //moved to LightStrip subsystem 
   //lights
   public void lightsaber(){
-    boolean isRed=false;
-    if(isRed==true){
+    boolean isRed = ds.getAlliance() != Alliance.Blue;
+
+    if(isRed == true){
       for(var height=0; height<LEDCount1; height++){
         AddressableLEDBuffer1.setRGB(height, 99,0,0);
         //AddressableLEDBuffer1.delay(20);  FIND DELAY FUNCTION
         LEDStrip1.setData(AddressableLEDBuffer1);
       }
     }
-    if(isRed==false){
+    else if(isRed == false){
       for(var height=0; height<LEDCount1; height++){
         AddressableLEDBuffer1.setRGB(height,31,235,253);
         //FIND Delay Function
         LEDStrip1.setData(AddressableLEDBuffer1);
       }
-
     }
   }
+  */
 }
