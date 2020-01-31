@@ -75,7 +75,15 @@ public class LawnMower extends SubsystemBase {
       return -1;
     }
   }
+/*
+  public String tof1Edge() {
 
+  }
+
+  public String tof2Edge() {
+
+  }
+*/
 /*  public double getTof3Distnace() {
     // This method will be called once per scheduler run
     if(tof3.inRange()){
