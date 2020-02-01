@@ -1,4 +1,4 @@
-package libs.tof.org.letsbuildrockets.libs;
+package libs.org.letsbuildrockets.libs;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -39,15 +39,9 @@ public class CustomCAN {
 	 * Used to write data to the device.
 	 *
 	 * @param data
-	 *        Data to be written. Should be less than or equal to 8 bytes in length
+	 *        Data to be written. Should be EXACTLY 8 bytes long ONLY.
 	 */
 	public void write(byte[] data) {
-		if(data.length < 8){
-			byte newData[] = new byte[8];
-			for(int i = 0; i < data.length; i++)
-				newData[i] = data[i];
-			data = newData;
-		}
 		try {
 			writeSafely(data);
 		}

@@ -13,11 +13,11 @@ import frc.robot.RobotMap;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import libs.org.letsbuildrockets.libs.TimeOfFlightSensor;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import libs.tof.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
 public class LawnMower extends SubsystemBase {
   
@@ -73,7 +73,7 @@ public class LawnMower extends SubsystemBase {
     if(tof2.inRange()){
       System.out.println("distance: " + tof2.getDistance()+ " " + tof2.getError());
       // distance measured in mm
-      if(tof2.getDistance() <= 600){
+      if(tof2.getDistance() <= 100){
         boolean ballHere = true;
         return 0;
       }

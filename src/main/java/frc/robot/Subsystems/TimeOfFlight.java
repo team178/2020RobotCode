@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import libs.tof.org.letsbuildrockets.libs.*;
+import libs.org.letsbuildrockets.libs.*;
 
 public class TimeOfFlight extends SubsystemBase {
 
@@ -11,7 +11,6 @@ public class TimeOfFlight extends SubsystemBase {
    */
   public void robotInit() {
     tofsensor = new TimeOfFlightSensor(0x621);
-    System.out.println("ToF Sensor at " + String.format("0x%03x", tofsensor.getID()) + "! (with firmware version: " + tofsensor.getFirwareVersion().toString()+")");
   }
 
   public double getDistance() {
