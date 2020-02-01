@@ -7,21 +7,30 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.ColorSensor;
+import frc.robot.RobotMap;
 
 public class WheelOfFortuneContestant extends SubsystemBase {
+  /**
+   * Creaes a new WheelOfFortuneContestant.
+   */
+  public WheelOfFortuneContestant() {
+    
+  }
 
+  public static VictorSPX contestant = new VictorSPX(RobotMap.contestant);
+  private final I2C.Port i2cPort = I2C.Port.kOnboard;;
 
-  private final I2C.Port i2cPort = I2C.Port.kOnboard;
-
-
+  
 
   private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
 
@@ -37,10 +46,17 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public static final Color Green = ColorMatch.makeColor(0.196, 0.557, 0.246);
   public static final Color Red = ColorMatch.makeColor(0.475, 0.371, 0.153);
   public static final Color Yellow = ColorMatch.makeColor(0.293, 0.561, 0.144);
+  public static final Color Black = ColorMatch.makeColor(0,0,0);
   private final double PROXIMITY = 0; // IR
   // this isn't the final value, this will change depending on sensor placement
   private final static Color DESIRE = Blue;
- 
+  ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+  
+
+
+  public void spinToWin(double power) {
+    contestant.set(ControlMode.PercentOutput, power);
+  }
 
     /**
      * Run the color match algorithm on our detected color
@@ -53,7 +69,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   
   public void periodic() {
     // This method will be called once per scheduler run
-    getRotations();
+    ColorSensor s1 = new ColorSensor();
 
     /**
      * The sensor returns a raw IR value of the infrared light detected.
@@ -89,25 +105,19 @@ public class WheelOfFortuneContestant extends SubsystemBase {
    
     return rot;
   }
-  ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
 
-  
   public void updateRotations(){
-  
-    
-    
-
 
     if(match.color == Blue) 
     {
-        subRot++;
+      subRot++; //passes over the color blue one time (need 2 for one rotation)
     }
 
-    if(subRot%2 == 0)
+    if(subRot%2 == 0 && subRot > 0) //checks to see if subrotations is even (2)
     {
-      subRot /= 2;
-      rot += subRot;
-      subRot = 0;
+      rot++; //adds one rotation
+      subRot = 0; //resets subRot to 0
+
       //takes amount of time BLUE pops up, and creates a counter. Counter is then converted into revolutions of the wheel
       //rot is the rotation value
     }
@@ -119,21 +129,36 @@ public class WheelOfFortuneContestant extends SubsystemBase {
       m_colorMatcher.addColorMatch(Yellow);
     }
     
-    public void desiredColor()//ask vivek to put javadoc here
+    public Color getBlueColor()
     {
-      if(match.color == DESIRE){//Write this when you have the controller panal motor code
-        
-        
-      }
-    
+      return Blue;
+    }
 
-
+    public Color getRedColor()
+    {
+      return Red;
     }
     
+    public Color getGreenColor()
+    {
+      return Green;
+    }
 
-     
+    public Color getYellowColor()
+    {
+      return Yellow;
+    }
 
+     public Color getColorMatch()
+     {
+        return detectedColor;
 
+     }
+
+     public int getRot()
+     {
+       return rot;
+     }
     
 }
    
