@@ -17,9 +17,10 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.autonomous.AutonomousSelector;
+//import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
+import frc.robot.subsystems.WheelOfFortuneContestant;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
   public static LawnMower lawnmower;
   public static ColorSensorV3 colorSensor;
   public static OI oi;
+  public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
   private static final double smallTolerance = .1;
 
@@ -65,9 +67,8 @@ public class Robot extends TimedRobot {
     colorSensor = new ColorSensorV3(null);
     lawnmower = new LawnMower();
     oi = new OI();
+    wheeloffortunecontestant = new WheelOfFortuneContestant();
     drivetrain.calibrateGyro();
-    tof1Previous = 0;
-    tof2Previous = 0;
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -100,14 +101,16 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     drivetrain.calibrateGyro();
+    lawnmower.updateTof1Distance();
+    lawnmower.updateTof2Distance();
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
-    SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
-    SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
+    SmartDashboard.putNumber("TOF 1 Distance", lawnmower.getTof1Distance());
+    SmartDashboard.putNumber("TOF 2 Distance", lawnmower.getTof2Distance());
+    SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
+    SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
 //    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
-    tof1Previous = lawnmower.getTof1Distance();
-    tof2Previous = lawnmower.getTof2Distance();
 
     //Gyro stuff
     if(drivetrain.getGyroReading()%360 == 0)
@@ -136,7 +139,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    autonomousCommand = AutonomousSelector.getAutonomousCommand();
+  //  autonomousCommand = AutonomousSelector.getAutonomousCommand();
   }
 
   /**

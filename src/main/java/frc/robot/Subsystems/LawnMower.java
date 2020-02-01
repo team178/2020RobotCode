@@ -25,20 +25,17 @@ public class LawnMower extends SubsystemBase {
   private static DoubleSolenoid deployer;
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
-//  private static TimeOfFlightSensor tof3;
-  private static double tof1Previous;
-  private static double tof2Previous;
-  private static boolean firstTime;
+  private static TimeOfFlightSensor tof3;
+
+  public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
+  public final double MIN = 60;
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
     deployer = new DoubleSolenoid(RobotMap.deployerForward, RobotMap.deployerReverse);
-    tof1 = new TimeOfFlightSensor(0x621);
-    tof2 = new TimeOfFlightSensor(0x622);
-//    tof3 = new TimeOfFlightSensor(0x623);
-    tof1Previous = 0;
-    tof2Previous = 0;
-    firstTime = true;
+    tof1 = new TimeOfFlightSensor(0x620);
+    tof2 = new TimeOfFlightSensor(0x621);
+    tof3 = new TimeOfFlightSensor(0x622);
   }
 
   public void intakeBall (double speed) {
@@ -53,75 +50,42 @@ public class LawnMower extends SubsystemBase {
     deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
   }
 
+  public void updateTof1Distance() {
+    tof1.updateDistance();
+  }
+
+  public void updateTof2Distance() {
+    tof2.updateDistance();
+  }
+
+  public void updateTof3Distance() {
+    tof3.updateDistance();
+  }
+
+  public String getTof1Edge() {
+    return tof1.getEdge();
+  }
+
+  public String getTof2Edge() {
+    return tof2.getEdge();
+  }
+
+  public String getTof3Edge() {
+    return tof3.getEdge();
+  }
+
   public double getTof1Distance() {
-    if(tof1.inRange()){
-      System.out.println("distance: " + tof1.getDistance()+ " " + tof1.getError());
-      // distance measured in mm
-      if(tof1.getDistance() <= 600){
-        boolean ballHere = true;
-        return 0;
-      }
-      return tof1.getDistance();
-    } else {
-      System.out.println("out of range");
-      return -1;
-    }
+    return tof1.getDistance();
   }
 
   public double getTof2Distance() {
-    // This method will be called once per scheduler run
-    if(tof2.inRange()){
-      System.out.println("distance: " + tof2.getDistance()+ " " + tof2.getError());
-      // distance measured in mm
-      if(tof2.getDistance() <= 100){
-        boolean ballHere = true;
-        return 0;
-      }
-      return tof2.getDistance();
-    } else {
-      System.out.println("out of range");
-      return -1;
-    }
+    return tof2.getDistance();
   }
 
-  public String tof1Edge() {
-    double secant = ((getTof1Distance() - tof1Previous)/0.2);
-    if (secant > 10) { //check this value
-      return "Trailing";
-    } else if (secant < 10) { //check this value
-      return "Leading";
-    } else {
-      return "Middle";
-    }
+  public double getTof3Distance() {
+    return tof3.getDistance();
   }
-
-  public String tof2Edge() {
-    double secant = ((getTof2Distance() - tof2Previous)/0.2);
-    if (secant > 10) { //check this value
-      return "Trailing";
-    } else if (secant < 10) {
-      return "Leading";
-    } else {
-      return "Middle";
-    }
-  }
-
-/*  public double getTof3Distnace() {
-    // This method will be called once per scheduler run
-    if(tof3.inRange()){
-      System.out.println("distance: " + tof3.getDistance()+ " " + tof3.getError());
-      // distance measured in mm
-      if(tof3.getDistance() <= 600){
-        boolean ballHere = true;
-        return 0;
-      }
-      return tof3.getDistance();
-    } else {
-      System.out.println("out of range");
-      return -1;
-    }
-  } */
-
+  
   public void periodic() {
 
   }
