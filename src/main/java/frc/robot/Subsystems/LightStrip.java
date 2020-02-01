@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;//do driverstation stuff in Robot.java 
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 
 public class LightStrip extends SubsystemBase {
   /**
@@ -22,6 +23,7 @@ public class LightStrip extends SubsystemBase {
   public AddressableLEDBuffer lightsColor;
   public int numOfLEDs;
   public DriverStation ds; 
+  public Timer timer;
 
   public LightStrip(int port, int numOfLEDs) {
     this.ds = DriverStation.getInstance();
@@ -31,6 +33,7 @@ public class LightStrip extends SubsystemBase {
     strip.setLength(lightsColor.getLength());
     strip.setData(lightsColor);
     strip.start();
+    this.timer = new Timer();
   }
 
   @Override
@@ -38,17 +41,52 @@ public class LightStrip extends SubsystemBase {
     // This method will be called once per scheduler run
 
   }
+  public void forceLights(){
+    int red;
+    int green;
+    int blue;
+    int red1;
+    int green1;
+    int blue1;
+    if(ds.getAlliance() != Alliance.Blue){
+      red=255;
+      green=0;
+      blue=0;
+    }
+    else{
+      red=0;
+      green=0;
+      blue=255;
+    }
+    for(int i=0; i<10; i++){
+      lightsColor.setRGB(i,red,green,blue);
+      this.strip.setData(lightsColor);
+    }
+    int iterators = ((int) Math.random() * numOfLEDs) + 1;
+    if(ds.getAlliance() != Alliance.Blue){
+      red1=0;
+      green1=0;
+      blue1=255;
+    }
+    else{
+      red1=255;
+      green1=0;
+      blue1=0;
+    }
+    lightsColor.setRGB(iterators, red1, green1, blue1);
+  }
 
 
   //methods for different lights patterns
   public void lightsaber()//for climber arm 
   {
+    timer.start();
     if(ds.getAlliance() != Alliance.Blue)
      {
         for(int i = 0; i < this.numOfLEDs; i++)
         {
             lightsColor.setRGB(i, 99, 0, 0);
-            //delay
+            Timer.delay(.25);
             this.strip.setData(lightsColor);
         }
       }
@@ -56,13 +94,13 @@ public class LightStrip extends SubsystemBase {
       {
         for (int i = 0; i < this.numOfLEDs; i++)
         {
-          lightsColor.setRGB(i, 31, 235, 253);
-          //delay
-          this.strip.setData(lightsColor);
+            lightsColor.setRGB(i, 31, 235, 253);
+            Timer.delay(.25);
+            this.strip.setData(lightsColor);
         }
       }
+      timer.stop();
     }
-
   }
 
 
