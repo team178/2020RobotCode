@@ -26,7 +26,7 @@ public class XboxController {
     public static Button auxBack;
     public static Button auxStart;
 
-    public XboxController (int port) {
+    public XboxController(int port) {
         xbox = new Joystick(port);
         auxA = new JoystickButton(xbox, 1);
         auxB = new JoystickButton(xbox, 2);
@@ -38,20 +38,27 @@ public class XboxController {
         auxStart = new JoystickButton(xbox, 8);
     }
 
-    //AUX controller accessor methods
-    public double getLeftStickYAux() {
-		return xbox.getRawAxis(1);
-	}
+    public double getLeftStickX() {
+	return xbox.getRawAxis(0);
+    }
 	
-    public double getRightStickYAux() {
-		return xbox.getRawAxis(5);
-	}
+    public double getLeftStickY() {
+	return xbox.getRawAxis(1);
+    }
 	
-    public double getLeftTriggerAux() {
-		return xbox.getRawAxis(2);
-	}
+    public double getRightStickX() {
+	return xbox.getRawAxis(4);
+    }
 	
-    public double getRightTriggerAux() {
-		return xbox.getRawAxis(3);
-	}
+    public double getRightStickY() {
+	return xbox.getRawAxis(5);
+    }
+	
+    public double getLeftTrigger() {
+	return xbox.getRawAxis(2);
+    }
+	
+    public double getRightTrigger() {
+	return xbox.getRawAxis(3);
+    }
 }

@@ -7,11 +7,18 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;//lights
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
+
 
 
 /**
@@ -19,18 +26,31 @@ import frc.robot.subsystems.LawnMower;
  * functions corresponding to each mode, as described in the TimedRobot
  * documentation. If you change the name of this class or the package after
  * creating this project, you must also update the build.gradle file in the
- * project.
+ * project....
  */
 public class Robot extends TimedRobot {
 
+  //Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
   public static ColorSensor colorSensor;
   public static OI oi;
-   private static final String kDefaultAuto = "Default";
-   private static final String kCustomAuto = "My Auto";
-   private String m_autoSelected;
-   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+
+  /* //moved to LightStrip subsystem 
+  //lights
+  public static DriverStation ds;
+  public static AddressableLED LEDStrip1;
+  public static AddressableLED LEDStrip2;
+  public static AddressableLEDBuffer AddressableLEDBuffer1;
+  public static AddressableLEDBuffer AddressableLEDBuffer2;
+  public static int LEDCount1=10;
+  public static int LEDCount2=10;
+  */
+  public static double tof1Previous;
+  public static double tof2Previous;
+  
+  //Declare autonomous command
+  private Command autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -43,9 +63,28 @@ public class Robot extends TimedRobot {
     colorSensor = new ColorSensor();
     lawnmower = new LawnMower();
     oi = new OI();
+    drivetrain.calibrateGyro();
+    tof1Previous = 0;
+    tof2Previous = 0;
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
+
+    /* //moved to LightStrip subsystem 
+    //lights
+    ds = DriverStation.getInstance();
+    LEDStrip1= new AddressableLED(9);
+    LEDStrip2= new AddressableLED(8);
+    AddressableLEDBuffer1= new AddressableLEDBuffer(LEDCount1);
+    AddressableLEDBuffer2= new AddressableLEDBuffer(LEDCount2);
+    LEDStrip1.setLength(AddressableLEDBuffer1.getLength());
+    LEDStrip2.setLength(AddressableLEDBuffer2.getLength());
+    LEDStrip1.setData(AddressableLEDBuffer1);
+    LEDStrip2.setData(AddressableLEDBuffer2);
+    LEDStrip1.start();
+    LEDStrip2.start();
+    */
+    
   }
 
   /**
@@ -59,14 +98,19 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     drivetrain.calibrateGyro();
-
-
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
-//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distnace());
-    
+//    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
+    System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
+    tof1Previous = lawnmower.getTof1Distance();
+    tof2Previous = lawnmower.getTof2Distance();
+
+
+
+    //lights
+
   }
 
   /**
@@ -82,10 +126,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
-  m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    autonomousCommand = AutonomousSelector.getAutonomousCommand();
   }
 
   /**
@@ -93,22 +134,43 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    
+    CommandScheduler.getInstance().run();
   }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() 
-  {
+  public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   /**
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() 
-  {
+  public void testPeriodic() {
   }
+
+  /* //moved to LightStrip subsystem 
+  //lights
+  public void lightsaber(){
+    boolean isRed = ds.getAlliance() != Alliance.Blue;
+
+    if(isRed == true){
+      for(var height=0; height<LEDCount1; height++){
+        AddressableLEDBuffer1.setRGB(height, 99,0,0);
+        //AddressableLEDBuffer1.delay(20);  FIND DELAY FUNCTION
+        LEDStrip1.setData(AddressableLEDBuffer1);
+      }
+    }
+    else if(isRed == false){
+      for(var height=0; height<LEDCount1; height++){
+        AddressableLEDBuffer1.setRGB(height,31,235,253);
+        //FIND Delay Function
+        LEDStrip1.setData(AddressableLEDBuffer1);
+      }
+    }
+  }
+  */
 }

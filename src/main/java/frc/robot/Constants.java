@@ -17,13 +17,18 @@ public class Constants {
     //Drive constants
     public static double WHEEL_CIRCUMFRENCE = Units.inchesToMeters(6) * Math.PI;
     public static double ENCODER_TICKS = 1024;
-    public static double TRACK_WIDTH_INCHES = 23.75;
-    public static double TRACK_WIDTH_METERS = Units.inchesToMeters(TRACK_WIDTH_INCHES);
+    public static double TRACK_WIDTH_METERS = 7.239;
     public static double ENCODER_DPP = WHEEL_CIRCUMFRENCE / ENCODER_TICKS;
 
     //Pathplanning constants
     public static double MAX_VELOCITY_MPS = 0;
     public static double MAX_ACCEL_MPSPS = 0;
+    public static double OPTIMAL_DRIVE_KP = 0;
+    
+    public static double kS = 0;
+    public static double kV = 0;
+    public static double kA = 0;
+    
     public static double RAMSETE_B = 0;
     public static double RAMSETE_ZETA = 0;
 }
