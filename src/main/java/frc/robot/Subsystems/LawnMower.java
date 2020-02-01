@@ -7,15 +7,17 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import libs.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
-import libs.tof.org.letsbuildrockets.libs.TimeOfFlightSensor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LawnMower extends SubsystemBase {
   
@@ -24,6 +26,9 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
 //  private static TimeOfFlightSensor tof3;
+  private static double tof1Previous;
+  private static double tof2Previous;
+  private static boolean firstTime;
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
@@ -31,6 +36,9 @@ public class LawnMower extends SubsystemBase {
     tof1 = new TimeOfFlightSensor(0x621);
     tof2 = new TimeOfFlightSensor(0x622);
 //    tof3 = new TimeOfFlightSensor(0x623);
+    tof1Previous = 0;
+    tof2Previous = 0;
+    firstTime = true;
   }
 
   public void intakeBall (double speed) {
@@ -65,7 +73,7 @@ public class LawnMower extends SubsystemBase {
     if(tof2.inRange()){
       System.out.println("distance: " + tof2.getDistance()+ " " + tof2.getError());
       // distance measured in mm
-      if(tof2.getDistance() <= 600){
+      if(tof2.getDistance() <= 100){
         boolean ballHere = true;
         return 0;
       }
@@ -73,6 +81,28 @@ public class LawnMower extends SubsystemBase {
     } else {
       System.out.println("out of range");
       return -1;
+    }
+  }
+
+  public String tof1Edge() {
+    double secant = ((getTof1Distance() - tof1Previous)/0.2);
+    if (secant > 10) { //check this value
+      return "Trailing";
+    } else if (secant < 10) { //check this value
+      return "Leading";
+    } else {
+      return "Middle";
+    }
+  }
+
+  public String tof2Edge() {
+    double secant = ((getTof2Distance() - tof2Previous)/0.2);
+    if (secant > 10) { //check this value
+      return "Trailing";
+    } else if (secant < 10) {
+      return "Leading";
+    } else {
+      return "Middle";
     }
   }
 
@@ -91,4 +121,8 @@ public class LawnMower extends SubsystemBase {
       return -1;
     }
   } */
+
+  public void periodic() {
+
+  }
 }

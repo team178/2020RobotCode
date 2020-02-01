@@ -37,19 +37,19 @@ public class ThrustmasterJoystick {
     public ThrustmasterJoystick(int port) {
         joystick = new Joystick(port);
         trigger = new JoystickButton(joystick, 1);
-	    headBottom = new JoystickButton(joystick, 2);
-	    headLeft = new JoystickButton(joystick, 3);
-	    headRight = new JoystickButton(joystick, 4);
-	    leftPadTop1 = new JoystickButton(joystick, 5);
-	    leftPadTop2 = new JoystickButton(joystick, 6);
-	    leftPadTop3 = new JoystickButton(joystick, 7);
-	    leftPadBottom3 = new JoystickButton(joystick, 8);
-	    leftPadBottom2  = new JoystickButton(joystick, 9);
-	    leftPadBottom1 = new JoystickButton(joystick, 10);
-	    rightPadTop3 = new JoystickButton(joystick, 11);
-	    rightPadTop2 = new JoystickButton(joystick, 12);
-	    rightPadTop1 = new JoystickButton(joystick, 13);
-	    rightPadBottom1 = new JoystickButton(joystick, 14);
+	headBottom = new JoystickButton(joystick, 2);
+	headLeft = new JoystickButton(joystick, 3);
+	headRight = new JoystickButton(joystick, 4);
+	leftPadTop1 = new JoystickButton(joystick, 5);
+	leftPadTop2 = new JoystickButton(joystick, 6);
+	leftPadTop3 = new JoystickButton(joystick, 7);
+	leftPadBottom3 = new JoystickButton(joystick, 8);
+	leftPadBottom2  = new JoystickButton(joystick, 9);
+	leftPadBottom1 = new JoystickButton(joystick, 10);
+	rightPadTop3 = new JoystickButton(joystick, 11);
+	rightPadTop2 = new JoystickButton(joystick, 12);
+	rightPadTop1 = new JoystickButton(joystick, 13);
+	rightPadBottom1 = new JoystickButton(joystick, 14);
         rightPadBottom3 = new JoystickButton(joystick, 16);
     
         //Setting JOYSTICK channels
@@ -61,29 +61,31 @@ public class ThrustmasterJoystick {
 
     //JOYSTICK accessor methods
     public double getX() {
-		return joystick.getRawAxis(0);
-	}
+	return joystick.getRawAxis(0);
+    }
 	
     public double getY() {
-		return -joystick.getRawAxis(1);
-	}
+	return -joystick.getRawAxis(1);
+    }
 
     public double getTwist() {
-		return joystick.getRawAxis(2);
+	return joystick.getRawAxis(2);
     }
     
-    public double getSlider() {
-		return (joystick.getRawAxis(3) + 1) / 2;
+    /**
+     * @param includeNegative defines whether or not to include the negative slider values
+     *		true -- slider returns -1 to +1
+     * 		false -- slider returns 0 to +1
+     * @return the slider value defined by <i>includeNegative</i> 
+     */
+    public double getSlider(boolean includeNegative) {
+	return includeNegative ? joystick.getRawAxis(3) : (joystick.getRawAxis(3) + 1) / 2;
     }
     
-    public void printJoystickChannels() 
-    {
-		System.out.println("X channel: " + joystick.getXChannel());
-		System.out.println("Y channel: " + joystick.getYChannel());
-		System.out.println("Z channel: " + joystick.getZChannel());
-		System.out.println("Twist channel: " + joystick.getTwistChannel());
-	}
-
-
-
+    public void printJoystickChannels() {
+	System.out.println("X channel: " + joystick.getXChannel());
+	System.out.println("Y channel: " + joystick.getYChannel());
+	System.out.println("Z channel: " + joystick.getZChannel());
+	System.out.println("Twist channel: " + joystick.getTwistChannel());
+    }
 }
