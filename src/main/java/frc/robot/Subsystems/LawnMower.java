@@ -29,6 +29,13 @@ public class LawnMower extends SubsystemBase {
   private static double tof1Previous;
   private static double tof2Previous;
   private static boolean firstTime;
+  private double[] tof1Values;
+  private double[] tof2Values;
+  private String tof1LastEdge;
+  private String tof2LastEdge;
+
+  public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
+  public final double MIN = 60;
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
@@ -39,6 +46,10 @@ public class LawnMower extends SubsystemBase {
     tof1Previous = 0;
     tof2Previous = 0;
     firstTime = true;
+    tof1Values = new double[2];
+    tof2Values = new double[2];
+    tof1LastEdge = "None";
+    tof2LastEdge = "None";
   }
 
   public void intakeBall (double speed) {
@@ -54,73 +65,64 @@ public class LawnMower extends SubsystemBase {
   }
 
   public double getTof1Distance() {
-    if(tof1.inRange()){
-      System.out.println("distance: " + tof1.getDistance()+ " " + tof1.getError());
-      // distance measured in mm
-      if(tof1.getDistance() <= 600){
-        boolean ballHere = true;
-        return 0;
-      }
-      return tof1.getDistance();
-    } else {
-      System.out.println("out of range");
-      return -1;
+    tof1Values[1] = tof1Values[0];
+    tof1Values[0] = tof1.getDistance();
+    return tof1Values[0];
+  }
+
+  public String getTof1Edge() {
+    double secant = (tof1Values[1] - tof1Values[0])/0.02;
+    //System.out.println("Slope of Secant Line: " + secant);
+    if (tof1Values[0] > MAX) { //test this max value
+      return "No ball";
+    } else if (tof1Values[0] < MIN) { //test this min value
+      return "Center";
+    } else if (secant > 100) {
+      tof1LastEdge = "Leading";
+      return "Leading";
+    } else if (secant < -100) {
+      tof1LastEdge = "Trailing";
+      return "Trailing";
+    } else if (tof1LastEdge == "Leading") {
+      return "Leading";
+    } else if (tof1LastEdge == "Trailing") {
+      return "Trailing";
+    } else if (tof1LastEdge == "None") {
+      return "No ball";
     }
+    return "No ball";
+    //A minimum value returns "Center", a maximum value returns "No Ball"
   }
 
   public double getTof2Distance() {
-    // This method will be called once per scheduler run
-    if(tof2.inRange()){
-      System.out.println("distance: " + tof2.getDistance()+ " " + tof2.getError());
-      // distance measured in mm
-      if(tof2.getDistance() <= 100){
-        boolean ballHere = true;
-        return 0;
-      }
-      return tof2.getDistance();
-    } else {
-      System.out.println("out of range");
-      return -1;
-    }
+    tof2Values[1] = tof2Values[0];
+    tof2Values[0] = tof2.getDistance();
+    return tof2Values[0];
   }
 
-  public String tof1Edge() {
-    double secant = ((getTof1Distance() - tof1Previous)/0.2);
-    if (secant > 10) { //check this value
-      return "Trailing";
-    } else if (secant < 10) { //check this value
+  public String getTof2Edge() {
+    double secant = (tof2Values[1] - tof2Values[0])/0.02;
+    //System.out.println("Slope of Secant Line: " + secant);
+    if (tof2Values[0] > MAX) { //test this max value
+      return "No ball";
+    } else if (tof2Values[0] < MIN) { //test this min value
+      return "Center";
+    } else if (secant > 100) {
+      tof2LastEdge = "Leading";
       return "Leading";
-    } else {
-      return "Middle";
-    }
-  }
-
-  public String tof2Edge() {
-    double secant = ((getTof2Distance() - tof2Previous)/0.2);
-    if (secant > 10) { //check this value
+    } else if (secant < -100) {
+      tof2LastEdge = "Trailing";
       return "Trailing";
-    } else if (secant < 10) {
+    } else if (tof2LastEdge == "Leading") {
       return "Leading";
-    } else {
-      return "Middle";
+    } else if (tof2LastEdge == "Trailing") {
+      return "Trailing";
+    } else if (tof2LastEdge == "None") {
+      return "No ball";
     }
+    return "No ball";
+    //A minimum value returns "Center", a maximum value returns "No Ball"
   }
-
-/*  public double getTof3Distnace() {
-    // This method will be called once per scheduler run
-    if(tof3.inRange()){
-      System.out.println("distance: " + tof3.getDistance()+ " " + tof3.getError());
-      // distance measured in mm
-      if(tof3.getDistance() <= 600){
-        boolean ballHere = true;
-        return 0;
-      }
-      return tof3.getDistance();
-    } else {
-      System.out.println("out of range");
-      return -1;
-    }
-  } */
 
   public void periodic() {
 

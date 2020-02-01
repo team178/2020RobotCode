@@ -21,12 +21,12 @@ import frc.robot.ColorSensor;
 public class SpinWheelOfFortuneByRotations extends CommandBase {
  
 
-  private static WheelOfFortuneContestant wheelOfFortuneContestant = Robot.wheelOfFortuneContestant;
+  private static WheelOfFortuneContestant wheelOfFortuneContestant = Robot.wheeloffortunecontestant;
   public static final double spinPower = 1;
   
 
   public SpinWheelOfFortuneByRotations() {
-    addRequirements(Robot.wheelOfFortuneContestant);
+    addRequirements(Robot.wheeloffortunecontestant);
   }
 
   // Called when the command is initially scheduled.
@@ -58,6 +58,6 @@ public class SpinWheelOfFortuneByRotations extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() { //if rotations between 3-5 return true
-  
+    return true;
   }
 }

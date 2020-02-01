@@ -18,7 +18,7 @@ import com.revrobotics.ColorMatch;
 import com.revrobotics.ColorMatchResult;
 
 public class SpinWheelOfFortuneToColor extends CommandBase {
-  WheelOfFortuneContestant wheelOfFortuneContestant = Robot.wheelOfFortuneContestant;
+  WheelOfFortuneContestant wheelOfFortuneContestant = Robot.wheeloffortunecontestant;
   
   private final static ColorMatch m_colorMatcher = new ColorMatch();
   // private static final Color BLUE = new ColorMatch.makeColor(0, 0, );
@@ -32,7 +32,7 @@ public class SpinWheelOfFortuneToColor extends CommandBase {
   private String gameData = DriverStation.getInstance().getGameSpecificMessage();
   
   public SpinWheelOfFortuneToColor() {
-    addRequirements(Robot.wheelOfFortuneContestant);
+    addRequirements(Robot.wheeloffortunecontestant);
   }
   // Called when the command is initially scheduled.
   @Override
