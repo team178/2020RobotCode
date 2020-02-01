@@ -6,6 +6,9 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.subsystems;
+
+import com.revrobotics.ColorMatch;
+import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import edu.wpi.first.wpilibj.I2C;
 
@@ -17,16 +20,37 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
 
   private final I2C.Port i2cPort = I2C.Port.kOnboard;
-  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-  private int rot = 0;
-  private int subRot = 0;
-  private final double BLUE = 0.4; // value depends on lighting and distance
-  
-  
 
-  final Color detectedColor = m_colorSensor.getColor();
+
+
+  private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
+
+  Color detectedColor = m_colorSensor.getColor();
+
+  private int rot = 0;
+
+  private int subRot = 0;
+ 
+  private final static ColorMatch m_colorMatcher = new ColorMatch();
+  // private static final Color BLUE = new ColorMatch.makeColor(0, 0, );
+  public static final Color Blue = ColorMatch.makeColor(0.136, 0.412, 0.450);
+  public static final Color Green = ColorMatch.makeColor(0.196, 0.557, 0.246);
+  public static final Color Red = ColorMatch.makeColor(0.475, 0.371, 0.153);
+  public static final Color Yellow = ColorMatch.makeColor(0.293, 0.561, 0.144);
+  private final double PROXIMITY = 0; // IR
+  // this isn't the final value, this will change depending on sensor placement
+  private final static Color DESIRE = Blue;
+ 
+
+    /**
+     * Run the color match algorithm on our detected color
+     */
+    
+    
+    
+    
+
   
-  @Override
   public void periodic() {
     // This method will be called once per scheduler run
     getRotations();
@@ -35,15 +59,13 @@ public class WheelOfFortuneContestant extends SubsystemBase {
      * The sensor returns a raw IR value of the infrared light detected.
      */
     final double IR = m_colorSensor.getIR();
-
+    
     /**
      * Open Smart Dashboard or Shuffleboard to see the color detected by the 
      * sensor.
      */
-    SmartDashboard.putNumber("Red", detectedColor.red);
-    SmartDashboard.putNumber("Green", detectedColor.green);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("IR", IR);
+    
+    
 
     /**
      * In addition to RGB IR values, the color sensor can also return an 
@@ -64,14 +86,19 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     
   }
   public int getRotations() {
-  
+   
     return rot;
   }
-  
+  ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
 
+  
   public void updateRotations(){
+  
     
-    if(detectedColor.blue >= BLUE) 
+    
+
+
+    if(match.color == Blue) 
     {
         subRot++;
     }
@@ -82,7 +109,32 @@ public class WheelOfFortuneContestant extends SubsystemBase {
       rot += subRot;
       subRot = 0;
       //takes amount of time BLUE pops up, and creates a counter. Counter is then converted into revolutions of the wheel
+      //rot is the rotation value
     }
+  }
+    public static void ColorMatcher() {
+      m_colorMatcher.addColorMatch(Blue);
+      m_colorMatcher.addColorMatch(Green);
+      m_colorMatcher.addColorMatch(Red);
+      m_colorMatcher.addColorMatch(Yellow);
     }
-   
+    
+    public void desiredColor()//ask vivek to put javadoc here
+    {
+      if(match.color == DESIRE){//Write this when you have the controller panal motor code
+        
+        
+      }
+    
+
+
+    }
+    
+
+     
+
+
+    
 }
+   
+
