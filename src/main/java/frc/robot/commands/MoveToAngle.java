@@ -16,11 +16,12 @@ public class MoveToAngle extends CommandBase {
     private OI oi;
     private DriveTrain drivetrain;
     private static double currentAngle;
-    private static double desiredAngle = 180;
-    private static final double tolerance = 5;
+    private static double desiredAngle;
+    private static final double tolerance = 10;
   
-    public MoveToAngle() {
+    public MoveToAngle(double angle) {
         addRequirements(Robot.drivetrain);
+        desiredAngle = angle;
     }
 
   // Called when the command is initially scheduled.
@@ -34,7 +35,7 @@ public class MoveToAngle extends CommandBase {
   @Override
   public void execute() {
     //This will move to the desired angle within a tolerance of 5  
-    if(desiredAngle < Robot.getCurrentAngle() + tolerance && desiredAngle > Robot.getCurrentAngle() - tolerance) {
+    if(desiredAngle-10 < Robot.getCurrentAngle() + tolerance && desiredAngle-10 > Robot.getCurrentAngle() - tolerance) {
         drivetrain.drive(0, 0);
     } else {
         drivetrain.drive(-0.5, 0.5);
@@ -50,6 +51,6 @@ public class MoveToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return desiredAngle < Robot.getCurrentAngle()+tolerance && desiredAngle > Robot.getCurrentAngle()-tolerance;
+    return(desiredAngle-10 < Robot.getCurrentAngle()+tolerance && desiredAngle-10 > Robot.getCurrentAngle()-tolerance);
   }
 }

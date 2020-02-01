@@ -16,7 +16,6 @@ public class Move90Degrees extends CommandBase {
   
   private OI oi;
   private DriveTrain drivetrain;
-  private static double currentAngle;
   private static double increment = 90;
   private static final double tolerance = 5;
 
@@ -34,7 +33,31 @@ public class Move90Degrees extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      
+      if(Robot.getCurrentAngle() > 270 && Robot.getCurrentAngle() < 360) {
+          if(increment*4 < Robot.getCurrentAngle() + tolerance && increment*4 > Robot.getCurrentAngle() - tolerance) {
+              drivetrain.drive(0, 0);
+          } else {
+              drivetrain.drive(-0.5, 0.5);
+          }
+      } else if(Robot.getCurrentAngle() > 180 && Robot.getCurrentAngle() < 270) {
+        if(increment*3 < Robot.getCurrentAngle() + tolerance && increment*3 > Robot.getCurrentAngle() - tolerance) {
+            drivetrain.drive(0, 0);
+        } else {
+            drivetrain.drive(-0.5, 0.5);
+        }
+      } else if(Robot.getCurrentAngle() > 90 && Robot.getCurrentAngle() < 180) {
+        if(increment*2 < Robot.getCurrentAngle() + tolerance && increment*2 > Robot.getCurrentAngle() - tolerance) {
+            drivetrain.drive(0, 0);
+        } else {
+            drivetrain.drive(-0.5, 0.5);
+        }
+      } else if(Robot.getCurrentAngle() > 0 && Robot.getCurrentAngle() < 90) {
+        if(increment < Robot.getCurrentAngle() + tolerance && increment > Robot.getCurrentAngle() - tolerance) {
+            drivetrain.drive(0, 0);
+        } else {
+            drivetrain.drive(-0.5, 0.5);
+        }
+      }
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +68,7 @@ public class Move90Degrees extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return ( (Robot.getCurrentAngle() > 70 && Robot.getCurrentAngle() < 90)||(Robot.getCurrentAngle() > 160 && Robot.getCurrentAngle() < 180)||
+    (Robot.getCurrentAngle() > 250 && Robot.getCurrentAngle() < 270)||(Robot.getCurrentAngle() > 340 && Robot.getCurrentAngle() < 360) );
   }
 }
