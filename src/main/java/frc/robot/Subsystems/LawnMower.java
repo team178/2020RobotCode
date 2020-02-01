@@ -25,14 +25,7 @@ public class LawnMower extends SubsystemBase {
   private static DoubleSolenoid deployer;
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
-//  private static TimeOfFlightSensor tof3;
-  private static double tof1Previous;
-  private static double tof2Previous;
-  private static boolean firstTime;
-  private double[] tof1Values;
-  private double[] tof2Values;
-  private String tof1LastEdge;
-  private String tof2LastEdge;
+  private static TimeOfFlightSensor tof3;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
@@ -40,16 +33,9 @@ public class LawnMower extends SubsystemBase {
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
     deployer = new DoubleSolenoid(RobotMap.deployerForward, RobotMap.deployerReverse);
-    tof1 = new TimeOfFlightSensor(0x621);
-    tof2 = new TimeOfFlightSensor(0x622);
-//    tof3 = new TimeOfFlightSensor(0x623);
-    tof1Previous = 0;
-    tof2Previous = 0;
-    firstTime = true;
-    tof1Values = new double[2];
-    tof2Values = new double[2];
-    tof1LastEdge = "None";
-    tof2LastEdge = "None";
+    tof1 = new TimeOfFlightSensor(0x620);
+    tof2 = new TimeOfFlightSensor(0x621);
+    tof3 = new TimeOfFlightSensor(0x622);
   }
 
   public void intakeBall (double speed) {
@@ -64,66 +50,42 @@ public class LawnMower extends SubsystemBase {
     deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
   }
 
-  public double getTof1Distance() {
-    tof1Values[1] = tof1Values[0];
-    tof1Values[0] = tof1.getDistance();
-    return tof1Values[0];
+  public void updateTof1Distance() {
+    tof1.updateDistance();
+  }
+
+  public void updateTof2Distance() {
+    tof2.updateDistance();
+  }
+
+  public void updateTof3Distance() {
+    tof3.updateDistance();
   }
 
   public String getTof1Edge() {
-    double secant = (tof1Values[1] - tof1Values[0])/0.02;
-    //System.out.println("Slope of Secant Line: " + secant);
-    if (tof1Values[0] > MAX) { //test this max value
-      return "No ball";
-    } else if (tof1Values[0] < MIN) { //test this min value
-      return "Center";
-    } else if (secant > 100) {
-      tof1LastEdge = "Leading";
-      return "Leading";
-    } else if (secant < -100) {
-      tof1LastEdge = "Trailing";
-      return "Trailing";
-    } else if (tof1LastEdge == "Leading") {
-      return "Leading";
-    } else if (tof1LastEdge == "Trailing") {
-      return "Trailing";
-    } else if (tof1LastEdge == "None") {
-      return "No ball";
-    }
-    return "No ball";
-    //A minimum value returns "Center", a maximum value returns "No Ball"
-  }
-
-  public double getTof2Distance() {
-    tof2Values[1] = tof2Values[0];
-    tof2Values[0] = tof2.getDistance();
-    return tof2Values[0];
+    return tof1.getEdge();
   }
 
   public String getTof2Edge() {
-    double secant = (tof2Values[1] - tof2Values[0])/0.02;
-    //System.out.println("Slope of Secant Line: " + secant);
-    if (tof2Values[0] > MAX) { //test this max value
-      return "No ball";
-    } else if (tof2Values[0] < MIN) { //test this min value
-      return "Center";
-    } else if (secant > 100) {
-      tof2LastEdge = "Leading";
-      return "Leading";
-    } else if (secant < -100) {
-      tof2LastEdge = "Trailing";
-      return "Trailing";
-    } else if (tof2LastEdge == "Leading") {
-      return "Leading";
-    } else if (tof2LastEdge == "Trailing") {
-      return "Trailing";
-    } else if (tof2LastEdge == "None") {
-      return "No ball";
-    }
-    return "No ball";
-    //A minimum value returns "Center", a maximum value returns "No Ball"
+    return tof2.getEdge();
   }
 
+  public String getTof3Edge() {
+    return tof3.getEdge();
+  }
+
+  public double getTof1Distance() {
+    return tof1.getDistance();
+  }
+
+  public double getTof2Distance() {
+    return tof2.getDistance();
+  }
+
+  public double getTof3Distance() {
+    return tof3.getDistance();
+  }
+  
   public void periodic() {
 
   }

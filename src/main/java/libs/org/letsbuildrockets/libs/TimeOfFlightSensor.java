@@ -11,10 +11,19 @@ public class TimeOfFlightSensor {
     CustomCAN tofsensor;
     static int TOFCount = 0;
 
+    // Team 178 2020 Specific Fields
+    private double[] values;
+    private String lastEdge;
+
+    public final double MAX = 150; //These values need to be refined based on the actual dimmensions of the lawnmower
+    public final double MIN = 60;
+
     public TimeOfFlightSensor(int ID) {
         tofsensor = new CustomCAN("TOF"+String.valueOf(TOFCount), ID);
         _ID = ID;
-        TOFCount++;
+        TOFCount++;       
+        values = new double[2];
+        lastEdge = "None";
     }
 
     private void readBuffer() {
@@ -48,4 +57,31 @@ public class TimeOfFlightSensor {
         return (_error == 0);
     }
 
+        //Team 178 2020 Specific Methods
+        public void updateDistance() {
+            values[1] = values[0];
+            values[0] = getDistance();
+        }
+    
+        public String getEdge() {
+            double secant = (values[1] - values[0])/0.02;
+            if (values[0] > MAX) {
+                return "No ball";
+            } else if (values[0] < MIN) {
+                return "Center";
+            } else if (secant > 100) {
+                lastEdge = "Leading";
+                return "Leading";
+            } else if (secant < -100) {
+                lastEdge = "Trailing";
+                return "Trailing";
+            } else if (lastEdge == "Leading") {
+                return "Leading";
+            } else if (lastEdge == "Trailing") {
+                return "Trailing";
+            } else if (lastEdge == "None") {
+                return "No ball";
+            }
+            return "No ball";
+        }
 }

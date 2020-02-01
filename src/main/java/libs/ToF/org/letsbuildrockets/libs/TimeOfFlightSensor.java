@@ -47,8 +47,8 @@ public class TimeOfFlightSensor {
         packetTimer.start();
         getFirwareVersion();
         if(_firmwareVersion.isOlderThan(minVersion))
-            HAL.sendError(true, -2, false, "LBR: Old Firmware! ToF sensor at " + String.format("0x%04x", _ID) + " is on firmware version " + _firmwareVersion.toString() + " but version " + minVersion.toString() + " is required. Upgrade ToF firmware, or downagrade the TimeOfFlight Java library!", "", "", false);    
-    }
+            HAL.sendError(true, -2, false, "LBR: Old Firmware! ToF sensor at " + String.format("0x%04x", _ID) + " is on firmware version " + _firmwareVersion.toString() + " but version " + minVersion.toString() + " is required. Upgrade ToF firmware, or downagrade the TimeOfFlight Java library!", "", "", false);
+        }
 
     private void readBuffer() {
         try {
