@@ -18,6 +18,7 @@ public class RobotMap {
     public static int DMTopRight = 3;
     public static int DMBottomRight = 4;
     public static int intake = 5;
+    public static int contestant = 11; //jeff ;( 12:50-12:53 T.O.D 2/1/20
 
     public static int elevator = 6;
     public static int winch1 = 7;
