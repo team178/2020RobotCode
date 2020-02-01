@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import com.revrobotics.ColorSensorV3;
+
 import edu.wpi.first.wpilibj.AddressableLED;//lights
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -19,8 +21,6 @@ import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 
-
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -30,11 +30,13 @@ import frc.robot.subsystems.LawnMower;
  */
 public class Robot extends TimedRobot {
 
-  //Declare subsystems
+  // Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
-  public static ColorSensor colorSensor;
+  public static ColorSensorV3 colorSensor;
   public static OI oi;
+  private static double currentAngle;
+  private static final double smallTolerance = .1;
 
   /* //moved to LightStrip subsystem 
   //lights
@@ -60,7 +62,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     drivetrain = new DriveTrain();
-    colorSensor = new ColorSensor();
+    colorSensor = new ColorSensorV3(null);
     lawnmower = new LawnMower();
     oi = new OI();
     drivetrain.calibrateGyro();
@@ -107,8 +109,16 @@ public class Robot extends TimedRobot {
     tof1Previous = lawnmower.getTof1Distance();
     tof2Previous = lawnmower.getTof2Distance();
 
-
-
+    //Gyro stuff
+    if(drivetrain.getGyroReading()%360 == 0)
+    {
+      currentAngle = drivetrain.getGyroReading();
+    } else {
+      currentAngle = Math.abs(drivetrain.getGyroReading()%360);
+    }
+    System.out.println("Gyro Reading: " + drivetrain.getGyroReading());
+    System.out.println("Current Angle Reading: " + currentAngle);
+    
     //lights
 
   }
@@ -150,6 +160,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+  }
+
+  public static double getCurrentAngle() {
+    return currentAngle;
   }
 
   /* //moved to LightStrip subsystem 
