@@ -46,6 +46,8 @@ public class Robot extends TimedRobot {
   public static int LEDCount1=10;
   public static int LEDCount2=10;
   */
+  public static double tof1Previous;
+  public static double tof2Previous;
   
   //Declare autonomous command
   private Command autonomousCommand;
@@ -62,6 +64,8 @@ public class Robot extends TimedRobot {
     lawnmower = new LawnMower();
     oi = new OI();
     drivetrain.calibrateGyro();
+    tof1Previous = 0;
+    tof2Previous = 0;
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -100,6 +104,8 @@ public class Robot extends TimedRobot {
 //    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
+    tof1Previous = lawnmower.getTof1Distance();
+    tof2Previous = lawnmower.getTof2Distance();
 
 
 
