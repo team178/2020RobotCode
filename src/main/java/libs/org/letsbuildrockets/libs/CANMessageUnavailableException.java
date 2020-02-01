@@ -1,4 +1,4 @@
-package libs.tof.org.letsbuildrockets.libs;
+package libs.org.letsbuildrockets.libs;
 
 
 /**
