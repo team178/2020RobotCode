@@ -40,7 +40,7 @@ public class TimeOfFlightSensor {
 
     public TimeOfFlightSensor(int ID) {
         tofsensor = new CustomCAN("TOF"+String.valueOf(TOFCount), ID);
-        _firmwareVersion = new VersionNumber(1, 1); //changed firmware version
+        _firmwareVersion = new VersionNumber(0, 0); //changed firmware version
         _ID = ID;
         TOFCount++;
         packetTimer = new Timer();
