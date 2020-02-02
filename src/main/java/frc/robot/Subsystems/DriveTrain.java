@@ -49,14 +49,14 @@ public class DriveTrain extends SubsystemBase {
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
  
   public DriveTrain() {
-	  //DM initializations
-	  leftMaster = new TalonSRX(RobotMap.DMTopLeft);
+    //DM initializations
+    leftMaster = new TalonSRX(RobotMap.DMTopLeft);
     leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
-    leftSlave.set(ControlMode.Follower, RobotMap.DMTopLeft);
+    leftSlave.follow(leftMaster)
     
-	  rightMaster = new TalonSRX(RobotMap.DMTopRight);
+    rightMaster = new TalonSRX(RobotMap.DMTopRight);
     rightSlave = new VictorSPX(RobotMap.DMBottomRight);
-    rightSlave.set(ControlMode.Follower, RobotMap.DMTopRight);
+    rightSlave.follow(rightMaster)
 
     leftEncoder = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2, false);
     rightEncoder = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4, true);
