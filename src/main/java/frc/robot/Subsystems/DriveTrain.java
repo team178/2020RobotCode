@@ -86,7 +86,7 @@ public class DriveTrain extends SubsystemBase {
   }
   
   public void drive(double leftPower, double rightPower) {
-    leftMaster.set(ControlMode.PercentOutput, -leftPower);
+    leftMaster.set(ControlMode.PercentOutput, leftPower);
     rightMaster.set(ControlMode.PercentOutput, rightPower);
   }
 
