@@ -49,15 +49,27 @@ public class DriveTrain extends SubsystemBase {
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
  
   public DriveTrain() {
-    //DM initializations
-    leftMaster = new TalonSRX(RobotMap.DMTopLeft);
-    leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
-    leftSlave.follow(leftMaster)
-    
-    rightMaster = new TalonSRX(RobotMap.DMTopRight);
-    rightSlave = new VictorSPX(RobotMap.DMBottomRight);
-    rightSlave.follow(rightMaster)
+    //Init DMs
+	  leftMaster = new VictorSPX(RobotMap.DMTopLeft);
+	  leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
+	  rightMaster = new VictorSPX(RobotMap.DMTopRight);
+	  rightSlave = new VictorSPX(RobotMap.DMBottomRight);
+	  
+	  //Set victors to slaves
+	  leftSlave.follow(leftMaster);
+	  rightSlave.follow(rightMaster);
+	  
+	  //Config left motor & sensor directions
+	  leftMaster.setInverted(true);
+	  leftMaster.setSensorPhase(true);
+	  leftSlave.setInverted(InvertType.FollowMaster);
+	  
+	  //Config right motor & sensor directions
+	  rightMaster.setInverted(false);
+	  rightMaster.setSensorPhase(false);
+	  rightSlave.setInverted(InvertType.FollowMaster);
 
+    //Config encoders (?)
     leftEncoder = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2, false);
     rightEncoder = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4, true);
     
