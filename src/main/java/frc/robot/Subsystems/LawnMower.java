@@ -26,6 +26,9 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
+  private static int counter;
+  private static boolean inTrigger;
+  private static boolean outTrigger;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
@@ -36,6 +39,9 @@ public class LawnMower extends SubsystemBase {
     tof1 = new TimeOfFlightSensor(0x620);
     tof2 = new TimeOfFlightSensor(0x621);
     tof3 = new TimeOfFlightSensor(0x622);
+    counter = 0;
+    inTrigger = true;
+    outTrigger = false;
   }
 
   public void intakeBall (double speed) {
@@ -86,6 +92,30 @@ public class LawnMower extends SubsystemBase {
     return tof3.getDistance();
   }
   
+  public void addToCounter() {
+    if (tof1.getEdge() == "Leading" && inTrigger) {
+      counter++;
+      inTrigger = false;
+    }
+    if (tof1.getEdge() == "No ball" && !inTrigger) {
+      inTrigger = true;
+    }
+  }
+
+  public void removeFromCounter() {
+    if (tof3.getEdge() == "Leading" && !outTrigger) {
+      outTrigger = true;
+    }
+    if (tof3.getEdge() == "No ball" && outTrigger) {
+      counter--;
+      outTrigger = false;
+    }
+  }
+
+  public int getCounter() {
+    return counter;
+  }
+
   public void periodic() {
 
   }
