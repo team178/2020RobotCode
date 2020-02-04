@@ -10,7 +10,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorMatch;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,13 +32,70 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public static final Color Red = ColorMatch.makeColor(0.475, 0.371, 0.153);
   public static final Color Yellow = ColorMatch.makeColor(0.293, 0.561, 0.144);
   public static final Color Black = ColorMatch.makeColor(0,0,0);
+  private String gameData = DriverStation.getInstance().getGameSpecificMessage();
+  private Double spinPower = 0.0;
+
+  public Color findGameDataColor()
+  {
+    if(gameData.length() > 0)
+    {
+      switch (gameData.charAt(0))
+      {
+        case 'B' :
+          //Blue case code
+          break;
+        case 'G' :
+          //Green case code
+          break;
+        case 'R' :
+          //Red case code
+          break;
+        case 'Y' :
+          //Yellow case code
+          break;
+        default :
+          //This is corrupt data
+          break;
+      }
+    } else {
+      
+    }
+
+
+
+    if(gameData.length() > 0)
+    {
+      if(gameData.charAt(0) == 'B')
+      {
+        Color gameDataColor = Blue;
+        return Blue;
+      }
+
+      if(gameData.charAt(0) == 'G')
+      {
+        Color gameDataColor = Green;
+        return Green;
+      }
+
+      if(gameData.charAt(0) == 'R')
+      {
+        Color gameDataColor = Red;
+        return Red;
+      }
+
+      if(gameData.charAt(0) == 'Y')
+      {
+        Color gameDataColor = Yellow;
+        return Yellow;
+      }
+    }
+    return Black;
+  }
+ 
+ 
+  
   
 
-
-  public void spinToWin(double power) {
-    contestant.set(ControlMode.PercentOutput, power);
-  }
-    
   public String getColor() {
     Color c = colorsensor.detectColor();
     if (compareColors(c, Blue))
@@ -67,8 +124,17 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   
   public void periodic() {
+    contestant.set(ControlMode.PercentOutput,spinPower);
+    if(findGameDataColor() == Blue )
+    {
+      while ( colorsensor.detectColor() != Blue){//public static VictorSPX contestant = new VictorSPX(RobotMap.contestant);
+        //insert way to put spin moter here
+    } 
     SmartDashboard.putString("Color", getColor());
   }
 }
+}
+
+  
    
 

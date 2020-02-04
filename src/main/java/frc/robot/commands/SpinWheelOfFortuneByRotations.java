@@ -4,7 +4,7 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-
+/*
 package frc.robot.commands;
 
 import com.revrobotics.ColorMatchResult;
@@ -61,3 +61,4 @@ public class SpinWheelOfFortuneByRotations extends CommandBase {
     return true;
   }
 }
+*/
