@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
@@ -50,9 +51,9 @@ public class DriveTrain extends SubsystemBase {
  
   public DriveTrain() {
     //Init DMs
-	  leftMaster = new VictorSPX(RobotMap.DMTopLeft);
+	  leftMaster = new TalonSRX(RobotMap.DMTopLeft);
 	  leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
-	  rightMaster = new VictorSPX(RobotMap.DMTopRight);
+	  rightMaster = new TalonSRX(RobotMap.DMTopRight);
 	  rightSlave = new VictorSPX(RobotMap.DMBottomRight);
 	  
 	  //Set victors to slaves

@@ -112,6 +112,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
     SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
     SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
+    SmartDashboard.putString("Color", wheeloffortunecontestant.getColor());
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
 
