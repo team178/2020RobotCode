@@ -21,10 +21,16 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   private VictorSPX contestant;
   private ColorSensor colorsensor;
+  private double rot;
+  private String initColor;
+  private boolean countTrigger;
 
   public WheelOfFortuneContestant() {
     contestant = new VictorSPX(RobotMap.contestant);
     colorsensor = new ColorSensor();
+    rot = 0;
+    initColor = getColor();
+    countTrigger = false;
   }
 
   public static final Color Blue = ColorMatch.makeColor(0.136, 0.412, 0.450);
@@ -35,7 +41,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   private String gameData = DriverStation.getInstance().getGameSpecificMessage();
   private Double spinPower = 0.0;
 
-  public Color findGameDataColor()
+  public String findGameDataColor()
   {
     if(gameData.length() > 0)
     {
@@ -67,29 +73,29 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     {
       if(gameData.charAt(0) == 'B')
       {
-        Color gameDataColor = Blue;
-        return Blue;
+        String gameDataColor = "Blue";
+        return "Blue";
       }
 
       if(gameData.charAt(0) == 'G')
       {
-        Color gameDataColor = Green;
-        return Green;
+        String gameDataColor = "Green";
+        return "Green";
       }
 
       if(gameData.charAt(0) == 'R')
       {
-        Color gameDataColor = Red;
-        return Red;
+        String gameDataColor = "Red";
+        return "Red";
       }
 
       if(gameData.charAt(0) == 'Y')
       {
-        Color gameDataColor = Yellow;
-        return Yellow;
+        String gameDataColor = "Yellow";
+        return "Yellow";
       }
     }
-    return Black;
+    return "Black";
   }
  
  
@@ -120,12 +126,41 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return false;
   }
     
-    
+  public double getRotations() {
+    if (initColor == "No Color") {
+      initColor = getColor();
+      return 0;
+    } else if (initColor != getColor()) {
+      countTrigger = true;
+    } else if (getColor() == initColor && countTrigger) {
+      rot+=0.5;
+      countTrigger = false;
+    }
+    return rot;
+  }
+
+  public boolean rotationControl() {
+    if (getRotations() < 3) {
+      contestant.set(ControlMode.PercentOutput, 1);
+      return false;
+    }
+    contestant.set(ControlMode.PercentOutput, 0);
+    return true;
+  }
+
+  public boolean positionControl() {
+    if (findGameDataColor() == getColor()) {
+      contestant.set(ControlMode.PercentOutput, 0.5);
+      return true;
+    }
+    contestant.set(ControlMode.PercentOutput, 0);
+    return false;
+  }
 
   
   public void periodic() {
     contestant.set(ControlMode.PercentOutput,spinPower);
-    if(findGameDataColor() == Blue )
+    if(findGameDataColor() == "Blue" )
     {
       while ( colorsensor.detectColor() != Blue){//public static VictorSPX contestant = new VictorSPX(RobotMap.contestant);
         //insert way to put spin moter here
