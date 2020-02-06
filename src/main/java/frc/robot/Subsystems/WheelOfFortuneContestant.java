@@ -104,14 +104,22 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   public String getColor() {
     Color c = colorsensor.detectColor();
-    if (compareColors(c, Blue))
+    if (compareColors(c, Blue)) {
       return "Blue";
-    if (compareColors(c, Green))
+    }
+    if (compareColors(c, Green)) {
       return "Green";
-    if (compareColors(c, Red))
+    }
+    if (compareColors(c, Red)) {
       return "Red";
-    if (compareColors(c, Yellow))
+    }
+    if (compareColors(c, Yellow)) {
       return "Yellow";
+    }
+    if (compareColors(c, Black)) {
+      return "Black";
+    }
+
     return "No Color";
   }
 
@@ -127,7 +135,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   }
     
   public double getRotations() {
-    if (initColor == "No Color") {
+    if (initColor == "No Color" || initColor == "Black") {
       initColor = getColor();
       return 0;
     } else if (initColor != getColor()) {
@@ -142,6 +150,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public boolean rotationControl() {
     if (getRotations() < 3) {
       contestant.set(ControlMode.PercentOutput, 1);
+      return false;
+    } else if (getRotations() >= 5) {
+      contestant.set(ControlMode.PercentOutput, 1);
+      rot = 0;
       return false;
     }
     contestant.set(ControlMode.PercentOutput, 0);
@@ -159,15 +171,8 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   
   public void periodic() {
-    contestant.set(ControlMode.PercentOutput,spinPower);
-    if(findGameDataColor() == "Blue" )
-    {
-      while ( colorsensor.detectColor() != Blue){//public static VictorSPX contestant = new VictorSPX(RobotMap.contestant);
-        //insert way to put spin moter here
-    } 
-    SmartDashboard.putString("Color", getColor());
+    
   }
-}
 }
 
   
