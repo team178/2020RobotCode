@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.OI;
 import frc.robot.RobotMap;
 
 public class Climber extends SubsystemBase {
@@ -22,27 +23,37 @@ public class Climber extends SubsystemBase {
   private static VictorSPX leveler;
 
   public Climber() {
-    elevator = new DoubleSolenoid(RobotMap.hookThurst1,RobotMap.hookThrust2);
+    elevator = new DoubleSolenoid(RobotMap.hookThurst1, RobotMap.hookThrust2);
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
     leveler = new VictorSPX(RobotMap.leveler);
-    winchSlave.set(ControlMode.Follower, RobotMap.winchMaster);
+    winchSlave.follow(winchMaster);
   }
 
- // public void climb (double speed) {
-    
- // }
+  public void extendHook() {
+    elevator.set(DoubleSolenoid.Value.kForward);
+  }
 
-  public void moveWinch (double speed) {
+  public void retractHook() {
+    elevator.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  public void windWinch(double speed) {
     winchMaster.set(ControlMode.PercentOutput, speed);
   }
 
-  public void moveAlongBar (double speed) {
+  public void moveAlongBar(double speed) {
     leveler.set(ControlMode.PercentOutput, speed);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (OI.aux.rightBumper.get()) {
+      extendHook();
+    }
+    if (OI.aux.leftBumper.get()) {
+      retractHook();
+      windWinch(1);
+    }
   }
 }

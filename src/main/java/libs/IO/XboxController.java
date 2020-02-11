@@ -16,49 +16,49 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  */
 public class XboxController {
 
-    public static Joystick xbox;
-    public static Button auxA;
-    public static Button auxB;
-    public static Button auxX;
-    public static Button auxY;
-    public static Button auxLeftBumper;
-    public static Button auxRightBumper;
-    public static Button auxBack;
-    public static Button auxStart;
+    public static Joystick controller;
+    public Button a;
+    public Button b;
+    public Button x;
+    public Button y;
+    public Button leftBumper;
+    public Button rightBumper;
+    public Button back;
+    public Button start;
 
     public XboxController(int port) {
-        xbox = new Joystick(port);
-        auxA = new JoystickButton(xbox, 1);
-        auxB = new JoystickButton(xbox, 2);
-        auxX = new JoystickButton(xbox, 3);
-        auxY = new JoystickButton(xbox, 4);
-        auxLeftBumper = new JoystickButton(xbox, 5);
-        auxRightBumper = new JoystickButton(xbox, 6);
-        auxBack = new JoystickButton(xbox, 7);
-        auxStart = new JoystickButton(xbox, 8);
+        controller = new Joystick(port);
+        a = new JoystickButton(controller, 1);
+        b = new JoystickButton(controller, 2);
+        x = new JoystickButton(controller, 3);
+        y = new JoystickButton(controller, 4);
+        leftBumper = new JoystickButton(controller, 5);
+        rightBumper = new JoystickButton(controller, 6);
+        back = new JoystickButton(controller, 7);
+        start = new JoystickButton(controller, 8);
     }
 
     public double getLeftStickX() {
-	return xbox.getRawAxis(0);
+	return controller.getRawAxis(0);
     }
 	
     public double getLeftStickY() {
-	return xbox.getRawAxis(1);
+	return controller.getRawAxis(1);
     }
 	
     public double getRightStickX() {
-	return xbox.getRawAxis(4);
+	return controller.getRawAxis(4);
     }
 	
     public double getRightStickY() {
-	return xbox.getRawAxis(5);
+	return controller.getRawAxis(5);
     }
 	
     public double getLeftTrigger() {
-	return xbox.getRawAxis(2);
+	return controller.getRawAxis(2);
     }
 	
     public double getRightTrigger() {
-	return xbox.getRawAxis(3);
+	return controller.getRawAxis(3);
     }
 }

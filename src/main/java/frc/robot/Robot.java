@@ -9,11 +9,7 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3; //test commit hi
 
-import edu.wpi.first.wpilibj.AddressableLED;//lights
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -39,6 +35,8 @@ public class Robot extends TimedRobot { //yeet
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
   private static final double smallTolerance = .1;
+
+  public static joystick 
 
   /* //moved to LightStrip subsystem 
   //lights
