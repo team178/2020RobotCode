@@ -25,6 +25,7 @@ public class XboxController {
     public Button rightBumper;
     public Button back;
     public Button start;
+    public Direction direction; //DPAD direction 
 
     public XboxController(int port) {
         controller = new Joystick(port);
@@ -36,6 +37,55 @@ public class XboxController {
         rightBumper = new JoystickButton(controller, 6);
         back = new JoystickButton(controller, 7);
         start = new JoystickButton(controller, 8);
+        direction = this.getDirection(); 
+    }
+
+    public static enum Direction {
+        NONE(-1), TOP(0), TOPRIGHT(45), RIGHT(90), BOTTOMRIGHT (135), BOTTOM(180), BOTTOMLEFT(225), LEFT(270), TOPLEFT (315);
+
+        int direction;
+        private Direction(int direction) {
+            this.direction = direction;
+        }
+    }
+
+    public Direction getDirection()//gets DPAD direction
+    { 
+        int DPADVal = controller.getPOV();
+        if (DPADVal == 0)
+        {
+            return Direction.TOP;
+        }
+        else if (DPADVal == 45)
+        {
+            return Direction.TOPRIGHT;
+        }
+        else if (DPADVal == 90)
+        {
+            return Direction.RIGHT;
+        }
+        else if (DPADVal == 135)
+        {
+            return Direction.BOTTOMRIGHT;
+        }
+        else if (DPADVal == 180)
+        {
+            return Direction.BOTTOM;
+        }
+        else if (DPADVal == 225)
+        {
+            return Direction.BOTTOMLEFT;
+        }
+        else if (DPADVal == 270)
+        {
+            return Direction.LEFT; 
+        }
+        else if (DPADVal == 315)
+        {
+            return Direction.TOPLEFT;
+        }
+        return Direction.NONE;
+
     }
 
     public double getLeftStickX() {
@@ -59,6 +109,6 @@ public class XboxController {
     }
 	
     public double getRightTrigger() {
-	return controller.getRawAxis(3);
+    return controller.getRawAxis(3);
     }
 }
