@@ -22,7 +22,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   private VictorSPX contestant;
   private ColorSensor colorsensor;
   private double rot;
-  private String initColor;
+  private char initColor;
   private boolean countTrigger;
 
   public WheelOfFortuneContestant() {
@@ -33,100 +33,46 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     countTrigger = false;
   }
 
-  public static final Color Blue = ColorMatch.makeColor(0.136, 0.412, 0.450);
+  public static final Color Blue = ColorMatch.makeColor(0.153, 0.445, 0.402);
   public static final Color Green = ColorMatch.makeColor(0.196, 0.557, 0.246);
   public static final Color Red = ColorMatch.makeColor(0.475, 0.371, 0.153);
-  public static final Color Yellow = ColorMatch.makeColor(0.293, 0.561, 0.144);
+  public static final Color Yellow = ColorMatch.makeColor(0.319, 0.545, 0.136);
   public static final Color Black = ColorMatch.makeColor(0,0,0);
   private String gameData = DriverStation.getInstance().getGameSpecificMessage();
-  private Double spinPower = 0.0;
 
-  public String findGameDataColor()
-  {
-    if(gameData.length() > 0)
-    {
-      switch (gameData.charAt(0))
-      {
-        case 'B' :
-          //Blue case code
-          break;
-        case 'G' :
-          //Green case code
-          break;
-        case 'R' :
-          //Red case code
-          break;
-        case 'Y' :
-          //Yellow case code
-          break;
-        default :
-          //This is corrupt data
-          break;
-      }
-    } else {
-      
+  public char findGameDataColor() {
+    if(gameData.length() > 0) {
+      return gameData.charAt(0);
     }
-
-
-
-    if(gameData.length() > 0)
-    {
-      if(gameData.charAt(0) == 'B')
-      {
-        String gameDataColor = "Blue";
-        return "Blue";
-      }
-
-      if(gameData.charAt(0) == 'G')
-      {
-        String gameDataColor = "Green";
-        return "Green";
-      }
-
-      if(gameData.charAt(0) == 'R')
-      {
-        String gameDataColor = "Red";
-        return "Red";
-      }
-
-      if(gameData.charAt(0) == 'Y')
-      {
-        String gameDataColor = "Yellow";
-        return "Yellow";
-      }
-    }
-    return "Black";
+    return 'N';
   }
  
  
   
   
 
-  public String getColor() {
+  public char getColor() {
     Color c = colorsensor.detectColor();
     if (compareColors(c, Blue)) {
-      return "Blue";
+      return 'B';
     }
     if (compareColors(c, Green)) {
-      return "Green";
+      return 'G';
     }
     if (compareColors(c, Red)) {
-      return "Red";
+      return 'R';
     }
     if (compareColors(c, Yellow)) {
-      return "Yellow";
-    }
-    if (compareColors(c, Black)) {
-      return "Black";
+      return 'Y';
     }
 
-    return "No Color";
+    return 'N';
   }
 
   public boolean compareColors(Color a, Color b) {
-    if ((a.red < b.red + 0.02) && (a.red > b.red - 0.02)) {
-      if ((a.green < b.green + 0.02) && (a.green > b.green - 0.02)) {
-        if ((a.blue < b.blue + 0.02) && (a.blue > b.blue - 0.02)) {
+    if ((a.red < b.red + 0.045) && (a.red > b.red - 0.045)) {
+      if ((a.green < b.green + 0.045) && (a.green > b.green - 0.045)) {
+        if ((a.blue < b.blue + 0.045) && (a.blue > b.blue - 0.045)) {
           return true;
         }
       } 
@@ -135,38 +81,57 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   }
     
   public double getRotations() {
-    if (initColor == "No Color" || initColor == "Black") {
+    if (initColor == 'N') {
       initColor = getColor();
       return 0;
-    } else if (initColor != getColor()) {
-      countTrigger = true;
-    } else if (getColor() == initColor && countTrigger) {
-      rot+=0.5;
-      countTrigger = false;
     }
+
+    if (initColor != getColor() && getColor() != 'N') {
+      countTrigger = true;
+    }
+
+    if (countTrigger) {
+      if (initColor == getColor()) {
+        rot += 0.5;
+        countTrigger = false;
+      }
+
+      if (rot >= 5) {
+        rot = 0;
+      }
+    }
+    
     return rot;
   }
 
-  public boolean rotationControl() {
-    if (getRotations() < 3) {
-      contestant.set(ControlMode.PercentOutput, 1);
-      return false;
-    } else if (getRotations() >= 5) {
-      contestant.set(ControlMode.PercentOutput, 1);
-      rot = 0;
+  public boolean rotationControl(int desiredRotations) {
+    if (getRotations() < desiredRotations) {
       return false;
     }
-    contestant.set(ControlMode.PercentOutput, 0);
     return true;
   }
 
   public boolean positionControl() {
-    if (findGameDataColor() == getColor()) {
-      contestant.set(ControlMode.PercentOutput, 0.5);
-      return true;
+    if (findGameDataColor() != getColor() || findGameDataColor() == 'N') {
+      return false;
     }
-    contestant.set(ControlMode.PercentOutput, 0);
-    return false;
+    return true;
+  }
+
+  public void spinRC() {
+    if (!rotationControl(3)) {
+      contestant.set(ControlMode.PercentOutput, 1);
+    } else {
+      contestant.set(ControlMode.PercentOutput, 0);
+    }
+  }
+
+  public void spinPC() {
+    if (!positionControl()) {
+      contestant.set(ControlMode.PercentOutput, 1);
+    } else {
+      contestant.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   
