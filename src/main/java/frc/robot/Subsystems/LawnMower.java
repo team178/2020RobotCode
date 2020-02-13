@@ -44,6 +44,26 @@ public class LawnMower extends SubsystemBase {
     outTrigger = false;
   }
 
+  public void ballDump(double speed) {
+    if (getCounter() != 0) {
+      intakeBall(speed);
+    } else {
+      intakeBall(0);
+    }
+  }
+
+  public void runMower(double speed) {
+    if (getCounter() < 4) {
+      if (!tof1.getEdge().equals("No ball")) {
+        intakeBall(speed);
+      } else if (tof2.getEdge().equals("Center")) {
+        intakeBall(0);
+      }
+    } else {
+      intakeBall(0);
+    }
+  } 
+
   public void intakeBall (double speed) {
     intake.set(ControlMode.PercentOutput, speed);
   }
@@ -93,28 +113,38 @@ public class LawnMower extends SubsystemBase {
   }
   
   public void addToCounter() {
-    if (tof1.getEdge() == "Leading" && inTrigger) {
+    if (tof1.getEdge().equals("Leading") && inTrigger) {
       counter++;
       inTrigger = false;
     }
-    if (tof1.getEdge() == "No ball" && !inTrigger) {
+    if (tof1.getEdge().equals("No ball") && !inTrigger) {
       inTrigger = true;
     }
   }
 
   public void removeFromCounter() {
-    if (tof3.getEdge() == "Leading" && !outTrigger) {
+    if (!(tof3.getEdge().equals("No ball")) && !outTrigger) {
       outTrigger = true;
     }
-    if (tof3.getEdge() == "No ball" && outTrigger) {
+    if (tof3.getEdge().equals("No ball") && outTrigger) {
       counter--;
       outTrigger = false;
     }
   }
 
+  public void counterFixer() {
+    while (counter < 0) {
+      counter ++;
+    }
+  }
+
   public int getCounter() {
+    addToCounter();
+    removeFromCounter();
     return counter;
   }
+
+  // should only have to apply "ballDump", "runMower", "extendIntake" & "retractIntake" to buttons/triggers
 
   public void periodic() {
 
