@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 import libs.IO.ColorSensor;
 
@@ -38,19 +39,15 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public static final Color Red = ColorMatch.makeColor(0.475, 0.371, 0.153);
   public static final Color Yellow = ColorMatch.makeColor(0.319, 0.545, 0.136);
   public static final Color Black = ColorMatch.makeColor(0,0,0);
-  private String gameData = DriverStation.getInstance().getGameSpecificMessage();
 
   public char findGameDataColor() {
+    String gameData = Robot.gameData;
     if(gameData.length() > 0) {
       return gameData.charAt(0);
     }
     return 'N';
   }
  
- 
-  
-  
-
   public char getColor() {
     Color c = colorsensor.detectColor();
     if (compareColors(c, Blue)) {
@@ -133,6 +130,8 @@ public class WheelOfFortuneContestant extends SubsystemBase {
       contestant.set(ControlMode.PercentOutput, 0);
     }
   }
+
+  // should only have to apply "spinPC" and "spinRC" to buttons/triggers
 
   
   public void periodic() {

@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.revrobotics.ColorSensorV3; //test commit hi
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,7 +37,7 @@ public class Robot extends TimedRobot { //yeet
   private static double currentAngle;
   private static final double smallTolerance = .1;
 
-  public static joystick 
+  public static String gameData;
 
   /* //moved to LightStrip subsystem 
   //lights
@@ -67,6 +68,7 @@ public class Robot extends TimedRobot { //yeet
     oi = new OI();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
     drivetrain.calibrateGyro();
+    gameData = "";
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
@@ -98,6 +100,8 @@ public class Robot extends TimedRobot { //yeet
    */
   @Override
   public void robotPeriodic() {
+    
+    gameData = DriverStation.getInstance().getGameSpecificMessage();
     drivetrain.calibrateGyro();
     lawnmower.updateTof1Distance();
     lawnmower.updateTof2Distance();
