@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.OI;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class Climber extends SubsystemBase {
@@ -48,10 +48,10 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (OI.aux.rightBumper.get()) {
+    if (Robot.auxController.rightBumper.get()) {
       extendHook();
     }
-    if (OI.aux.leftBumper.get()) {
+    if (Robot.auxController.leftBumper.get()) {
       retractHook();
       windWinch(1);
     }

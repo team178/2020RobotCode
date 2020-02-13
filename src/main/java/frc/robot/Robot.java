@@ -11,13 +11,14 @@ import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-//import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.WheelOfFortuneContestant;
+import libs.IO.ThrustmasterJoystick;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -32,13 +33,16 @@ public class Robot extends TimedRobot {
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
   public static ColorSensorV3 colorSensor;
-  public static OI oi;
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
 
   public static String gameData;
   public static double tof1Previous;
   public static double tof2Previous;
+
+  //Declare joysticks
+  public static ThrustmasterJoystick mainController;
+	public static XboxController auxController;
   
   //Declare autonomous command
   //private Command autonomousCommand;
@@ -53,7 +57,6 @@ public class Robot extends TimedRobot {
     drivetrain = new DriveTrain();
     colorSensor = new ColorSensorV3(null);
     lawnmower = new LawnMower();
-    oi = new OI();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
     drivetrain.calibrateGyro();
     gameData = "";
@@ -61,6 +64,9 @@ public class Robot extends TimedRobot {
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
     
+    //init joysticks
+    mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
+  	auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
   }
 
   /**

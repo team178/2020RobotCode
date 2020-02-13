@@ -12,23 +12,67 @@ import edu.wpi.first.wpilibj.util.Units;
 /**
  * Add your docs here.
  */
-public class Constants {
+public final class Constants {
 
-    //Drive constants
-    public static double WHEEL_CIRCUMFRENCE = Units.inchesToMeters(6) * Math.PI;
-    public static double ENCODER_TICKS = 1024;
-    public static double TRACK_WIDTH_METERS = 7.239;
-    public static double ENCODER_DPP = WHEEL_CIRCUMFRENCE / ENCODER_TICKS;
+    public static class RobotMap {
+        //CAN
+        public static int PCM = 0;
+        public static int DMLeftMaster = 1;
+        public static int DMLeftSlave = 2;
+        public static int DMRightMaster = 3;
+        public static int DMRightSlave = 4;
+        public static int intake = 5;
+        
+        public static int hookThrust1 = 2;
+        public static int hookThrust2= 6;
+        public static int contestant = 11; //jeff ;( 12:50-12:53 T.O.D 2/1/20
+        public static int winchMaster = 12;
+        public static int winchSlave = 13;
+        public static int leveler = 14;
 
-    //Pathplanning constants
-    public static double MAX_VELOCITY_MPS = 0;
-    public static double MAX_ACCEL_MPSPS = 0;
-    public static double OPTIMAL_DRIVE_KP = 0;
-    
-    public static double kS = 0;
-    public static double kV = 0;
-    public static double kA = 0;
-    
-    public static double RAMSETE_B = 0;
-    public static double RAMSETE_ZETA = 0;
+        //idk what to do with these
+        public static int encoder1 = 5;
+        public static int encoder2 = 6;
+        public static int encoder3 = 7;
+        public static int encoder4 = 8;
+
+        //PCM
+        public static int deployerForward = 0;
+        public static int deployerReverse = 1;
+        
+        //Computer USB ports
+        public static int ActualJoystick = 0;
+        public static int JoystickPortXBoxAux = 1; 
+        public static int JoystickPortXBoxMain = 2;
+
+        //Lawnmower
+        public static int intakeMotor = 5; 
+        public static int intakeDeployer1= 0;
+        public static int intakeDeplyer2 = 1;
+        public static int timeOfFlightSensor1 = 0x621;
+    }
+
+    public static class PathConstants {
+        //Misc
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(6) * Math.PI;
+        public static double kEncoderTicks = 1024;
+        public static double kEncoderDPP = kWheelDiameterMeters / kEncoderTicks;
+
+        public static final double kTrackWidthMeters = Units.inchesToMeters(23.75);
+        public static final double kMaxVelMPS = 0;
+        public static final double kMaxAccelMPSPS = 0;
+        public static final double kMaxVoltage = 10;
+
+        //Feedforward gains
+        public static final double kS = 0;
+        public static final double kV = 0;
+        public static final double kA = 0;
+
+        //Feedback gains
+        public static final double kDriveP = 0;
+
+        //Ramsete
+        public static final double kRamseteB = 0;
+        public static final double kRamseteZeta = 0;
+    }
 }

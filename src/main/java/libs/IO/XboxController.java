@@ -41,7 +41,15 @@ public class XboxController {
     }
 
     public static enum Direction {
-        NONE(-1), TOP(0), TOPRIGHT(45), RIGHT(90), BOTTOMRIGHT (135), BOTTOM(180), BOTTOMLEFT(225), LEFT(270), TOPLEFT (315);
+        NONE(-1), 
+        TOP(0), 
+        TOP_RIGHT(45), 
+        RIGHT(90), 
+        BOTTOM_RIGHT(135), 
+        BOTTOM(180), 
+        BOTTOM_LEFT(225), 
+        LEFT(270), 
+        TOP_LEFT(315);
 
         int direction;
         private Direction(int direction) {
@@ -49,43 +57,18 @@ public class XboxController {
         }
     }
 
-    public Direction getDirection()//gets DPAD direction
-    { 
-        int DPADVal = controller.getPOV();
-        if (DPADVal == 0)
-        {
-            return Direction.TOP;
+    public Direction getDirection() {
+        switch (controller.getPOV()) {
+            case 0 : return Direction.TOP;
+            case 45 : return Direction.TOP_RIGHT;
+            case 90 : return Direction.RIGHT;
+            case 135 : return Direction.BOTTOM_RIGHT;
+            case 180 : return Direction.BOTTOM;
+            case 225 : return Direction.BOTTOM_LEFT;
+            case 270 : return Direction.LEFT;
+            case 315 : return Direction.TOP_LEFT;
+            default : return Direction.NONE;
         }
-        else if (DPADVal == 45)
-        {
-            return Direction.TOPRIGHT;
-        }
-        else if (DPADVal == 90)
-        {
-            return Direction.RIGHT;
-        }
-        else if (DPADVal == 135)
-        {
-            return Direction.BOTTOMRIGHT;
-        }
-        else if (DPADVal == 180)
-        {
-            return Direction.BOTTOM;
-        }
-        else if (DPADVal == 225)
-        {
-            return Direction.BOTTOMLEFT;
-        }
-        else if (DPADVal == 270)
-        {
-            return Direction.LEFT; 
-        }
-        else if (DPADVal == 315)
-        {
-            return Direction.TOPLEFT;
-        }
-        return Direction.NONE;
-
     }
 
     public double getLeftStickX() {
