@@ -7,11 +7,11 @@
 
 package frc.robot;
 
-import com.revrobotics.ColorSensorV3; //test commit hi
+import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj2.command.Command;
+//import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.autonomous.AutonomousSelector;
@@ -26,7 +26,7 @@ import frc.robot.subsystems.WheelOfFortuneContestant;
  * creating this project, you must also update the build.gradle file in the
  * project....
  */
-public class Robot extends TimedRobot { //yeet
+public class Robot extends TimedRobot {
 
   // Declare subsystems
   public static DriveTrain drivetrain;
@@ -35,25 +35,13 @@ public class Robot extends TimedRobot { //yeet
   public static OI oi;
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
-  private static final double smallTolerance = .1;
 
   public static String gameData;
-
-  /* //moved to LightStrip subsystem 
-  //lights
-  public static DriverStation ds;
-  public static AddressableLED LEDStrip1;
-  public static AddressableLED LEDStrip2;
-  public static AddressableLEDBuffer AddressableLEDBuffer1;
-  public static AddressableLEDBuffer AddressableLEDBuffer2;
-  public static int LEDCount1=10;
-  public static int LEDCount2=10;
-  */
   public static double tof1Previous;
   public static double tof2Previous;
   
   //Declare autonomous command
-  private Command autonomousCommand;
+  //private Command autonomousCommand;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -72,21 +60,6 @@ public class Robot extends TimedRobot { //yeet
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
-
-    /* //moved to LightStrip subsystem 
-    //lights
-    ds = DriverStation.getInstance();
-    LEDStrip1= new AddressableLED(9);
-    LEDStrip2= new AddressableLED(8);
-    AddressableLEDBuffer1= new AddressableLEDBuffer(LEDCount1);
-    AddressableLEDBuffer2= new AddressableLEDBuffer(LEDCount2);
-    LEDStrip1.setLength(AddressableLEDBuffer1.getLength());
-    LEDStrip2.setLength(AddressableLEDBuffer2.getLength());
-    LEDStrip1.setData(AddressableLEDBuffer1);
-    LEDStrip2.setData(AddressableLEDBuffer2);
-    LEDStrip1.start();
-    LEDStrip2.start();
-    */
     
   }
 
@@ -114,7 +87,7 @@ public class Robot extends TimedRobot { //yeet
     SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
     SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
     SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
-    SmartDashboard.putString("Color", wheeloffortunecontestant.getColor());
+//    SmartDashboard.putString("Color", wheeloffortunecontestant.getColor()); This code no longer works, because getColor now returns a char
     System.out.println("Gyro reading:" + drivetrain.getGyroReading());
     drivetrain.resetGyro();
 
@@ -127,8 +100,6 @@ public class Robot extends TimedRobot { //yeet
     }
     System.out.println("Gyro Reading: " + drivetrain.getGyroReading());
     System.out.println("Current Angle Reading: " + currentAngle);
-    
-    //lights
 
   }
 
@@ -174,26 +145,4 @@ public class Robot extends TimedRobot { //yeet
   public static double getCurrentAngle() {
     return currentAngle;
   }
-
-  /* //moved to LightStrip subsystem 
-  //lights
-  public void lightsaber(){
-    boolean isRed = ds.getAlliance() != Alliance.Blue;
-
-    if(isRed == true){
-      for(var height=0; height<LEDCount1; height++){
-        AddressableLEDBuffer1.setRGB(height, 99,0,0);
-        //AddressableLEDBuffer1.delay(20);  FIND DELAY FUNCTION
-        LEDStrip1.setData(AddressableLEDBuffer1);
-      }
-    }
-    else if(isRed == false){
-      for(var height=0; height<LEDCount1; height++){
-        AddressableLEDBuffer1.setRGB(height,31,235,253);
-        //FIND Delay Function
-        LEDStrip1.setData(AddressableLEDBuffer1);
-      }
-    }
-  }
-  */
 }
