@@ -51,10 +51,10 @@ public class DriveTrain extends SubsystemBase {
  
   public DriveTrain() {
     //Init DMs
-	  leftMaster = new TalonSRX(RobotMap.DMTopLeft);
-	  leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
-	  rightMaster = new TalonSRX(RobotMap.DMTopRight);
-	  rightSlave = new VictorSPX(RobotMap.DMBottomRight);
+	  leftMaster = new TalonSRX(RobotMap.DMLeftMaster);
+	  leftSlave = new VictorSPX(RobotMap.DMLeftSlave);
+	  rightMaster = new TalonSRX(RobotMap.DMRightMaster);
+	  rightSlave = new VictorSPX(RobotMap.DMRightSlave);
 	  
 	  //Set victors to slaves
 	  leftSlave.follow(leftMaster);

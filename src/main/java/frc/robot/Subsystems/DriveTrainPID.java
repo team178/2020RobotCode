@@ -35,15 +35,15 @@ public class DriveTrainPID extends PIDSubsystem {
   public DriveTrainPID() {
     super(new PIDController(0, 0, 0)); //We need to test and refine these values
 
-    leftMaster = new TalonSRX(RobotMap.DMTopLeft);
-    leftSlave = new VictorSPX(RobotMap.DMBottomLeft);
-    leftSlave.set(ControlMode.Follower, RobotMap.DMTopLeft);
+    leftMaster = new TalonSRX(RobotMap.DMLeftMaster);
+    leftSlave = new VictorSPX(RobotMap.DMLeftSlave);
+    leftSlave.set(ControlMode.Follower, RobotMap.DMLeftMaster);
     leftEncoder = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2);
     leftMaster.setInverted(true);
 
-	  rightMaster = new TalonSRX(RobotMap.DMTopRight);
-    rightSlave = new VictorSPX(RobotMap.DMBottomRight);
-    rightSlave.set(ControlMode.Follower, RobotMap.DMTopRight);
+	  rightMaster = new TalonSRX(RobotMap.DMRightMaster);
+    rightSlave = new VictorSPX(RobotMap.DMRightSlave);
+    rightSlave.set(ControlMode.Follower, RobotMap.DMRightMaster);
     rightEncoder = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4);
     rightMaster.setInverted(false);
   }
