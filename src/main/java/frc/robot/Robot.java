@@ -11,7 +11,6 @@ import com.revrobotics.ColorSensorV3;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.autonomous.AutonomousSelector;
@@ -19,6 +18,7 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import libs.IO.ThrustmasterJoystick;
+import libs.IO.XboxController;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -66,7 +66,7 @@ public class Robot extends TimedRobot {
     
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
-  	auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
+    auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
   }
 
   /**

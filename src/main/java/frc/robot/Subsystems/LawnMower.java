@@ -29,19 +29,21 @@ public class LawnMower extends SubsystemBase {
   private static int counter;
   private static boolean inTrigger;
   private static boolean outTrigger;
+  private static boolean solenoidTrigger;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
-    deployer = new DoubleSolenoid(RobotMap.deployerForward, RobotMap.deployerReverse);
+    deployer = new DoubleSolenoid(RobotMap.LMdeployerForward, RobotMap.LMdeployerReverse);
     tof1 = new TimeOfFlightSensor(0x620);
     tof2 = new TimeOfFlightSensor(0x621);
     tof3 = new TimeOfFlightSensor(0x622);
     counter = 0;
     inTrigger = true;
     outTrigger = false;
+    solenoidTrigger = false;
   }
 
   public void ballDump(double speed) {
@@ -147,6 +149,26 @@ public class LawnMower extends SubsystemBase {
   // should only have to apply "ballDump", "runMower", "extendIntake" & "retractIntake" to buttons/triggers
 
   public void periodic() {
+    if (!Robot.auxController.leftBumper.get()) {
+      solenoidTrigger = true;
+    }
+    
+    if (Robot.auxController.leftBumper.get()) {
+      if (deployer.get() == DoubleSolenoid.Value.kForward) {
+        retractIntake();
+      } else {
+        extendIntake();
+      }
+      solenoidTrigger = false;
+    }
+
+    if (Robot.auxController.getLeftTrigger() != 0) {
+      ballDump(Robot.auxController.getLeftTrigger());
+    }
+    
+    if (Robot.auxController.getRightTrigger() != 0) {
+      runMower(Robot.auxController.getRightTrigger());
+    }
+  }
 
   }
-}
