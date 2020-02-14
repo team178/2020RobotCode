@@ -8,12 +8,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.*;
 
 public class MoveToAngle extends CommandBase {
-    private OI oi;
     private DriveTrain drivetrain;
     private static double currentAngle;
     private static double desiredAngle;
@@ -27,7 +25,6 @@ public class MoveToAngle extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      oi = Robot.oi;
       drivetrain = Robot.drivetrain;
   }
 

@@ -8,13 +8,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.OI;
 import frc.robot.Robot;
 import frc.robot.subsystems.DriveTrain;
 
 public class Move90Degrees extends CommandBase {
   
-  private OI oi;
   private DriveTrain drivetrain;
   private static double increment = 90;
   private static final double tolerance = 5;
@@ -26,7 +24,6 @@ public class Move90Degrees extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      oi = Robot.oi;
       drivetrain = Robot.drivetrain;
   }
 
