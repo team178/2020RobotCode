@@ -33,10 +33,8 @@ public class RobotMap {
     public static int Encoder4 = 8;
 
     //PCM
-    public static int LMdeployerForward = 0;
-    public static int LMdeployerReverse = 1;
-    public static int WOFdeployerForward = 2; // check these two values
-    public static int WOFdeployerReverse = 3;
+    public static int LMdeployer = 0;
+    public static int WOFdeployer = 1;
     
     //Computer USB ports
     public static int ActualJoystick = 0;

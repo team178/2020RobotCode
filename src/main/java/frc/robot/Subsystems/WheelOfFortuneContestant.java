@@ -11,7 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorMatch;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -21,7 +21,7 @@ import libs.IO.ColorSensor;
 public class WheelOfFortuneContestant extends SubsystemBase {
 
   private VictorSPX contestant;
-  private DoubleSolenoid deployer;
+  private Solenoid deployer;
   private ColorSensor colorsensor;
   private double rot;
   private char initColor;
@@ -30,7 +30,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   public WheelOfFortuneContestant() {
     contestant = new VictorSPX(RobotMap.contestant);
-    deployer = new DoubleSolenoid(RobotMap.WOFdeployerForward, RobotMap.WOFdeployerReverse);
+    deployer = new Solenoid(RobotMap.WOFdeployer);
     colorsensor = new ColorSensor();
     rot = 0;
     initColor = getColor();
@@ -45,11 +45,11 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public static final Color Black = ColorMatch.makeColor(0,0,0);
 
   public void extendContestant() {
-    deployer.set(DoubleSolenoid.Value.kForward); // Might be kReverse, test
+    deployer.set(true);
   }
 
   public void retractContestant() {
-    deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
+    deployer.set(false);
   }
   
   public char findGameDataColor() {
@@ -151,8 +151,8 @@ public class WheelOfFortuneContestant extends SubsystemBase {
       solenoidTrigger = true;
     }
     
-    if (Robot.auxController.rightBumper.get()) {
-      if (deployer.get() == DoubleSolenoid.Value.kForward) {
+    if (Robot.auxController.rightBumper.get() && solenoidTrigger) {
+      if (deployer.get()) {
         retractContestant();
       } else {
         extendContestant();

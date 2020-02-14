@@ -15,14 +15,13 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import libs.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LawnMower extends SubsystemBase {
   
   private static VictorSPX intake;
-  private static DoubleSolenoid deployer;
+  private static Solenoid deployer;
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
@@ -36,7 +35,7 @@ public class LawnMower extends SubsystemBase {
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
-    deployer = new DoubleSolenoid(RobotMap.LMdeployerForward, RobotMap.LMdeployerReverse);
+    deployer = new Solenoid(RobotMap.LMdeployer);
     tof1 = new TimeOfFlightSensor(0x620);
     tof2 = new TimeOfFlightSensor(0x621);
     tof3 = new TimeOfFlightSensor(0x622);
@@ -71,11 +70,11 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void extendIntake() {
-    deployer.set(DoubleSolenoid.Value.kForward); // Might be kReverse, test
+    deployer.set(true);
   }
 
   public void retractIntake() {
-    deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
+    deployer.set(false);
   }
 
   public void updateTof1Distance() {
@@ -153,8 +152,8 @@ public class LawnMower extends SubsystemBase {
       solenoidTrigger = true;
     }
     
-    if (Robot.auxController.leftBumper.get()) {
-      if (deployer.get() == DoubleSolenoid.Value.kForward) {
+    if (Robot.auxController.leftBumper.get() && solenoidTrigger) {
+      if (deployer.get()) {
         retractIntake();
       } else {
         extendIntake();
