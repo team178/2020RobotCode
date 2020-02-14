@@ -36,9 +36,9 @@ public class LawnMower extends SubsystemBase {
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
     deployer = new Solenoid(RobotMap.LMdeployer);
-    tof1 = new TimeOfFlightSensor(0x620);
-    tof2 = new TimeOfFlightSensor(0x621);
-    tof3 = new TimeOfFlightSensor(0x622);
+    tof1 = new TimeOfFlightSensor(0x623);
+    tof2 = new TimeOfFlightSensor(0x620);
+    tof3 = new TimeOfFlightSensor(0x624);
     counter = 0;
     inTrigger = true;
     outTrigger = false;

@@ -33,8 +33,8 @@ public class RobotMap {
     public static int Encoder4 = 8;
 
     //PCM
-    public static int LMdeployer = 0;
-    public static int WOFdeployer = 1;
+    public static int LMdeployer = 2;
+    public static int WOFdeployer = 3;
     
     //Computer USB ports
     public static int ActualJoystick = 0;
