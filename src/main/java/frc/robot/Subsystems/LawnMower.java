@@ -56,12 +56,12 @@ public class LawnMower extends SubsystemBase {
   public void runMower(double speed) {
     if (getCounter() < 4) {
       if (!tof1.getEdge().equals("No ball")) {
-        intakeBall(speed);
+        intakeBall(0.5*speed);
       } else if (tof2.getEdge().equals("Center")) {
         intakeBall(0);
       }
     } else {
-      intakeBall(0);
+      intakeBall(0.5*speed);
     }
   } 
 
