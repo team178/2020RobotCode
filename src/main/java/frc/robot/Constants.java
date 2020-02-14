@@ -55,7 +55,7 @@ public final class Constants {
     public static class PathConstants {
         //Misc
         public static final double kWheelDiameterMeters = Units.inchesToMeters(6) * Math.PI;
-        public static double kEncoderTicks = 1024;
+        public static final double kEncoderTicks = 1024;
         public static double kEncoderDPP = kWheelDiameterMeters / kEncoderTicks;
 
         public static final double kTrackWidthMeters = Units.inchesToMeters(23.75);

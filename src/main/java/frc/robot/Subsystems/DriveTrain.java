@@ -22,9 +22,8 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.RobotMap;
-
 /**
  * Add your docs here.
  */
@@ -46,7 +45,7 @@ public class DriveTrain extends SubsystemBase {
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
 
   //Autonomous path planning
-  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(Constants.TRACK_WIDTH_METERS);
+  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(PathConstants.kTrackWidthMeters);
   private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
  
   public DriveTrain() {
@@ -74,8 +73,8 @@ public class DriveTrain extends SubsystemBase {
     leftEncoder = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2, false);
     rightEncoder = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4, true);
     
-    leftEncoder.setDistancePerPulse(Constants.ENCODER_DPP);
-    rightEncoder.setDistancePerPulse(Constants.ENCODER_DPP);
+    leftEncoder.setDistancePerPulse(PathConstants.kEncoderDPP);
+    rightEncoder.setDistancePerPulse(PathConstants.kEncoderDPP);
   }
 
   public double getLeftDistance() {

@@ -10,8 +10,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.ColorMatch;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
@@ -21,17 +21,21 @@ import libs.IO.ColorSensor;
 public class WheelOfFortuneContestant extends SubsystemBase {
 
   private VictorSPX contestant;
+  private DoubleSolenoid deployer;
   private ColorSensor colorsensor;
   private double rot;
   private char initColor;
   private boolean countTrigger;
+  private boolean solenoidTrigger;
 
   public WheelOfFortuneContestant() {
     contestant = new VictorSPX(RobotMap.contestant);
+    deployer = new DoubleSolenoid(RobotMap.WOFdeployerForward, RobotMap.WOFdeployerReverse);
     colorsensor = new ColorSensor();
     rot = 0;
     initColor = getColor();
     countTrigger = false;
+    solenoidTrigger = false;
   }
 
   public static final Color Blue = ColorMatch.makeColor(0.153, 0.445, 0.402);
@@ -40,6 +44,14 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public static final Color Yellow = ColorMatch.makeColor(0.319, 0.545, 0.136);
   public static final Color Black = ColorMatch.makeColor(0,0,0);
 
+  public void extendContestant() {
+    deployer.set(DoubleSolenoid.Value.kForward); // Might be kReverse, test
+  }
+
+  public void retractContestant() {
+    deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
+  }
+  
   public char findGameDataColor() {
     String gameData = Robot.gameData;
     if(gameData.length() > 0) {
@@ -133,10 +145,30 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   // should only have to apply "spinPC" and "spinRC" to buttons/triggers
 
-  
+  @Override
   public void periodic() {
+    if (!Robot.auxController.rightBumper.get()) {
+      solenoidTrigger = true;
+    }
     
+    if (Robot.auxController.rightBumper.get()) {
+      if (deployer.get() == DoubleSolenoid.Value.kForward) {
+        retractContestant();
+      } else {
+        extendContestant();
+      }
+      solenoidTrigger = false;
+    }
+
+    if (Robot.auxController.a.get()) {
+      spinRC();
+    }
+    
+    if (Robot.auxController.x.get()) {
+      spinPC();
+    }
   }
+
 }
 
   
