@@ -18,6 +18,10 @@ public class RobotMap {
     public static int DMRightMaster = 3;
     public static int DMRightSlave = 4;
     public static int intake = 5;
+    public static int conveyorTop = 6;
+    public static int conveyorBottom = 7;
+    public static int shooterLeft = 8;
+    public static int shooterRight = 9;
     public static int contestant = 11; //jeff ;( 12:50-12:53 T.O.D 2/1/20
 
     public static int hookThurst1 = 2;

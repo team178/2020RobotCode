@@ -23,6 +23,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LawnMower extends SubsystemBase {
   
   private static VictorSPX intake;
+  private static VictorSPX conveyorTop;
+  private static VictorSPX conveyorBottom;
+  private static VictorSPX shooterLeft;
+  private static VictorSPX shooterRight;
   private static Solenoid deployer;
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
@@ -35,6 +39,10 @@ public class LawnMower extends SubsystemBase {
 
   public LawnMower() {
     intake = new VictorSPX(RobotMap.intake);
+    conveyorTop = new VictorSPX(RobotMap.conveyorTop);
+    conveyorBottom = new VictorSPX(RobotMap.conveyorBottom);
+    shooterLeft = new VictorSPX(RobotMap.shooterLeft);
+    shooterRight = new VictorSPX(RobotMap.shooterRight);
     deployer = new Solenoid(RobotMap.LMdeployer);
     tof1 = new TimeOfFlightSensor(0x623);
     tof2 = new TimeOfFlightSensor(0x620);
@@ -47,16 +55,16 @@ public class LawnMower extends SubsystemBase {
 
   public void ballDump(double speed) {
     if (getCounter() != 0) {
-      intakeBall(speed);
+      moveAllMotors(speed);
     } else {
-      intakeBall(0);
+      moveAllMotors(0);
     }
   }
 
   public void runMower(double speed) {
     if (getCounter() < 4) {
       if (!tof1.getEdge().equals("No ball")) {
-        intakeBall(0.5*speed);
+        intakeBall(speed);
       } else if (tof2.getEdge().equals("Center")) {
         intakeBall(0);
       }
@@ -67,6 +75,22 @@ public class LawnMower extends SubsystemBase {
 
   public void intakeBall (double speed) {
     intake.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void moveConveyor(double speed) {
+    conveyorTop.set(ControlMode.PercentOutput, speed);
+    conveyorBottom.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void shoot(double speed) {
+    shooterLeft.set(ControlMode.PercentOutput, -speed);
+    shooterRight.set(ControlMode.PercentOutput, speed);
+  }
+
+  public void moveAllMotors(double speed) {
+    intakeBall(speed);
+    moveConveyor(speed);
+    shoot(speed);
   }
 
   public void extendIntake() {
@@ -145,8 +169,6 @@ public class LawnMower extends SubsystemBase {
     return counter;
   }
 
-  // should only have to apply "ballDump", "runMower", "extendIntake" & "retractIntake" to buttons/triggers
-
   public void periodic() {
     if (!Robot.auxController.leftBumper.get()) {
       solenoidTrigger = true;
@@ -164,9 +186,11 @@ public class LawnMower extends SubsystemBase {
     if (Robot.auxController.getLeftTrigger() != 0) {
       ballDump(Robot.auxController.getLeftTrigger());
     }
-    
+
     if (Robot.auxController.getRightTrigger() != 0) {
-      runMower(Robot.auxController.getRightTrigger());
+      intakeBall(Robot.auxController.getRightTrigger());
     }
+    
+    runMower(0.5);
   }
 }
