@@ -8,7 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.ColorMatch;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -20,7 +20,7 @@ import libs.IO.ColorSensor;
 
 public class WheelOfFortuneContestant extends SubsystemBase {
 
-  private VictorSPX contestant;
+  private TalonSRX contestant;
   private Solenoid deployer;
   private ColorSensor colorsensor;
   private double rot;
@@ -29,7 +29,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   private boolean solenoidTrigger;
 
   public WheelOfFortuneContestant() {
-    contestant = new VictorSPX(RobotMap.contestant);
+    contestant = new TalonSRX(RobotMap.contestant);
     deployer = new Solenoid(RobotMap.WOFdeployer);
     colorsensor = new ColorSensor();
     rot = 0;
