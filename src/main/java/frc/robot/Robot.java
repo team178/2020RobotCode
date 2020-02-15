@@ -8,7 +8,9 @@
 package frc.robot;
 
 import com.revrobotics.ColorSensorV3;
-
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +21,7 @@ import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -47,6 +50,9 @@ public class Robot extends TimedRobot {
   //Declare autonomous command
   //private Command autonomousCommand;
 
+  //USB Camera declarations
+  public static CameraServer camserv;
+  public static UsbCamera camera;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -67,8 +73,22 @@ public class Robot extends TimedRobot {
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
     auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
-  }
 
+
+    //Camera initializations
+    camserv = CameraServer.getInstance();
+    
+    //Camera 1
+    camera = camserv.startAutomaticCapture("cam1", 0);
+    //camera.setResolution(160, 90);
+    camera.setFPS(14);
+    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+  }
+  public void changeCamera(String newName, int newPort) {
+    camera = camserv.startAutomaticCapture(newName, newPort);
+    camera.setFPS(14);
+    camera.setPixelFormat(PixelFormat.kYUYV);
+  }
   /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
@@ -79,7 +99,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    
+    if (mainController.headLeft.get()) {
+      changeCamera("cam1", 0);
+    }
+
+    if (mainController.headBottom.get()) {
+      changeCamera("cam2", 1);
+    }
+
+    if (mainController.headRight.get()) {
+      changeCamera("cam3", 2);
+    }
     gameData = DriverStation.getInstance().getGameSpecificMessage();
     drivetrain.calibrateGyro();
     lawnmower.updateTof1Distance();
