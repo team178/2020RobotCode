@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 
 public class LightsArduino extends SubsystemBase {
@@ -75,26 +76,26 @@ public boolean sendMessage(char message){
   //Lights methods -- sends characters to arduino to indicate different light colors
   public boolean setAllianceColor() {
     if (ds.getAlliance() == Alliance.Blue) {
-      return sendMessage('b');
+      return blue();
     }
     else {
-      return sendMessage('r');
+      return red();
     }
   }
 
   public boolean red() {
-    System.out.println("red");
+    //System.out.println("red");
     return sendMessage('r');
   }
 
   public boolean blue() {
-    System.out.println("blue");
+    //System.out.println("blue");
     return sendMessage('b');
   }
 
   public boolean off()
   {
-    System.out.println("off");
+    //System.out.println("off");
     return sendMessage('n');
   }
 
@@ -107,5 +108,6 @@ public boolean sendMessage(char message){
   @Override
   public void periodic() {
     //put lights patterns & logic here
+    
   }
 }
