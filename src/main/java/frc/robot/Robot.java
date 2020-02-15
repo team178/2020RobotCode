@@ -14,17 +14,20 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.autonomous.PossibleTrajectories;
 import frc.robot.subsystems.Climber;
 //import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.WheelOfFortuneContestant;
+import frc.robot.subsystems.LightsArduino;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
-import frc.robot.subsystems.LightsArduino;
 
 
 /**
@@ -35,6 +38,10 @@ import frc.robot.subsystems.LightsArduino;
  * project....
  */
 public class Robot extends TimedRobot {
+  
+  //Declare auto sendable choosers
+  public static SendableChooser<String> startPath = new SendableChooser<>();
+  public static SendableChooser<String> endLocation = new SendableChooser<>();
 
   // Declare subsystems
   public static DriveTrain drivetrain;
@@ -66,6 +73,19 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotInit() {
+    
+    startPath.addOption("Left","Left");
+    startPath.addOption("Middle","Middle");
+    startPath.addOption("Right","Right");
+
+    endLocation.addOption("Left","Left");
+    endLocation.addOption("Middle","Middle");
+    endLocation.addOption("Right","Right");
+
+
+    SmartDashboard.putData("AutoLocation", startPath);
+    SmartDashboard.putData("AutoLocation", endLocation);
+
     drivetrain = new DriveTrain();
     lawnmower = new LawnMower();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
@@ -111,6 +131,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    //camera stuff
     if (mainController.headLeft.get()) {
       changeCamera("cam0", 0);
     }
@@ -157,7 +179,41 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
   //  autonomousCommand = AutonomousSelector.getAutonomousCommand();
-  }
+  CommandScheduler.getInstance().run();
+  Command autonomousCommand;
+  //Might scrw up if keep changing startPath and endLocation
+  if (startPath.getSelected() != "" && endLocation.getSelected() != ""){
+    String path1 = startPath.getSelected();
+    String path2 = endLocation.getSelected();
+    if (path1.equals("Left")) {
+      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryLeftForward)
+          .andThen(() -> lawnmower.ballDump(1));
+      autonomousCommand.execute();
+    }
+    else if (path1.equals("Middle")) {
+      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleForward)
+          .andThen(() -> lawnmower.ballDump(1));
+      autonomousCommand.execute();
+    }
+    else if (path1.equals("Right")) {
+      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightForward)
+          .andThen(() -> lawnmower.ballDump(1));
+      autonomousCommand.execute();
+    }
+    if (path2.equals("Left")) {
+      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryLeftBack);
+      autonomousCommand.execute();
+    }
+    else if (path2.equals("Middle")) {
+      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleBack);
+      autonomousCommand.execute();
+    }
+    else if (path2.equals("Right")) {
+      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightBack);
+      autonomousCommand.execute();
+    }
+  } 
+}
 
   /**
    * This function is called periodically during autonomous.
