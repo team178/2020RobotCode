@@ -55,7 +55,8 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   
   /** 
    * @return char
-   * 
+   * This command takes the game data color given and gives us the game data in the for of a char
+   * This makes the value easier and more consistant to react with and manipulate in the code
    */
   public char findGameDataColor() {
     String gameData = Robot.gameData;
@@ -68,6 +69,9 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   
   /** 
    * @return char
+   * This takes the color values that are being gotten from the color sensor and converting them to chars
+   * This allows us to create chars from the values we get, so that when we compare colors
+   * we are comparing chars to chars and not strings to chars
    */
   public char getColor() {
     Color c = colorsensor.detectColor();
@@ -92,6 +96,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
    * @param a
    * @param b
    * @return boolean
+   * This is the method that 
    */
   public boolean compareColors(Color a, Color b) {
     if ((a.red < b.red + 0.045) && (a.red > b.red - 0.045)) {
