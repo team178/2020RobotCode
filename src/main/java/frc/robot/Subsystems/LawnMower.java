@@ -28,6 +28,7 @@ public class LawnMower extends SubsystemBase {
   private static VictorSPX shooterLeft;
   private static VictorSPX shooterRight;
   private static Solenoid deployer;
+  private static Solenoid bouncer;
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
@@ -44,6 +45,7 @@ public class LawnMower extends SubsystemBase {
     shooterLeft = new VictorSPX(RobotMap.shooterLeft);
     shooterRight = new VictorSPX(RobotMap.shooterRight);
     deployer = new Solenoid(RobotMap.LMdeployer);
+    bouncer = new Solenoid(RobotMap.LMbouncer);
     tof1 = new TimeOfFlightSensor(0x623);
     tof2 = new TimeOfFlightSensor(0x620);
     tof3 = new TimeOfFlightSensor(0x624);
@@ -94,11 +96,19 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void extendIntake() {
-    deployer.set(true); // Might be kReverse, test
+    deployer.set(true);
   }
 
   public void retractIntake() {
-    deployer.set(false); // Might be kForward, test
+    deployer.set(false);
+  }
+
+  public void startBouncing() {
+    bouncer.set(true);
+  }
+
+  public void stopBouncing() {
+    bouncer.set(false);
   }
 
   public void updateTof1Distance() {

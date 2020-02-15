@@ -27,8 +27,6 @@ public class RobotMap {
     public static int winchSlave = 13;
     public static int leveler = 14;
 
-    public static int hookThurst = 2;
-
     //idk what to do with these
     public static int Encoder1 = 5;
     public static int Encoder2 = 6;
@@ -39,7 +37,9 @@ public class RobotMap {
     public static int lightsI2CAddress = 4; 
 
     //PCM
-    public static int LMdeployer = 2;
+    public static int LMdeployer = 0;
+    public static int LMbouncer = 1;
+    public static int hookThurst = 2;
     public static int WOFdeployer = 3;
     
     //Computer USB ports
