@@ -25,10 +25,9 @@ import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.WheelOfFortuneContestant;
-import jdk.jfr.internal.cmd.Execute;
+import frc.robot.subsystems.LightsArduino;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
-import frc.robot.subsystems.LightsArduino;
 
 
 /**
@@ -132,6 +131,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+
+    //camera stuff
     if (mainController.headLeft.get()) {
       changeCamera("cam0", 0);
     }
