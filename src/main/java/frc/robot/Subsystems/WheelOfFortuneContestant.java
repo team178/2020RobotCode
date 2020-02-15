@@ -52,6 +52,11 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     deployer.set(false);
   }
   
+  
+  /** 
+   * @return char
+   * 
+   */
   public char findGameDataColor() {
     String gameData = Robot.gameData;
     if(gameData.length() > 0) {
@@ -60,6 +65,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return 'N';
   }
  
+  
+  /** 
+   * @return char
+   */
   public char getColor() {
     Color c = colorsensor.detectColor();
     if (compareColors(c, Blue)) {
@@ -78,6 +87,12 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return 'N';
   }
 
+  
+  /** 
+   * @param a
+   * @param b
+   * @return boolean
+   */
   public boolean compareColors(Color a, Color b) {
     if ((a.red < b.red + 0.045) && (a.red > b.red - 0.045)) {
       if ((a.green < b.green + 0.045) && (a.green > b.green - 0.045)) {
@@ -89,6 +104,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return false;
   }
     
+  
+  /** 
+   * @return double
+   */
   public double getRotations() {
     if (initColor == 'N') {
       initColor = getColor();
@@ -113,6 +132,11 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return rot;
   }
 
+  
+  /** 
+   * @param desiredRotations
+   * @return boolean
+   */
   public boolean rotationControl(int desiredRotations) {
     if (getRotations() < desiredRotations) {
       return false;
@@ -120,6 +144,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return true;
   }
 
+  
+  /** 
+   * @return boolean
+   */
   public boolean positionControl() {
     if (findGameDataColor() != getColor() || findGameDataColor() == 'N') {
       return false;
