@@ -18,10 +18,11 @@ public class RobotMap {
     public static int DMRightMaster = 3;
     public static int DMRightSlave = 4;
     public static int intake = 5;
-    public static int contestant = 11; //jeff ;( 12:50-12:53 T.O.D 2/1/20
-
-    public static int hookThurst1 = 2;
-    public static int hookThrust2= 6;
+    public static int conveyorTop = 6;
+    public static int conveyorBottom = 7;
+    public static int shooterLeft = 8;
+    public static int shooterRight = 9;
+    public static int contestant = 10; //jeff ;( 12:50-12:53 T.O.D 2/1/20
     public static int winchMaster = 12;
     public static int winchSlave = 13;
     public static int leveler = 14;
@@ -38,17 +39,13 @@ public class RobotMap {
     public static int numOfLEDs = 10;
 
     //PCM
-    public static int LMdeployer = 2;
+    public static int LMdeployer = 0;
+    public static int LMbouncer = 1;
+    public static int hookThurst = 2;
     public static int WOFdeployer = 3;
     
     //Computer USB ports
     public static int ActualJoystick = 0;
     public static int JoystickPortXBoxAux = 1; 
     public static int JoystickPortXBoxMain = 2;
-
-    //Lawnmower
-    public static int intakeMotor = 5; 
-    public static int intakeDeployer1= 0;
-    public static int intakeDeplyer2 = 1;
-    public static int timeOfFlightSensor1 = 0x621;
 }

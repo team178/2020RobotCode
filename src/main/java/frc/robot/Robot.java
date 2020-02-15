@@ -111,15 +111,15 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     if (mainController.headLeft.get()) {
-      changeCamera("cam1", 0);
+      changeCamera("cam0", 0);
     }
 
     if (mainController.headBottom.get()) {
-      changeCamera("cam2", 1);
+      changeCamera("cam1", 1);
     }
 
     if (mainController.headRight.get()) {
-      changeCamera("cam3", 2);
+      changeCamera("cam2", 2);
     }
     gameData = DriverStation.getInstance().getGameSpecificMessage();
     drivetrain.calibrateGyro();

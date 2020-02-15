@@ -8,34 +8,34 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class Climber extends SubsystemBase {
   
-  private static DoubleSolenoid elevator;
-  private static VictorSPX winchMaster;
-  private static VictorSPX winchSlave;
-  private static VictorSPX leveler;
+  private static Solenoid elevator;
+  private static TalonSRX winchMaster;
+  private static TalonSRX winchSlave;
+  private static TalonSRX leveler;
 
   public Climber() {
-    elevator = new DoubleSolenoid(RobotMap.hookThurst1, RobotMap.hookThrust2);
-    winchMaster = new VictorSPX(RobotMap.winchMaster);
-    winchSlave = new VictorSPX(RobotMap.winchSlave);
-    leveler = new VictorSPX(RobotMap.leveler);
+    elevator = new Solenoid(RobotMap.hookThurst);
+    winchMaster = new TalonSRX(RobotMap.winchMaster);
+    winchSlave = new TalonSRX(RobotMap.winchSlave);
+    leveler = new TalonSRX(RobotMap.leveler);
     winchSlave.follow(winchMaster);
   }
 
   public void extendHook() {
-    elevator.set(DoubleSolenoid.Value.kForward);
+    elevator.set(true);
   }
 
   public void retractHook() {
-    elevator.set(DoubleSolenoid.Value.kReverse);
+    elevator.set(false);
   }
 
   public void windWinch(double speed) {
