@@ -10,20 +10,20 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 public class Climber extends SubsystemBase {
   
-  private static DoubleSolenoid elevator;
+  private static Solenoid elevator;
   private static VictorSPX winchMaster;
   private static VictorSPX winchSlave;
   private static VictorSPX leveler;
 
   public Climber() {
-    elevator = new DoubleSolenoid(RobotMap.hookThurst1, RobotMap.hookThrust2);
+    elevator = new Solenoid(RobotMap.hookThurst);
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
     leveler = new VictorSPX(RobotMap.leveler);
@@ -31,11 +31,11 @@ public class Climber extends SubsystemBase {
   }
 
   public void extendHook() {
-    elevator.set(DoubleSolenoid.Value.kForward);
+    elevator.set(true);
   }
 
   public void retractHook() {
-    elevator.set(DoubleSolenoid.Value.kReverse);
+    elevator.set(false);
   }
 
   public void windWinch(double speed) {
