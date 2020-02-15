@@ -46,10 +46,4 @@ public class RobotMap {
     public static int ActualJoystick = 0;
     public static int JoystickPortXBoxAux = 1; 
     public static int JoystickPortXBoxMain = 2;
-
-    //Lawnmower
-    public static int intakeMotor = 5; 
-    public static int intakeDeployer1= 0;
-    public static int intakeDeplyer2 = 1;
-    public static int timeOfFlightSensor1 = 0x621;
 }

@@ -11,7 +11,7 @@ import frc.robot.Robot;
 import frc.robot.RobotMap;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import libs.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
@@ -22,11 +22,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LawnMower extends SubsystemBase {
   
-  private static VictorSPX intake;
-  private static VictorSPX conveyorTop;
-  private static VictorSPX conveyorBottom;
-  private static VictorSPX shooterLeft;
-  private static VictorSPX shooterRight;
+  private static TalonSRX intake;
+  private static TalonSRX conveyorTop;
+  private static TalonSRX conveyorBottom;
+  private static TalonSRX shooterLeft;
+  private static TalonSRX shooterRight;
   private static Solenoid deployer;
   private static Solenoid bouncer;
   private static TimeOfFlightSensor tof1;
@@ -39,11 +39,11 @@ public class LawnMower extends SubsystemBase {
   public final double MIN = 60;
 
   public LawnMower() {
-    intake = new VictorSPX(RobotMap.intake);
-    conveyorTop = new VictorSPX(RobotMap.conveyorTop);
-    conveyorBottom = new VictorSPX(RobotMap.conveyorBottom);
-    shooterLeft = new VictorSPX(RobotMap.shooterLeft);
-    shooterRight = new VictorSPX(RobotMap.shooterRight);
+    intake = new TalonSRX(RobotMap.intake);
+    conveyorTop = new TalonSRX(RobotMap.conveyorTop);
+    conveyorBottom = new TalonSRX(RobotMap.conveyorBottom);
+    shooterLeft = new TalonSRX(RobotMap.shooterLeft);
+    shooterRight = new TalonSRX(RobotMap.shooterRight);
     deployer = new Solenoid(RobotMap.LMdeployer);
     bouncer = new Solenoid(RobotMap.LMbouncer);
     tof1 = new TimeOfFlightSensor(0x623);
