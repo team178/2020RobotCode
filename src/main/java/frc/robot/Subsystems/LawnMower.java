@@ -53,13 +53,11 @@ public class LawnMower extends SubsystemBase {
     solenoidTrigger = false;
   }
 
-  public boolean ballDump(double speed) {
+  public void ballDump(double speed) {
     if (getCounter() != 0) {
       moveAllMotors(speed);
-      return false;
     } else {
       moveAllMotors(0);
-      return true;
     }
   }
 
