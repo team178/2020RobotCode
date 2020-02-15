@@ -106,6 +106,6 @@ public boolean sendMessage(char message){
 
   @Override
   public void periodic() {
-    //put lights patterns here
+    //put lights patterns & logic here
   }
 }
