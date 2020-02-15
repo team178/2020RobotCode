@@ -14,10 +14,14 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.command.WaitForChildren;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.autonomous.PossibleTrajectories;
 import frc.robot.subsystems.Climber;
 //import frc.robot.autonomous.AutonomousSelector;
@@ -40,9 +44,11 @@ import libs.IO.XboxController;
 public class Robot extends TimedRobot {
   
   //Declare auto sendable choosers
+  public static SendableChooser<Integer> robotDelayInt = new SendableChooser<>();
+  public static SendableChooser<Integer> robotDelayDec = new SendableChooser<>();
   public static SendableChooser<String> startPath = new SendableChooser<>();
   public static SendableChooser<String> endLocation = new SendableChooser<>();
-
+  
   // Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
@@ -73,15 +79,45 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotInit() {
-    
+    //Creates options for robot start path drop down
     startPath.addOption("Left","Left");
     startPath.addOption("Middle","Middle");
     startPath.addOption("Right","Right");
 
+    //Creates options for robot end location drop down
     endLocation.addOption("Left","Left");
     endLocation.addOption("Middle","Middle");
     endLocation.addOption("Right","Right");
 
+    //Creates options for robot timer integer numbers
+    robotDelayInt.addOption("Integer Number for Timer", 0);
+    robotDelayInt.addOption("Integer Number for Timer", 1);
+    robotDelayInt.addOption("Integer Number for Timer", 2);
+    robotDelayInt.addOption("Integer Number for Timer", 3);
+    robotDelayInt.addOption("Integer Number for Timer", 4);
+    robotDelayInt.addOption("Integer Number for Timer", 5);
+    robotDelayInt.addOption("Integer Number for Timer", 6);
+    robotDelayInt.addOption("Integer Number for Timer", 7);
+    robotDelayInt.addOption("Integer Number for Timer", 8);
+    robotDelayInt.addOption("Integer Number for Timer", 9);
+    robotDelayInt.addOption("Integer Number for Timer", 10);
+    robotDelayInt.addOption("Integer Number for Timer", 11);
+    robotDelayInt.addOption("Integer Number for Timer", 12);
+    robotDelayInt.addOption("Integer Number for Timer", 13);
+    robotDelayInt.addOption("Integer Number for Timer", 14);
+    robotDelayInt.addOption("Integer Number for Timer", 15);
+
+    //Creates options for robot timer decimal part of integer
+    robotDelayDec.addOption("Decimal part of timer", 0);
+    robotDelayDec.addOption("Decimal part of timer", 1);
+    robotDelayDec.addOption("Decimal part of timer", 2);
+    robotDelayDec.addOption("Decimal part of timer", 3);
+    robotDelayDec.addOption("Decimal part of timer", 4);
+    robotDelayDec.addOption("Decimal part of timer", 5);
+    robotDelayDec.addOption("Decimal part of timer", 6);
+    robotDelayDec.addOption("Decimal part of timer", 7);
+    robotDelayDec.addOption("Decimal part of timer", 8);
+    robotDelayDec.addOption("Decimal part of timer", 9);
 
     SmartDashboard.putData("AutoLocation", startPath);
     SmartDashboard.putData("AutoLocation", endLocation);
@@ -178,42 +214,84 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-  //  autonomousCommand = AutonomousSelector.getAutonomousCommand();
   CommandScheduler.getInstance().run();
-  Command autonomousCommand;
-  //Might scrw up if keep changing startPath and endLocation
+  double timerValue = 0;
+
+  Trajectory sTrajectory = null;
+  Trajectory eTrajectory = null;
+
+  RamseteCommand rForward = null;
+  RamseteCommand rBackward = null;
+//the command rForward / rBackward refers to direction of the robot, either forwards or backwards;
+//forward is used when the robot moves from its station into the dumpball area
+//backward is used when the robot comes back from dumpball area into its station
   if (startPath.getSelected() != "" && endLocation.getSelected() != ""){
+    timerValue = robotDelayInt.getSelected() + robotDelayDec.getSelected() / 10;
+
     String path1 = startPath.getSelected();
     String path2 = endLocation.getSelected();
+//dictates that whenever path 1 is called, the robot is in its start phase of moving towards the balldump
+
+//the trajectories refer to either s(tart) or e(nd); s refers to robot's movement towards the balldump and e to its return
     if (path1.equals("Left")) {
-      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryLeftForward)
-          .andThen(() -> lawnmower.ballDump(1));
-      autonomousCommand.execute();
+      sTrajectory = PossibleTrajectories.TrajectoryLeftForward;
+    } else if (path1.equals("Middle")) {
+      sTrajectory = PossibleTrajectories.TrajectoryMiddleForward;
+    } else if (path1.equals("Right")) {
+      sTrajectory = PossibleTrajectories.TrajectoryRightForward;
     }
-    else if (path1.equals("Middle")) {
-      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleForward)
-          .andThen(() -> lawnmower.ballDump(1));
-      autonomousCommand.execute();
-    }
-    else if (path1.equals("Right")) {
-      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightForward)
-          .andThen(() -> lawnmower.ballDump(1));
-      autonomousCommand.execute();
-    }
+//thus, if the robot is moving from its station into the balldump area, we choose which station it starts out from
     if (path2.equals("Left")) {
-      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryLeftBack);
-      autonomousCommand.execute();
+      eTrajectory = PossibleTrajectories.TrajectoryLeftBack;
+    } else if (path2.equals("Middle")) {
+      eTrajectory = PossibleTrajectories.TrajectoryMiddleBack;
+    } else if (path2.equals("Right")) {
+      eTrajectory = PossibleTrajectories.TrajectoryRightBack;
     }
-    else if (path2.equals("Middle")) {
-      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleBack);
-      autonomousCommand.execute();
-    }
-    else if (path2.equals("Right")) {
-      autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightBack);
-      autonomousCommand.execute();
-    }
-  } 
-}
+//thus, if the robot is moving from the balldump area, we choose which station it will move into
+    rForward = PossibleTrajectories.getRamseteCommand(sTrajectory);
+    rBackward = PossibleTrajectories.getRamseteCommand(eTrajectory);
+//dictates that robot will move (forward) at the (s)tart
+// as well as robot will move (backward) at the (e)nd
+  }
+//the wait time is necessary in order to avoid other robots in our robot's path
+  Command autonomousCommand = new WaitCommand(timerValue);
+  autonomousCommand.andThen(rForward);
+  autonomousCommand.andThen(() -> lawnmower.ballDump(1));
+  autonomousCommand.andThen(rBackward);
+//commented this out because the code was made more efficient by vivek. sorry yellow gang
+  //Might scrw up if keep changing startPath and endLocation
+  // if (startPath.getSelected() != "" && endLocation.getSelected() != "") {
+  //   if (path1.equals("Left")) {
+  //     autonomousCommand = autonomousCommand.andThen(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryLeftForward);
+  //     autonomousCommand = autonomousCommand.andThen(() -> lawnmower.ballDump(1));
+  //     autonomousCommand.execute();
+  //   }
+  //   else if (path1.equals("Middle")) {
+  //     autonomousCommand = autonomousCommand.andThen(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleForward);
+  //     autonomousCommand = autonomousCommand.andThen(() -> lawnmower.ballDump(1));
+  //     autonomousCommand.execute();
+  //   }
+  //   else if (path1.equals("Right")) 
+  //     autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightForward);
+  //     autonomousCommand = autonomousCommand.andThen(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightForward);
+  //     autonomousCommand = autonomousCommand.andThen(() -> lawnmower.ballDump(1));
+  //     autonomousCommand.execute();
+  //   }
+  //   if (path2.equals("Left")) {
+  //     autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryLeftBack);
+  //     autonomousCommand.execute();
+  //   }
+  //   else if (path2.equals("Middle")) {
+  //     autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleBack);
+  //     autonomousCommand.execute();
+  //   }
+  //   else if (path2.equals("Right")) {
+  //     autonomousCommand = PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightBack);
+  //     autonomousCommand.execute();
+  //   }
+  // } 
+  }
 
   /**
    * This function is called periodically during autonomous.
