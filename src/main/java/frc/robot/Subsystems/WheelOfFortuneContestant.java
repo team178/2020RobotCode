@@ -52,6 +52,12 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     deployer.set(false);
   }
   
+  
+  /** 
+   * @return char
+   * This command takes the game data color given and gives us the game data in the for of a char
+   * This makes the value easier and more consistant to react with and manipulate in the code
+   */
   public char findGameDataColor() {
     String gameData = Robot.gameData;
     if(gameData.length() > 0) {
@@ -60,6 +66,13 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return 'N';
   }
  
+  
+  /** 
+   * @return char
+   * This takes the color values that are being gotten from the color sensor and converting them to chars
+   * This allows us to create chars from the values we get, so that when we compare colors
+   * we are comparing chars to chars and not strings to chars
+   */
   public char getColor() {
     Color c = colorsensor.detectColor();
     if (compareColors(c, Blue)) {
@@ -78,6 +91,13 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return 'N';
   }
 
+  
+  /** 
+   * @param a
+   * @param b
+   * @return boolean
+   * This is the method that 
+   */
   public boolean compareColors(Color a, Color b) {
     if ((a.red < b.red + 0.045) && (a.red > b.red - 0.045)) {
       if ((a.green < b.green + 0.045) && (a.green > b.green - 0.045)) {
@@ -89,6 +109,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return false;
   }
     
+  
+  /** 
+   * @return double
+   */
   public double getRotations() {
     if (initColor == 'N') {
       initColor = getColor();
@@ -113,6 +137,11 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return rot;
   }
 
+  
+  /** 
+   * @param desiredRotations
+   * @return boolean
+   */
   public boolean rotationControl(int desiredRotations) {
     if (getRotations() < desiredRotations) {
       return false;
@@ -120,6 +149,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return true;
   }
 
+  
+  /** 
+   * @return boolean
+   */
   public boolean positionControl() {
     if (findGameDataColor() != getColor() || findGameDataColor() == 'N') {
       return false;
