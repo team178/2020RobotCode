@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 
 public class LightsArduino extends SubsystemBase {
@@ -135,15 +136,19 @@ public boolean sendMessage(char message){
     return sendMessage('n');
   }
 
-  /*public boolean ball()
+  public boolean ball(int balls)
   {
-    return sendMessage( Number of balls in conveyer);
-  }*/
+    int bin = Integer.parseInt(Integer.toBinaryString(balls));
+    char output = (char)bin;
+    //System.out.println(output);
+    return sendMessage(output);
+  }
 
 
   @Override
   public void periodic() {
-    //put lights patterns & logic here
+    ball(Robot.lawnmower.getCounter());
+    setAllianceColor();
     
   }
 }
