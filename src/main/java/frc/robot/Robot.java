@@ -13,6 +13,7 @@ import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.autonomous.AutonomousSelector;
@@ -21,6 +22,7 @@ import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
+import frc.robot.subsystems.LightsArduino;
 
 
 /**
@@ -38,6 +40,7 @@ public class Robot extends TimedRobot {
   public static ColorSensorV3 colorSensor;
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
+  public static LightsArduino lights; 
 
   public static String gameData;
   public static double tof1Previous;
@@ -64,6 +67,9 @@ public class Robot extends TimedRobot {
     colorSensor = new ColorSensorV3(null);
     lawnmower = new LawnMower();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
+    lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
+    //put lights code here
+    
     drivetrain.calibrateGyro();
     gameData = "";
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);

@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
-public class Lights extends SubsystemBase {
+public class LightsArduino extends SubsystemBase {
   /**
    * Creates a new Lights.
    */
@@ -23,23 +23,29 @@ public class Lights extends SubsystemBase {
   protected boolean received;
   protected boolean sent;
 
-  public Lights(Port port, int address) {
+  public LightsArduino(Port port, int address) {
     arduino = new I2C(port, address);
     ds = DriverStation.getInstance();
   }
 
 
-  public boolean sendMessage(String pattern) {
+  /* public boolean sendMessage(String pattern) {
     boolean sent = false;
     String message = pattern.toLowerCase();
     
-    //System.out.println("Message Sent: " + message);
+   System.out.println("Message Sent: " + message);
     sent = !arduino.writeBulk(message.getBytes()); //Returns true if aborted, false if completed
-    //System.out.println("Message Sent? " + arduino.addressOnly());
+    System.out.println("Message Sent? " + arduino.addressOnly());
 
     return sent;
   }
-
+ */
+public boolean sendMessage(char message){
+  byte[] bytearray=new byte[1];
+  bytearray[0]=(byte)message;
+  sent=!arduino.writeBulk(bytearray);
+  return sent;
+}
   public byte[] receiveMessage(int address) //for which i2c address to read from
   {
     byte[] dataFromArduino = new byte[2]; //change based on type of data 
@@ -69,29 +75,37 @@ public class Lights extends SubsystemBase {
   //Lights methods -- sends characters to arduino to indicate different light colors
   public boolean setAllianceColor() {
     if (ds.getAlliance() == Alliance.Blue) {
-      return sendMessage("b");
+      return sendMessage('b');
     }
     else {
-      return sendMessage("r");
+      return sendMessage('r');
     }
   }
 
-  public boolean lights1() {
-    return sendMessage("h");
+  public boolean red() {
+    System.out.println("red");
+    return sendMessage('r');
   }
 
-  public boolean lights2() {
-    return sendMessage("c");
+  public boolean blue() {
+    System.out.println("blue");
+    return sendMessage('b');
   }
 
-  public boolean lightsOff()
+  public boolean off()
   {
-    return sendMessage("n");
+    System.out.println("off");
+    return sendMessage('n');
   }
+
+  /*public boolean ball()
+  {
+    return sendMessage( Number of balls in conveyer);
+  }*/
 
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    //put lights patterns here
   }
 }

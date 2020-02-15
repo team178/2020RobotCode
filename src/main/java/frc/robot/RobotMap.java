@@ -32,6 +32,9 @@ public class RobotMap {
     public static int Encoder3 = 7;
     public static int Encoder4 = 8;
 
+    //lights 
+    public static int lightsI2CAddress = 4; 
+
     //PCM
     public static int LMdeployer = 2;
     public static int WOFdeployer = 3;
