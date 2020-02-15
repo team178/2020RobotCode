@@ -70,11 +70,11 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void extendIntake() {
-    deployer.set(DoubleSolenoid.Value.kForward); // Might be kReverse, test
+    deployer.set(true); // Might be kReverse, test
   }
 
   public void retractIntake() {
-    deployer.set(DoubleSolenoid.Value.kReverse); // Might be kForward, test
+    deployer.set(false); // Might be kForward, test
   }
 
   public void updateTof1Distance() {
@@ -112,8 +112,61 @@ public class LawnMower extends SubsystemBase {
   public double getTof3Distance() {
     return tof3.getDistance();
   }
-  
-  public void periodic() {
 
+  public void addToCounter() {
+    if (tof1.getEdge().equals("Leading") && inTrigger) {
+      counter++;
+      inTrigger = false;
+    }
+    if (tof1.getEdge().equals("No ball") && !inTrigger) {
+      inTrigger = true;
+    }
+  }
+
+  public void removeFromCounter() {
+    if (!(tof3.getEdge().equals("No ball")) && !outTrigger) {
+      outTrigger = true;
+    }
+    if (tof3.getEdge().equals("No ball") && outTrigger) {
+      counter--;
+      outTrigger = false;
+    }
+  }
+
+  public void counterFixer() {
+    while (counter < 0) {
+      counter ++;
+    }
+  }
+
+  public int getCounter() {
+    addToCounter();
+    removeFromCounter();
+    return counter;
+  }
+
+  // should only have to apply "ballDump", "runMower", "extendIntake" & "retractIntake" to buttons/triggers
+
+  public void periodic() {
+    if (!Robot.auxController.leftBumper.get()) {
+      solenoidTrigger = true;
+    }
+    
+    if (Robot.auxController.leftBumper.get() && solenoidTrigger) {
+      if (deployer.get()) {
+        retractIntake();
+      } else {
+        extendIntake();
+      }
+      solenoidTrigger = false;
+    }
+
+    if (Robot.auxController.getLeftTrigger() != 0) {
+      ballDump(Robot.auxController.getLeftTrigger());
+    }
+    
+    if (Robot.auxController.getRightTrigger() != 0) {
+      runMower(Robot.auxController.getRightTrigger());
+    }
   }
 }
