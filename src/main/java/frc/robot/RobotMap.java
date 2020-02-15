@@ -35,6 +35,8 @@ public class RobotMap {
 
     //lights 
     public static int lightsI2CAddress = 4; 
+    public static int lightsPWM = 3;
+    public static int numOfLEDs = 10;
 
     //PCM
     public static int LMdeployer = 0;

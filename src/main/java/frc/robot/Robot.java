@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 //import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
+import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
@@ -41,6 +42,7 @@ public class Robot extends TimedRobot {
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
   public static LightsArduino lights; 
+  public static LightStrip lightStrip;
 
   public static String gameData;
   public static double tof1Previous;
@@ -67,8 +69,11 @@ public class Robot extends TimedRobot {
     colorSensor = new ColorSensorV3(null);
     lawnmower = new LawnMower();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
+
+    //lights
     lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
-    //put lights code here
+    lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
+    
     
     drivetrain.calibrateGyro();
     gameData = "";
@@ -142,6 +147,10 @@ public class Robot extends TimedRobot {
     }
     System.out.println("Gyro Reading: " + drivetrain.getGyroReading());
     System.out.println("Current Angle Reading: " + currentAngle);
+
+    //lights stuff
+    lights.periodic();
+    //lightStrip.periodic();
 
   }
 
