@@ -12,24 +12,33 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 
 public class LightsArduino extends SubsystemBase {
   /**
-   * Creates a new Lights.
+   * Creates a new Lights object, comprised of an Arduino connected via I2C. 
    */
   protected I2C arduino;
   protected DriverStation ds;
   protected boolean received;
   protected boolean sent;
-
+/**
+ * Creates a new LightsArduino, taking an i2c port number and i2c address
+ * @param port
+ * @param address
+ */
   public LightsArduino(Port port, int address) {
     arduino = new I2C(port, address);
     ds = DriverStation.getInstance();
   }
 
 
-  /* public boolean sendMessage(String pattern) {
+  
+  /** 
+   * @return boolean
+   */
+   public boolean sendMessage(String pattern) {
     boolean sent = false;
     String message = pattern.toLowerCase();
     
@@ -39,13 +48,18 @@ public class LightsArduino extends SubsystemBase {
 
     return sent;
   }
- */
+  
 public boolean sendMessage(char message){
   byte[] bytearray=new byte[1];
   bytearray[0]=(byte)message;
   sent=!arduino.writeBulk(bytearray);
   return sent;
 }
+  
+  /** 
+   * @param address
+   * @return byte[]
+   */
   public byte[] receiveMessage(int address) //for which i2c address to read from
   {
     byte[] dataFromArduino = new byte[2]; //change based on type of data 
@@ -61,51 +75,80 @@ public boolean sendMessage(char message){
     return dataFromArduino;
   }
 
+  
+  /** 
+   * @return boolean
+   */
   //Checker methods
   public boolean checkIfReceived()
   {
     return received;
   }
 
+  
+  /** 
+   * @return boolean
+   */
   public boolean checkIfSent()
   {
     return sent;
   }
   
+  
+  /** 
+   * @return boolean
+   */
   //Lights methods -- sends characters to arduino to indicate different light colors
   public boolean setAllianceColor() {
     if (ds.getAlliance() == Alliance.Blue) {
-      return sendMessage('b');
+      return blue();
     }
     else {
-      return sendMessage('r');
+      return red();
     }
   }
 
+  
+  /** 
+   * @return boolean
+   */
   public boolean red() {
-    System.out.println("red");
+    //System.out.println("red");
     return sendMessage('r');
   }
 
+  
+  /** 
+   * @return boolean
+   */
   public boolean blue() {
-    System.out.println("blue");
+    //System.out.println("blue");
     return sendMessage('b');
   }
 
+  
+  /** 
+   * @return boolean
+   */
   public boolean off()
   {
-    System.out.println("off");
+    //System.out.println("off");
     return sendMessage('n');
   }
 
-  /*public boolean ball()
+  public boolean ball(int balls)
   {
-    return sendMessage( Number of balls in conveyer);
-  }*/
+    int bin = Integer.parseInt(Integer.toBinaryString(balls));
+    char output = (char)bin;
+    //System.out.println(output);
+    return sendMessage(output);
+  }
 
 
   @Override
   public void periodic() {
-    //put lights patterns & logic here
+    ball(Robot.lawnmower.getCounter());
+    setAllianceColor();
+    
   }
 }
