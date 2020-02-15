@@ -22,10 +22,10 @@ public class RobotMap {
     public static int conveyorBottom = 7;
     public static int shooterLeft = 8;
     public static int shooterRight = 9;
-    public static int contestant = 10; //jeff ;( 12:50-12:53 T.O.D 2/1/20
-    public static int winchMaster = 12;
-    public static int winchSlave = 13;
-    public static int leveler = 14;
+    public static int contestant = 13; //jeff ;( 12:50-12:53 T.O.D 2/1/20
+    public static int winchMaster = 11;
+    public static int winchSlave = 12;
+    public static int leveler = 10;
 
     //idk what to do with these
     public static int Encoder1 = 5;
