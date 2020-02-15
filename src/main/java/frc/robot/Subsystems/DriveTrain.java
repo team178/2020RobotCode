@@ -13,16 +13,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.*;
+import frc.robot.Robot;
 import frc.robot.RobotMap;
 /**
  * Add your docs here.
@@ -37,16 +31,9 @@ public class DriveTrain extends SubsystemBase {
   
   public static TalonSRX rightMaster;
   public static VictorSPX rightSlave;
-  
-  public static Encoder leftEncoder;
-  public static Encoder rightEncoder;
 
   //gyro
   private final Gyro gyro = new ADXRS450_Gyro(sPort);
-
-  //Autonomous path planning
-  private final DifferentialDriveKinematics kinematics = new DifferentialDriveKinematics(PathConstants.kTrackWidthMeters);
-  private final DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(getHeading());
  
   public DriveTrain() {
     //Init DMs
@@ -68,78 +55,11 @@ public class DriveTrain extends SubsystemBase {
 	  rightMaster.setInverted(false);
 	  rightMaster.setSensorPhase(false);
 	  rightSlave.setInverted(InvertType.FollowMaster);
-
-    //Config encoders (?)
-    leftEncoder = new Encoder(RobotMap.Encoder1, RobotMap.Encoder2, false);
-    rightEncoder = new Encoder(RobotMap.Encoder3, RobotMap.Encoder4, true);
-    
-    leftEncoder.setDistancePerPulse(PathConstants.kEncoderDPP);
-    rightEncoder.setDistancePerPulse(PathConstants.kEncoderDPP);
   }
 
-  public double getLeftDistance() {
-      return leftEncoder.getDistance();
-  }
-  
-  public double getRightDistance() {
-      return rightEncoder.getDistance();
-  }
-  
   public void drive(double leftPower, double rightPower) {
     leftMaster.set(ControlMode.PercentOutput, leftPower);
     rightMaster.set(ControlMode.PercentOutput, rightPower);
-  }
-
-  /**
-   * @return The current wheel speeds.
-   */
-  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getRate(), rightEncoder.getRate());
-  }
-
-  /**
-   * @param pose The pose to which to set the odometry.
-   */
-  public void resetOdometry(Pose2d pose) {
-    resetEncoders();
-    odometry.resetPosition(pose, getHeading());
-  }
-
-  /**
-   * @return the current robot pose according to odometry
-   */
-  public Pose2d getPose() {
-    return odometry.getPoseMeters();
-  }
-
-  /**
-   * @return the gyro heading (angle) as a Rotation2d object
-   */
-  public Rotation2d getHeading() {
-    return Rotation2d.fromDegrees(0); //REPLACE WITH -(ACTUAL GYRO ANGLE)
-  }
-
-  /**
-   * Reset encoders
-   */
-  public void resetEncoders() {
-    leftEncoder.reset();
-    rightEncoder.reset();
-  }
-
-  /**
-   * Reset gyro heading
-   */
-  public void resetHeading() {
-    gyro.reset();
-  }
-
-  public DifferentialDriveKinematics getKinematics() {
-    return kinematics;
-  }
-
-  public DifferentialDriveOdometry getOdometry() {
-    return odometry;
   }
 
   public void resetGyro() {
@@ -156,7 +76,12 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //Update odometry
-    odometry.update(getHeading(), getLeftDistance(), getRightDistance());
+    double yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
+    double twistReduction = Robot.mainController.trigger.get() ? 0.4 : 1;
+
+    double yVal = Robot.mainController.getY() * yReduction;
+    double twistVal = Robot.mainController.getTwist() * twistReduction;
+
+    drive(yVal+twistVal, yVal-twistVal);
   } 
 }

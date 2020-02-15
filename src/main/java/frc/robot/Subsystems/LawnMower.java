@@ -15,9 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import libs.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LawnMower extends SubsystemBase {
