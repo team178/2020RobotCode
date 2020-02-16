@@ -72,8 +72,8 @@ public class Robot extends TimedRobot {
   private static double currentAngle;
   
   //Declare joysticks
-  public static ThrustmasterJoystick mainController;
-	public static XboxController auxController;
+  public static ThrustmasterJoystick mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
+  public static XboxController auxController = new XboxController(RobotMap.JoystickPortXboxAux);
   
   //Declare autonomous command
   //private Command autonomousCommand;
@@ -136,11 +136,6 @@ public class Robot extends TimedRobot {
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
     // SmartDashboard.putData("Auto choices", m_chooser);
-    
-    //init joysticks
-    mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
-    auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
-
 
     //Camera initializations
     camserv = CameraServer.getInstance();
