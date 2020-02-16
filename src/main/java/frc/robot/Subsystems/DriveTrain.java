@@ -44,10 +44,6 @@ public class DriveTrain extends SubsystemBase {
   private static SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftMaster, leftSlave);
   private static SpeedControllerGroup rightMotors = new SpeedControllerGroup(leftMaster, leftSlave);
 
-  //Encoders 
-  private final int TIMEOUT = 30;//"block" to stop the config from continuously updating until success (not really sure why we need this -Darren)
-  private static int distanceTravelled; 
-
   //Gyro
   private final Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 
@@ -70,6 +66,10 @@ public class DriveTrain extends SubsystemBase {
   public Supplier<Double> leftRate;
   public Supplier<Double> rightRate;
   
+  //Gyro mehtods
+  public Supplier<Double> headingDegrees;
+  public Supplier<Double> headingRotation2d;
+  
   public DriveTrain() {
     leftMaster = new WPI_TalonSRX(RobotMap.DMLeftMaster);
     leftSlave = new WPI_VictorSPX(RobotMap.DMLeftSlave);
@@ -84,10 +84,12 @@ public class DriveTrain extends SubsystemBase {
 
     leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP;
     leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10;
-    
     rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP;
     rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10;
-
+    
+    headingDegrees = () -> -gyro.getAngle();
+    headingRotation2d = () -> Rotation2d.fromDegrees(-gyro.getAngle());
+    
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
 
