@@ -26,82 +26,79 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class PossibleTrajectories {
 
-    private static DriveTrain driveTrain = Robot.drivetrain;
+    private static DriveTrain driveTrain = Robot.driveTrain;
 
-    DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
+    private static DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
         driveTrain.getFeedforward(), 
         driveTrain.getKinematics(), 
         PathConstants.kMaxVoltage
     );
 
         //Creating trajectory config
-        public static TrajectoryConfig configForward = new TrajectoryConfig(
+    public static TrajectoryConfig configForward = new TrajectoryConfig(
         PathConstants.kMaxVelMPS, 
         PathConstants.kMaxAccelMPSPS
-        )
-        .setKinematics(driveTrain.getKinematics())
-        .setReversed(false)
-        .addConstraint(voltageConstraint);
+    )
+    .setKinematics(driveTrain.getKinematics())
+    .setReversed(false)
+    .addConstraint(voltageConstraint);
 
-    //Note: The distances and angles are not correct and are just educated guesses
-    
+    //Creating Trajectory for middle starting position going forwards
+    public static Trajectory TrajectoryMiddleForward = TrajectoryGenerator.generateTrajectory(
+        //Start pose
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(
+            new Translation2d(1.5,0)
+        ),
+        // End pose
+        new Pose2d(3, 0, new Rotation2d(0)),
+        configForward
+    );
 
-        //Creating Trajectory for middle starting position going forwards
-        public static Trajectory TrajectoryMiddleForward = TrajectoryGenerator.generateTrajectory(
-            //Start pose
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                new Translation2d(1.5,0)
-                ),
-            // End pose
-            new Pose2d(3, 0, new Rotation2d(0)),
-            configForward
-        );
+    //Creating Trajectory for Right position going forwards
+    public static Trajectory TrajectoryRightForward = TrajectoryGenerator.generateTrajectory(
+        //Start pose
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(
+            new Translation2d(1.5, -0.5) //Insert proper dimensions
+        ),
+        // End pose
+        new Pose2d(3, -1, new Rotation2d(30)), //Insert proper dimensions
+        configForward
+    );
 
-        //Creating Trajectory for Right position going forwards
-        public static Trajectory TrajectoryRightForward = TrajectoryGenerator.generateTrajectory(
-            //Start pose
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                new Translation2d(1.5, -0.5) //Insert proper dimensions
-                ),
-            // End pose
-            new Pose2d(3, -1, new Rotation2d(30)), //Insert proper dimensions
-            configForward
-        );
+    //Creating Trajectory for left position going forwards
+    public static Trajectory TrajectoryLeftForward = TrajectoryGenerator.generateTrajectory(
+        //Start pose
+        new Pose2d(0, 0, new Rotation2d(0)),
+        List.of(
+            new Translation2d(1.5, 0.5)
+        ),
+        // End pose
+        new Pose2d(3, 1, new Rotation2d(-30)),
+        configForward
+    );
 
-        //Creating Trajectory for left position going forwards
-        public static Trajectory TrajectoryLeftForward = TrajectoryGenerator.generateTrajectory(
-            //Start pose
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                new Translation2d(1.5, 0.5)
-            ),
-            // End pose
-            new Pose2d(3, 1, new Rotation2d(-30)),
-            configForward
-        );
-
-        //Creating trajectory configBackwards
-        static TrajectoryConfig configBackward = new TrajectoryConfig(
+    //Creating trajectory configBackwards
+    public static TrajectoryConfig configBackward = new TrajectoryConfig(
         PathConstants.kMaxVelMPS, 
         PathConstants.kMaxAccelMPSPS
-        )
-        .setKinematics(driveTrain.getKinematics())
-        .setReversed(true)
-        .addConstraint(voltageConstraint);
+    )
+    .setKinematics(driveTrain.getKinematics())
+    .setReversed(true)
+    .addConstraint(voltageConstraint);
 
-        //Creating Trajectory for middle position going backwards
-        public static Trajectory TrajectoryMiddleBack = TrajectoryGenerator.generateTrajectory(
-            //Start pose
-            new Pose2d(3, 0, new Rotation2d(0)),
-            List.of(
-                new Translation2d(1.5,0)
-                ),
-            // End pose
-            new Pose2d(0, 0, new Rotation2d(0)),
-            configBackward
-            );
+    //Creating Trajectory for middle position going backwards
+    public static Trajectory TrajectoryMiddleBack = TrajectoryGenerator.generateTrajectory(
+        //Start pose
+        new Pose2d(3, 0, new Rotation2d(0)),
+        List.of(
+            new Translation2d(1.5,0)
+        ),
+        // End pose
+        new Pose2d(0, 0, new Rotation2d(0)),
+        configBackward
+    );
 
         //Creating Trajectory for right position going backwards
         public static Trajectory TrajectoryRightBack = TrajectoryGenerator.generateTrajectory(

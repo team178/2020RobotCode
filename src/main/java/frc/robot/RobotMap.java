@@ -9,6 +9,9 @@ package frc.robot;
 /**
  * Add your docs here.
  */
+
+import edu.wpi.first.wpilibj.SPI;
+
 public class RobotMap {
 
     //CAN
@@ -26,6 +29,9 @@ public class RobotMap {
     public static int winchMaster = 11;
     public static int winchSlave = 12;
     public static int leveler = 10;
+
+    public static int encoderFeedbackDevice = 0;
+    public static SPI.Port gyroPort = SPI.Port.kOnboardCS0;
 
     //idk what to do with these
     public static int Encoder1 = 5;

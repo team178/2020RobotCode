@@ -180,11 +180,11 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (!Robot.auxController.rightBumper.get()) {
+    if (!Robot.mainController.leftPadBottom1.get()) {
       solenoidTrigger = true;
     }
     
-    if (Robot.auxController.rightBumper.get() && solenoidTrigger) {
+    if (Robot.mainController.leftPadBottom1.get() && solenoidTrigger) {
       if (deployer.get()) {
         retractContestant();
       } else {

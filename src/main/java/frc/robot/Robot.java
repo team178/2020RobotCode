@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.autonomous.PossibleTrajectories;
 import frc.robot.subsystems.Climber;
@@ -49,18 +50,27 @@ public class Robot extends TimedRobot {
   public static SendableChooser<String> endLocation = new SendableChooser<>();
   
   // Declare subsystems
-  public static DriveTrain drivetrain;
-  public static LawnMower lawnmower;
-  public static WheelOfFortuneContestant wheeloffortunecontestant;
-  private static double currentAngle;
-  public static LightsArduino lights; 
-  public static LightStrip lightStrip;
-  public static Climber climber;
+  public static DriveTrain driveTrain = new DriveTrain();
+  public static LawnMower lawnMower = new LawnMower();
+  public static WheelOfFortuneContestant wheelOfFortuneContestant = new WheelOfFortuneContestant();
+  public static LightsArduino lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
+  public static LightStrip lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
+  public static Climber climber = new Climber();
 
+  public static SubsystemBase[] subsystems = {
+    driveTrain,
+    lawnMower,
+    wheelOfFortuneContestant,
+    lights,
+    lightStrip,
+    climber
+  };
+  
   public static String gameData;
   public static double tof1Previous;
   public static double tof2Previous;
-
+  private static double currentAngle;
+  
   //Declare joysticks
   public static ThrustmasterJoystick mainController;
 	public static XboxController auxController;
@@ -120,18 +130,8 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putData("AutoLocation", startPath);
     SmartDashboard.putData("AutoLocation", endLocation);
-
-    drivetrain = new DriveTrain();
-    lawnmower = new LawnMower();
-    wheeloffortunecontestant = new WheelOfFortuneContestant();
-    climber = new Climber();
-
-    //lights
-    lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
-    lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
     
-    
-    drivetrain.calibrateGyro();
+    driveTrain.calibrateGyro();
     gameData = "";
     // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     // m_chooser.addOption("My Auto", kCustomAuto);
@@ -180,23 +180,23 @@ public class Robot extends TimedRobot {
       changeCamera("cam2", 2);
     }
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
-    SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
+    SmartDashboard.putNumber("Gyro Reading", driveTrain.getAngle().getDegrees());
+    SmartDashboard.putNumber("Balls in Lawn Mower", lawnMower.getCounter());
 
     //Gyro stuff
-    if(drivetrain.getGyroReading()%360 == 0)
+    if(driveTrain.getAngle().getDegrees()%360 == 0)
     {
-      currentAngle = drivetrain.getGyroReading();
+      currentAngle = driveTrain.getAngle().getDegrees();
     } else {
-      currentAngle = Math.abs(drivetrain.getGyroReading()%360);
+      currentAngle = Math.abs(driveTrain.getAngle().getDegrees()%360);
     }
-    System.out.println("Gyro Reading: " + drivetrain.getGyroReading());
+    System.out.println("Gyro Reading: " + driveTrain.getAngle());
     System.out.println("Current Angle Reading: " + currentAngle);
 
     climber.periodic();
-    drivetrain.periodic();
+    driveTrain.periodic();
     lights.periodic();
-    wheeloffortunecontestant.periodic();
+    wheelOfFortuneContestant.periodic();
 
   }
 
@@ -221,6 +221,7 @@ public class Robot extends TimedRobot {
 
   RamseteCommand rForward = null;
   RamseteCommand rBackward = null;
+
 //the command rForward / rBackward refers to direction of the robot, either forwards or backwards;
 //forward is used when the robot moves from its station into the dumpball area
 //backward is used when the robot comes back from dumpball area into its station
@@ -256,9 +257,10 @@ public class Robot extends TimedRobot {
 //the wait time is necessary in order to avoid other robots in our robot's path
   Command autonomousCommand = new WaitCommand(timerValue);
   autonomousCommand.andThen(rForward);
-  autonomousCommand.andThen(() -> lawnmower.ballDump(1));
+  autonomousCommand.andThen(() -> lawnMower.ballDump(1));
   autonomousCommand.andThen(rBackward);
 //commented this out because the code was made more efficient by vivek. sorry yellow gang
+// -- liza
   //Might scrw up if keep changing startPath and endLocation
   // if (startPath.getSelected() != "" && endLocation.getSelected() != "") {
   //   if (path1.equals("Left")) {
@@ -306,6 +308,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     CommandScheduler.getInstance().run();
+    for (SubsystemBase subsystem : subsystems) {
+      subsystem.periodic();
+    }
   }
 
   /**

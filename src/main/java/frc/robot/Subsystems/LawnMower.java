@@ -178,11 +178,11 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
-    if (!Robot.auxController.leftBumper.get()) {
+    if (!Robot.mainController.leftPadBottom3.get()) {
       solenoidTrigger = true;
     }
     
-    if (Robot.auxController.leftBumper.get() && solenoidTrigger) {
+    if (Robot.mainController.leftPadBottom3.get() && solenoidTrigger) {
       if (deployer.get()) {
         retractIntake();
       } else {
@@ -199,6 +199,6 @@ public class LawnMower extends SubsystemBase {
       intakeBall(Robot.auxController.getRightTrigger());
     }
     
-    runMower(0.5);
+    runMower(Robot.auxController.getLeftStickY());
   }
 }
