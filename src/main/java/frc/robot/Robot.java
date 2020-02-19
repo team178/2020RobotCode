@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
   
   //Declare joysticks
   public static ThrustmasterJoystick mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
-  public static XboxController auxController = new XboxController(RobotMap.JoystickPortXboxAux);
+  public static XboxController auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
   
   //Declare autonomous command
   //private Command autonomousCommand;

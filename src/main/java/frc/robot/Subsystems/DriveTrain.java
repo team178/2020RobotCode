@@ -68,7 +68,7 @@ public class DriveTrain extends SubsystemBase {
   
   //Gyro mehtods
   public Supplier<Double> headingDegrees;
-  public Supplier<Double> headingRotation2d;
+  public Supplier<Rotation2d> headingRotation2d;
   
   public DriveTrain() {
     leftMaster = new WPI_TalonSRX(RobotMap.DMLeftMaster);
