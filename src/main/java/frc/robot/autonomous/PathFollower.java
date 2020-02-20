@@ -33,7 +33,7 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class PathFollower {
 
-    private static DriveTrain driveTrain = Robot.driveTrain;
+    private static DriveTrain driveTrain = Robot.drivetrain;
 
     public static Command getAutonomousCommand() {
         //Creating autonomous voltage constraint

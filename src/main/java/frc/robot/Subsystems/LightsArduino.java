@@ -147,7 +147,7 @@ public boolean sendMessage(char message){
 
   @Override
   public void periodic() {
-    ball(Robot.lawnMower.getCounter());
+    ball(Robot.lawnmower.getCounter());
     setAllianceColor();
     
   }

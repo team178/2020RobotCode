@@ -173,6 +173,10 @@ public class DriveTrain extends SubsystemBase {
     odometry.update(getAngle(), leftRate.get(), rightRate.get());
   }
 
+  public double getGyroReading() {
+    return gyro.getAngle();
+  }
+
   /*
    * path planning accessors
    */

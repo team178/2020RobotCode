@@ -18,14 +18,14 @@ public class MoveToAngle extends CommandBase {
     private static final double tolerance = 10;
   
     public MoveToAngle(double angle) {
-        addRequirements(Robot.driveTrain);
+        addRequirements(Robot.drivetrain);
         desiredAngle = angle;
     }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      drivetrain = Robot.driveTrain;
+      drivetrain = Robot.drivetrain;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

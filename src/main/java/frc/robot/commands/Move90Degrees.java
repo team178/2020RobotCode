@@ -18,13 +18,13 @@ public class Move90Degrees extends CommandBase {
   private static final double tolerance = 5;
 
   public Move90Degrees() {
-    addRequirements(Robot.driveTrain);
+    addRequirements(Robot.drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      drivetrain = Robot.driveTrain;
+      drivetrain = Robot.drivetrain;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
