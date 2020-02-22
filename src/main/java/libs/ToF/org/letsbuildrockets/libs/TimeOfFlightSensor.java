@@ -42,7 +42,7 @@ public class TimeOfFlightSensor {
     private double[] values;
     private String lastEdge;
 
-    public final double MAX = 150; //These values need to be refined based on the actual dimmensions of the lawnmower
+    public final double MAX = 230; 
     public final double MIN = 60;
 
     public TimeOfFlightSensor(int ID) {
