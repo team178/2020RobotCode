@@ -13,6 +13,7 @@ import frc.robot.RobotMap;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import libs.IO.XboxController.Direction;
 import libs.org.letsbuildrockets.libs.TimeOfFlightSensor;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -55,23 +56,39 @@ public class LawnMower extends SubsystemBase {
 
   public void ballDump(double speed) {
     if (getCounter() != 0) {
-      moveAllMotors(speed);
+      moveConveyor(speed);
+      shoot(speed);
     } else {
-      moveAllMotors(0);
+      moveConveyor(0);
+      shoot(0);
     }
   }
 
-  public void runMower(double speed) {
+  public boolean positionOverride() {
+    if (getCounter() < 4) {
+      if (tof1.getEdge().equals("No ball") && tof2.getEdge().equals("Center")) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /* public void runMower(double speed) {
     if (getCounter() < 4) {
       if (!tof1.getEdge().equals("No ball")) {
         intakeBall(speed);
+        moveConveyor(speed);
       } else if (tof2.getEdge().equals("Center")) {
         intakeBall(0);
+        moveConveyor(0);
       }
     } else {
-      intakeBall(0.5*speed);
+      intakeBall(0.5*speed); //This might have to be 0...
+      moveConveyor(0.5*speed);
     }
-  } 
+  } */
 
   public void intakeBall(double speed) {
     System.out.println("speed " + speed);
@@ -179,25 +196,22 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
-    if (!Robot.mainController.leftPadBottom3.get()) {
-      solenoidTrigger = true;
-    }
-    
-    if (Robot.mainController.leftPadBottom3.get() && solenoidTrigger) {
-      if (deployer.get()) {
-        retractIntake();
-      } else {
-        extendIntake();
-      }
-      solenoidTrigger = false;
+    if (Robot.auxController.y.get()) {
+      ballDump(1);
     }
 
-    runMower(-Robot.auxController.getLeftStickY());
-    ballDump(Robot.auxController.getRightStickY());
-    intake.set(ControlMode.PercentOutput, Robot.auxController.getLeftStickY());
-    conveyorTop.set(ControlMode.PercentOutput, Robot.auxController.getLeftStickY());
-    conveyorBottom.set(ControlMode.PercentOutput, Robot.auxController.getLeftStickY());
-    shooterLeft.set(ControlMode.PercentOutput, -Robot.auxController.getRightStickY());
-    shooterRight.set(ControlMode.PercentOutput, -Robot.auxController.getRightStickY());
+    if (Robot.auxController.direction == Direction.TOP) {
+      extendIntake();
+    }
+
+    if (Robot.auxController.direction == Direction.BOTTOM) {
+      retractIntake();
+    }
+
+    if (!positionOverride()) {
+      moveConveyor(Robot.auxController.getLeftStickY());
+    }
+
+    intakeBall(Robot.auxController.getRightStickY());
   }
 }

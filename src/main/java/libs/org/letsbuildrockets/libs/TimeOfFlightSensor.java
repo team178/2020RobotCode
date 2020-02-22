@@ -14,7 +14,6 @@ public class TimeOfFlightSensor {
     // Team 178 2020 Specific Fields
     private double[] values;
     private String lastEdge;
-    private int counter;
 
     public final double MAX = 150; //These values need to be refined based on the actual dimmensions of the lawnmower
     public final double MIN = 60;

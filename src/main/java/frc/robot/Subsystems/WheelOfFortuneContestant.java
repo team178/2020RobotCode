@@ -51,6 +51,10 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   public void retractContestant() {
     deployer.set(false);
   }
+
+  public void spinContestant(double speed) {
+    contestant.set(ControlMode.PercentOutput, speed);
+  }
   
   
   /** 
@@ -160,19 +164,19 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     return true;
   }
 
-  public void spinRC() {
+  public void spinRC(double speed) {
     if (!rotationControl(3)) {
-      contestant.set(ControlMode.PercentOutput, 1);
+      spinContestant(speed);
     } else {
-      contestant.set(ControlMode.PercentOutput, 0);
+      spinContestant(0);
     }
   }
 
-  public void spinPC() {
+  public void spinPC(double speed) {
     if (!positionControl()) {
-      contestant.set(ControlMode.PercentOutput, 1);
+      spinContestant(speed);
     } else {
-      contestant.set(ControlMode.PercentOutput, 0);
+      spinContestant(0);
     }
   }
 
@@ -180,26 +184,24 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (!Robot.mainController.leftPadBottom1.get()) {
-      solenoidTrigger = true;
-    }
-    
-    if (Robot.mainController.leftPadBottom1.get() && solenoidTrigger) {
-      if (deployer.get()) {
-        retractContestant();
-      } else {
-        extendContestant();
-      }
-      solenoidTrigger = false;
+    spinContestant(Robot.auxController.getLeftTrigger());
+
+    if (Robot.auxController.x.get()) {
+      spinRC(1);
     }
 
     if (Robot.auxController.a.get()) {
-      spinRC();
+      spinPC(1);
+    }
+
+    if (Robot.auxController.back.get()) {
+      extendContestant();
+    }
+
+    if (Robot.auxController.start.get()) {
+      retractContestant();
     }
     
-    if (Robot.auxController.x.get()) {
-      spinPC();
-    }
   }
 
 }
