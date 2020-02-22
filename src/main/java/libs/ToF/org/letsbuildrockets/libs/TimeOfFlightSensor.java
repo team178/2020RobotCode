@@ -1,7 +1,7 @@
-package libs.ToF.org.letsbuildrockets.libs;
+package libs.tof.org.letsbuildrockets.libs;
 
-import libs.ToF.org.letsbuildrockets.libs.CustomCAN;
-import libs.ToF.org.letsbuildrockets.libs.VersionNumber;
+import libs.tof.org.letsbuildrockets.libs.CustomCAN;
+import libs.tof.org.letsbuildrockets.libs.VersionNumber;
 
 import edu.wpi.first.hal.util.UncleanStatusException;
 import edu.wpi.first.wpilibj.Timer;
@@ -38,6 +38,13 @@ public class TimeOfFlightSensor {
     protected CustomCAN tofsensor;
     protected static int TOFCount = 0;
 
+    // Team 178 2020 Specific Fields
+    private double[] values;
+    private String lastEdge;
+
+    public final double MAX = 150; //These values need to be refined based on the actual dimmensions of the lawnmower
+    public final double MIN = 60;
+
     public TimeOfFlightSensor(int ID) {
         tofsensor = new CustomCAN("TOF"+String.valueOf(TOFCount), ID);
         _firmwareVersion = new VersionNumber(0, 0);
@@ -48,6 +55,8 @@ public class TimeOfFlightSensor {
         getFirwareVersion();
         if(_firmwareVersion.isOlderThan(minVersion))
             HAL.sendError(true, -2, false, "LBR: Old Firmware! ToF sensor at " + String.format("0x%04x", _ID) + " is on firmware version " + _firmwareVersion.toString() + " but version " + minVersion.toString() + " is required. Upgrade ToF firmware, or downagrade the TimeOfFlight Java library!", "", "", false);
+        values = new double[2];
+        lastEdge = "None";
         }
 
     private void readBuffer() {
@@ -146,6 +155,35 @@ public class TimeOfFlightSensor {
         if(packetTimer.hasPeriodPassed(0.01))
             readBuffer();
         return (_error == 0);
+    }
+
+
+        //Team 178 2020 Specific Methods
+    public void updateDistance() {
+        values[1] = values[0];
+        values[0] = getDistance();
+    }
+
+    public String getEdge() {
+        double secant = (values[1] - values[0])/0.02;
+        if (values[0] > MAX) {
+            return "No ball";
+        } else if (values[0] < MIN) {
+            return "Center";
+        } else if (secant > 100) {
+            lastEdge = "Leading";
+            return "Leading";
+        } else if (secant < -100) {
+            lastEdge = "Trailing";
+            return "Trailing";
+        } else if (lastEdge == "Leading") {
+            return "Leading";
+        } else if (lastEdge == "Trailing") {
+            return "Trailing";
+        } else if (lastEdge == "None") {
+            return "No ball";
+        }
+        return "No ball";
     }
 
 }
