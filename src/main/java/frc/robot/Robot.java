@@ -71,8 +71,8 @@ public class Robot extends TimedRobot {
     climber = new Climber();
 
     //lights
-    lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
-    lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
+    //lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
+    //lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
     
     
     drivetrain.calibrateGyro();
@@ -134,7 +134,8 @@ public class Robot extends TimedRobot {
 
     climber.periodic();
     drivetrain.periodic();
-    lights.periodic();
+    //lights.periodic();
+    lawnmower.periodic();
     wheeloffortunecontestant.periodic();
 
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
@@ -145,6 +146,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
     SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
     SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
+    SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
   }
 
   /**

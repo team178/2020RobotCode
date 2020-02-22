@@ -55,18 +55,19 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void ballDump(double speed) {
-      shoot(speed);
+      moveConveyor(speed);
+      shoot(0.9*speed);
   }
 
   public boolean positionOverride() {
     if (getCounter() < 4) {
-      if (tof1.getEdge().equals("No ball") && tof2.getEdge().equals("Center")) {
+      if (tof1.getEdge().equals("No ball") && (tof2.getEdge().equals("Center") || tof2.getEdge().equals("Trailing"))) {
         return true;
       } else {
         return false;
       }
     }
-    return true;
+    return false;
   }
 
   /* public void runMower(double speed) {
@@ -189,12 +190,8 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
-    tof1.updateDistance();
-    tof2.updateDistance();
-    tof3.updateDistance();
-
     if (Robot.auxController.y.get()) {
-      ballDump(1);
+      ballDump(0.7);
     } else {
       ballDump(0);
     }
@@ -208,9 +205,11 @@ public class LawnMower extends SubsystemBase {
     }
 
     if (!positionOverride()) {
-      moveConveyor(Robot.auxController.getLeftStickY());
+      moveConveyor(0.28*Robot.auxController.getLeftStickY());
+    } else {
+      moveConveyor(0);
     }
 
-    intakeBall(-Robot.auxController.getRightStickY());
+    intakeBall(0.4*-Robot.auxController.getRightStickY());
   }
 }

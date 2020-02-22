@@ -43,7 +43,7 @@ public class TimeOfFlightSensor {
     private String lastEdge;
 
     public final double MAX = 230; 
-    public final double MIN = 60;
+    public final double MIN = 100;
 
     public TimeOfFlightSensor(int ID) {
         tofsensor = new CustomCAN("TOF"+String.valueOf(TOFCount), ID);
@@ -165,6 +165,9 @@ public class TimeOfFlightSensor {
     }
 
     public String getEdge() {
+        values[1] = values[0];
+        values[0] = getDistance();
+
         double secant = (values[1] - values[0])/0.02;
         if (values[0] > MAX) {
             return "No ball";
