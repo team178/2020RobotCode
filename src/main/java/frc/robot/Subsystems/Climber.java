@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,16 +19,15 @@ import frc.robot.RobotMap;
 public class Climber extends SubsystemBase {
   
   private static Solenoid elevator;
-  private static TalonSRX winchMaster;
-  private static TalonSRX winchSlave;
+  private static VictorSPX winchMaster;
+  private static VictorSPX winchSlave;
   private static TalonSRX leveler;
 
   public Climber() {
     elevator = new Solenoid(RobotMap.hookThurst);
-    winchMaster = new TalonSRX(RobotMap.winchMaster);
-    winchSlave = new TalonSRX(RobotMap.winchSlave);
+    winchMaster = new VictorSPX(RobotMap.winchMaster);
+    winchSlave = new VictorSPX(RobotMap.winchSlave);
     leveler = new TalonSRX(RobotMap.leveler);
-    winchSlave.follow(winchMaster);
   }
 
   public void extendHook() {
@@ -40,6 +40,8 @@ public class Climber extends SubsystemBase {
 
   public void windWinch(double speed) {
     winchMaster.set(ControlMode.PercentOutput, speed);
+    winchSlave.set(ControlMode.PercentOutput, speed);
+    System.out.println("Winch Speed:" + speed);
   }
 
   public void moveAlongBar(double speed) {
@@ -49,7 +51,7 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     windWinch(Robot.auxController.getRightTrigger());
-    
+
     if (Robot.auxController.leftBumper.get()) {
       extendHook();
     }

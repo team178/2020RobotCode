@@ -124,9 +124,6 @@ public class Robot extends TimedRobot {
       changeCamera("cam2", 2);
     }
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
-    SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
-
     //Gyro stuff
     if(drivetrain.getGyroReading()%360 == 0)
     {
@@ -139,6 +136,15 @@ public class Robot extends TimedRobot {
     drivetrain.periodic();
     lights.periodic();
     wheeloffortunecontestant.periodic();
+
+    SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
+    SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
+    SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
+    SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
+    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
+    SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
+    SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
+    SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
   }
 
   /**

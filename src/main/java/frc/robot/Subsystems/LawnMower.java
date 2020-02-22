@@ -45,9 +45,9 @@ public class LawnMower extends SubsystemBase {
     shooterRight = new TalonSRX(RobotMap.shooterRight);
     deployer = new Solenoid(RobotMap.LMdeployer);
     bouncer = new Solenoid(RobotMap.LMbouncer);
-    tof1 = new TimeOfFlightSensor(0x623);
-    tof2 = new TimeOfFlightSensor(0x620);
-    tof3 = new TimeOfFlightSensor(0x624);
+    tof1 = new TimeOfFlightSensor(0x0623);
+    tof2 = new TimeOfFlightSensor(0x0620);
+    tof3 = new TimeOfFlightSensor(0x0624);
     counter = 0;
     inTrigger = true;
     outTrigger = false;
@@ -55,13 +55,7 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void ballDump(double speed) {
-    if (getCounter() != 0) {
-      moveConveyor(speed);
       shoot(speed);
-    } else {
-      moveConveyor(0);
-      shoot(0);
-    }
   }
 
   public boolean positionOverride() {
@@ -91,7 +85,6 @@ public class LawnMower extends SubsystemBase {
   } */
 
   public void intakeBall(double speed) {
-    System.out.println("speed " + speed);
     intake.set(ControlMode.PercentOutput, speed);
   }
 
@@ -102,7 +95,7 @@ public class LawnMower extends SubsystemBase {
 
   public void shoot(double speed) {
     shooterLeft.set(ControlMode.PercentOutput, -speed);
-    shooterRight.set(ControlMode.PercentOutput, speed);
+    shooterRight.set(ControlMode.PercentOutput, -speed);
   }
 
   public void moveAllMotors(double speed) {
@@ -196,15 +189,21 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
+    tof1.updateDistance();
+    tof2.updateDistance();
+    tof3.updateDistance();
+
     if (Robot.auxController.y.get()) {
       ballDump(1);
+    } else {
+      ballDump(0);
     }
 
-    if (Robot.auxController.direction == Direction.TOP) {
+    if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();
     }
 
-    if (Robot.auxController.direction == Direction.BOTTOM) {
+    if (Robot.auxController.getDirection() == Direction.BOTTOM) {
       retractIntake();
     }
 
@@ -212,6 +211,6 @@ public class LawnMower extends SubsystemBase {
       moveConveyor(Robot.auxController.getLeftStickY());
     }
 
-    intakeBall(Robot.auxController.getRightStickY());
+    intakeBall(-Robot.auxController.getRightStickY());
   }
 }
