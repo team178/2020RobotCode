@@ -134,14 +134,11 @@ public class Robot extends TimedRobot {
     } else {
       currentAngle = Math.abs(drivetrain.getGyroReading()%360);
     }
-    System.out.println("Gyro Reading: " + drivetrain.getGyroReading());
-    System.out.println("Current Angle Reading: " + currentAngle);
 
     climber.periodic();
     drivetrain.periodic();
     lights.periodic();
     wheeloffortunecontestant.periodic();
-
   }
 
   /**

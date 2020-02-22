@@ -73,7 +73,8 @@ public class LawnMower extends SubsystemBase {
     }
   } 
 
-  public void intakeBall (double speed) {
+  public void intakeBall(double speed) {
+    System.out.println("speed " + speed);
     intake.set(ControlMode.PercentOutput, speed);
   }
 
@@ -191,14 +192,12 @@ public class LawnMower extends SubsystemBase {
       solenoidTrigger = false;
     }
 
-    if (Robot.auxController.getLeftTrigger() != 0) {
-      ballDump(Robot.auxController.getLeftTrigger());
-    }
-
-    if (Robot.auxController.getRightTrigger() != 0) {
-      intakeBall(Robot.auxController.getRightTrigger());
-    }
-    
-    runMower(Robot.auxController.getLeftStickY());
+    runMower(-Robot.auxController.getLeftStickY());
+    ballDump(Robot.auxController.getRightStickY());
+    intake.set(ControlMode.PercentOutput, Robot.auxController.getLeftStickY());
+    conveyorTop.set(ControlMode.PercentOutput, Robot.auxController.getLeftStickY());
+    conveyorBottom.set(ControlMode.PercentOutput, Robot.auxController.getLeftStickY());
+    shooterLeft.set(ControlMode.PercentOutput, -Robot.auxController.getRightStickY());
+    shooterRight.set(ControlMode.PercentOutput, -Robot.auxController.getRightStickY());
   }
 }
