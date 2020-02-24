@@ -55,8 +55,9 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void ballDump(double speed) {
+      counter = 0;
       moveConveyor(speed);
-      shoot(0.9*speed);
+      shoot(speed);
   }
 
   public boolean positionOverride() {
@@ -172,7 +173,7 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void counterFixer() {
-    while (counter < 0) {
+    if(counter < 0) {
       counter ++;
     }
   }
@@ -184,8 +185,14 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
+<<<<<<< HEAD
     /*if (Robot.auxController.y.get()) {
       ballDump(0.7);
+=======
+    getCounter();
+    if (Robot.auxController.y.get()) {
+      ballDump(0.5);
+>>>>>>> 7bccfaaf4874db39e4b8ba61a6bf401772cb70ee
     } else {
       ballDump(0);
     }*/
@@ -199,7 +206,7 @@ public class LawnMower extends SubsystemBase {
     }
 
     if (!positionOverride()) {
-      moveConveyor(0.28*Robot.auxController.getLeftStickY());
+      moveConveyor(0.25*Robot.auxController.getLeftStickY());
     } else {
       moveConveyor(0);
     }
