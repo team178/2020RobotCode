@@ -180,13 +180,27 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     }
   }
 
+  public void spinContestant(double speed, boolean override) {
+    if (override) {
+      contestant.set(ControlMode.PercentOutput, speed);
+    } else {
+      if(Robot.gameData.length() > 0) {
+        spinPC(speed);
+      } else {
+        spinRC(speed);
+      }
+    }
+  }
+
   // should only have to apply "spinPC" and "spinRC" to buttons/triggers
 
   @Override
   public void periodic() {
-    spinContestant(Robot.auxController.getLeftTrigger());
+    if (Robot.auxController.getLeftTrigger() > 0) {
+      spinContestant(Robot.auxController.getLeftTrigger(), true);
+    }
 
-    if (Robot.auxController.x.get()) {
+    /*if (Robot.auxController.x.get()) {
       spinRC(1);
     }
 
@@ -200,8 +214,7 @@ public class WheelOfFortuneContestant extends SubsystemBase {
 
     if (Robot.auxController.start.get()) {
       retractContestant();
-    }
-    
+    }*/
   }
 
 }

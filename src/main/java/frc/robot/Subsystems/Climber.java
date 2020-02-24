@@ -50,7 +50,7 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    windWinch(Robot.auxController.getRightTrigger());
+    /*windWinch(Robot.auxController.getRightTrigger());
 
     if (Robot.auxController.leftBumper.get()) {
       extendHook();
@@ -58,6 +58,6 @@ public class Climber extends SubsystemBase {
     
     if (Robot.auxController.rightBumper.get()) {
       retractHook();
-    }
+    }*/
   }
 }

@@ -38,8 +38,8 @@ public class DriveTrain extends SubsystemBase {
   private static WPI_TalonSRX rightMaster;
   private static WPI_VictorSPX rightSlave;
 
-  private static SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftMaster, leftSlave);
-  private static SpeedControllerGroup rightMotors = new SpeedControllerGroup(leftMaster, leftSlave);
+  private static SpeedControllerGroup leftMotors;
+  private static SpeedControllerGroup rightMotors;
 
   //Gyro
   private final Gyro gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
@@ -75,14 +75,14 @@ public class DriveTrain extends SubsystemBase {
     
     leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-
+    
     leftMaster.setSensorPhase(false);
     rightMaster.setSensorPhase(true);
-
-    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP;
-    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10;
-    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP;
-    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10;
+    
+    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
+    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
+    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //l
+    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //l
     
     headingDegrees = () -> -gyro.getAngle();
     headingRotation2d = () -> Rotation2d.fromDegrees(-gyro.getAngle());
@@ -90,8 +90,11 @@ public class DriveTrain extends SubsystemBase {
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
 
+    leftMotors = new SpeedControllerGroup(leftMaster, leftSlave);
+    rightMotors = new SpeedControllerGroup(leftMaster, leftSlave);
+    
     setDriveDirection(DriveDirection.FORWARD);
-
+    
     kinematics = new DifferentialDriveKinematics(PathConstants.kTrackWidthMeters);
     odometry = new DifferentialDriveOdometry(getAngle());
     feedforward = new SimpleMotorFeedforward(PathConstants.kS, PathConstants.kV, PathConstants.kA);

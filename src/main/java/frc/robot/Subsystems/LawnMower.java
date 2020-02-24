@@ -14,7 +14,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import libs.IO.XboxController.Direction;
-import libs.tof.org.letsbuildrockets.libs.TimeOfFlightSensor;
+import libs.tof.org.letsbuildrockets.libs.*;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -60,14 +60,8 @@ public class LawnMower extends SubsystemBase {
   }
 
   public boolean positionOverride() {
-    if (getCounter() < 4) {
-      if (tof1.getEdge().equals("No ball") && (tof2.getEdge().equals("Center") || tof2.getEdge().equals("Trailing"))) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-    return false;
+    return (getCounter() < 4) && tof1.getEdge().equals("No ball") && 
+        (tof2.getEdge().equals("Center") || tof2.getEdge().equals("Trailing"));
   }
 
   /* public void runMower(double speed) {
@@ -190,11 +184,11 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
-    if (Robot.auxController.y.get()) {
+    /*if (Robot.auxController.y.get()) {
       ballDump(0.7);
     } else {
       ballDump(0);
-    }
+    }*/
 
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();

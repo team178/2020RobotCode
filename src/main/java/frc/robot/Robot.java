@@ -11,10 +11,12 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.subsystems.Climber;
 //import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
@@ -84,7 +86,7 @@ public class Robot extends TimedRobot {
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
     auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
-
+    configButtonControls();
 
     //Camera initializations
     camserv = CameraServer.getInstance();
@@ -95,6 +97,17 @@ public class Robot extends TimedRobot {
     camera.setFPS(14);
     camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
   }
+
+  private void configButtonControls() {
+    //Aux buttons
+    auxController.y.whenPressed(() -> lawnmower.ballDump(0.7)).whenReleased(() -> lawnmower.ballDump(0));
+    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinContestant(1, false));
+    auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
+    auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
+    auxController.leftBumper.whenPressed(() -> climber.extendHook());
+    auxController.rightBumper.whenPressed(() -> climber.retractHook()).whileHeld(() -> climber.windWinch(1));
+  }
+
   public void changeCamera(String newName, int newPort) {
     camera = camserv.startAutomaticCapture(newName, newPort);
     camera.setFPS(14);
