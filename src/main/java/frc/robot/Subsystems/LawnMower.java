@@ -205,6 +205,6 @@ public class LawnMower extends SubsystemBase {
       moveConveyor(0);
     }
 
-    intakeBall(0.4*-Robot.auxController.getRightStickY());
+    intakeBall(-Robot.auxController.getRightStickY());
   }
 }

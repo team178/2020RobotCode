@@ -66,6 +66,9 @@ public class DriveTrain extends SubsystemBase {
   //Gyro mehtods
   public Supplier<Double> headingDegrees;
   public Supplier<Rotation2d> headingRotation2d;
+
+  //Misc
+  private DriveDirection currentDirection = DriveDirection.FORWARD;
   
   public DriveTrain() {
     leftMaster = new WPI_TalonSRX(RobotMap.DMLeftMaster);
@@ -79,10 +82,10 @@ public class DriveTrain extends SubsystemBase {
     leftMaster.setSensorPhase(false);
     rightMaster.setSensorPhase(true);
     
-    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
-    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
-    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //l
-    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //l
+    leftPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
+    leftRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
+    rightPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //l
+    rightRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //l
     
     headingDegrees = () -> -gyro.getAngle();
     headingRotation2d = () -> Rotation2d.fromDegrees(-gyro.getAngle());
@@ -115,6 +118,18 @@ public class DriveTrain extends SubsystemBase {
 
   public void setDriveDirection(DriveDirection driveDirection) {
     if (driveDirection == DriveDirection.FORWARD) {
+      leftMaster.setInverted(false);
+      rightMaster.setInverted(true);
+    } else {
+      leftMaster.setInverted(true);
+      rightMaster.setInverted(false);
+    }
+    leftSlave.setInverted(InvertType.FollowMaster);
+    rightSlave.setInverted(InvertType.FollowMaster);
+  }
+
+  public void toggleDriveDirection() {
+    if (currentDirection == DriveDirection.FORWARD) {
       leftMaster.setInverted(false);
       rightMaster.setInverted(true);
     } else {
@@ -162,7 +177,7 @@ public class DriveTrain extends SubsystemBase {
   public void periodic() {
     //Joystick drive
     yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-    twistReduction = Robot.mainController.trigger.get() ? 0.4 : 1;
+    twistReduction = Robot.mainController.trigger.get() ? 0.3 : 0.5;
 
     yVal = Robot.mainController.getY() * yReduction;
     twistVal = Robot.mainController.getTwist() * twistReduction;

@@ -90,22 +90,32 @@ public class Robot extends TimedRobot {
 
     //Camera initializations
     camserv = CameraServer.getInstance();
-    
+
     //Camera 1
     camera = camserv.startAutomaticCapture("cam1", 0);
+    //camera.setResolution(160, 90);
+    camera.setFPS(14);
+    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+    
+    //Camera 1
+    camera = camserv.startAutomaticCapture("cam1", 1);
     //camera.setResolution(160, 90);
     camera.setFPS(14);
     camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
   }
 
   private void configButtonControls() {
+    //Main buttons
+    mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    
     //Aux buttons
     auxController.y.whenPressed(() -> lawnmower.ballDump(0.7)).whenReleased(() -> lawnmower.ballDump(0));
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinContestant(1, false));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     auxController.leftBumper.whenPressed(() -> climber.extendHook());
-    auxController.rightBumper.whenPressed(() -> climber.retractHook()).whileHeld(() -> climber.windWinch(1));
+    auxController.rightBumper.whenPressed(() -> climber.retractHook());//.whileHeld(() -> climber.windWinch(0.4))
+      //.whenReleased(() -> climber.windWinch(0));
   }
 
   public void changeCamera(String newName, int newPort) {
