@@ -199,22 +199,6 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     if (Robot.auxController.getLeftTrigger() > 0) {
       spinContestant(Robot.auxController.getLeftTrigger(), true);
     }
-
-    /*if (Robot.auxController.x.get()) {
-      spinRC(1);
-    }
-
-    if (Robot.auxController.a.get()) {
-      spinPC(1);
-    }
-
-    if (Robot.auxController.back.get()) {
-      extendContestant();
-    }
-
-    if (Robot.auxController.start.get()) {
-      retractContestant();
-    }*/
   }
 
 }

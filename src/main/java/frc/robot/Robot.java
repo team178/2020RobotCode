@@ -109,12 +109,15 @@ public class Robot extends TimedRobot {
     mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
     
     //Aux buttons
+    auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1));
+    auxController.b.whenPressed(() -> climber.windWinch(-0.1)).whenReleased(() -> climber.windWinch(0));
     auxController.y.whenPressed(() -> lawnmower.ballDump(0.7)).whenReleased(() -> lawnmower.ballDump(0));
-    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinContestant(1, false));
+    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     auxController.leftBumper.whenPressed(() -> climber.extendHook());
     auxController.rightBumper.whenPressed(() -> climber.retractHook());//.whileHeld(() -> climber.windWinch(0.4))
+
       //.whenReleased(() -> climber.windWinch(0));
   }
 
