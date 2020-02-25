@@ -31,7 +31,7 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
-  private int counter;
+  public int counter;
   private boolean inTrigger, outTrigger, solenoidTrigger;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
@@ -182,6 +182,10 @@ public class LawnMower extends SubsystemBase {
     addToCounter();
     removeFromCounter();
     return counter;
+  }
+
+  public void resetCounter() {
+    counter = 0;
   }
 
   public void periodic() {

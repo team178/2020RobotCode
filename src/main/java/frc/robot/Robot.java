@@ -14,9 +14,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.*;
+import frc.robot.autonomous.AutoLeftShoot;
+import frc.robot.autonomous.AutoMiddleShoot;
+import frc.robot.autonomous.AutoRightShoot;
 import frc.robot.subsystems.Climber;
 //import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
@@ -52,10 +57,13 @@ public class Robot extends TimedRobot {
 
   //Declare joysticks
   public static ThrustmasterJoystick mainController;
-	public static XboxController auxController;
+  public static XboxController auxController;
+  
+  public static SendableChooser<Command> autoModes = new SendableChooser<>();
+  public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
   
   //Declare autonomous command
-  //private Command autonomousCommand;
+  private Command autonomousCommand;
 
   //USB Camera declarations
   public static CameraServer camserv;
@@ -102,11 +110,21 @@ public class Robot extends TimedRobot {
     //camera.setResolution(160, 90);
     camera.setFPS(14);
     camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+
+    autoModes.addOption("Left", new AutoLeftShoot());
+    autoModes.addOption("Middle", new AutoMiddleShoot());
+    autoModes.addOption("Right", new AutoRightShoot());
+
+    preLoaded.addOption("0", 0);
+    preLoaded.addOption("1", 1);
+    preLoaded.addOption("2", 2);
+    preLoaded.addOption("3", 3);
   }
 
   private void configButtonControls() {
     //Main buttons
     mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.rightPadBottom3.whenPressed(() -> lawnmower.resetCounter());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1));
@@ -117,7 +135,6 @@ public class Robot extends TimedRobot {
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     auxController.leftBumper.whenPressed(() -> climber.extendHook());
     auxController.rightBumper.whenPressed(() -> climber.retractHook());//.whileHeld(() -> climber.windWinch(0.4))
-
       //.whenReleased(() -> climber.windWinch(0));
   }
 
@@ -158,11 +175,11 @@ public class Robot extends TimedRobot {
       currentAngle = Math.abs(drivetrain.getGyroReading()%360);
     }
 
-    climber.periodic();
+  /*  climber.periodic();
     drivetrain.periodic();
     //lights.periodic();
     lawnmower.periodic();
-    wheeloffortunecontestant.periodic();
+    wheeloffortunecontestant.periodic(); */
 
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
@@ -173,6 +190,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
     SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
+    SmartDashboard.putData("Auto Chooser", autoModes);
+    SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
+
+    CommandScheduler.getInstance().run();
   }
 
   /**
@@ -188,7 +209,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-  //  autonomousCommand = AutonomousSelector.getAutonomousCommand();
+    lawnmower.counter = preLoaded.getSelected();
+    autonomousCommand = autoModes.getSelected();
+  
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   /**
