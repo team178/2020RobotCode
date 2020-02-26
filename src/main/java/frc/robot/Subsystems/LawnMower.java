@@ -189,6 +189,8 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
+    Robot.auxController.y.whenPressed(() -> ballDump(0.7)).whenReleased(() -> ballDump(0));
+
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();
     }

@@ -18,8 +18,8 @@ public class AutoMiddleShoot extends SequentialCommandGroup {
    * Creates a new AutoLeftShoot.
    */
   public AutoMiddleShoot() {
-    super(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleForward),
-    new AutoBallDump(),
-    PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleBack));
+  //  super(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleForward),
+  // new AutoBallDump(),
+  //  PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleBack));
   }
 }

@@ -38,10 +38,11 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     solenoidTrigger = false;
   }
 
-  public static final Color Blue = ColorMatch.makeColor(0.153, 0.445, 0.402);
-  public static final Color Green = ColorMatch.makeColor(0.196, 0.557, 0.246);
-  public static final Color Red = ColorMatch.makeColor(0.475, 0.371, 0.153);
-  public static final Color Yellow = ColorMatch.makeColor(0.319, 0.545, 0.136);
+  // these are our test values, not the acutal competition values.
+  public static final Color Blue = ColorMatch.makeColor(0.208, 0.471, 0.320);
+  public static final Color Green = ColorMatch.makeColor(0.240, 0.568, 0.191);
+  public static final Color Red = ColorMatch.makeColor(0.504, 0.353, 0.142);
+  public static final Color Yellow = ColorMatch.makeColor(0.305, 0.546, 0.140);
   public static final Color Black = ColorMatch.makeColor(0,0,0);
 
   public void extendContestant() {

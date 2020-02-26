@@ -18,8 +18,8 @@ public class AutoRightShoot extends SequentialCommandGroup {
    * Creates a new AutoLeftShoot.
    */
   public AutoRightShoot() {
-    super(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightForward),
-    new AutoBallDump(),
-    PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightBack));
+  //  super(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightForward),
+  //  new AutoBallDump(),
+  //  PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryRightBack));
   }
 }
