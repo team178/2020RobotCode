@@ -203,11 +203,11 @@ public class LawnMower extends SubsystemBase {
 
     if (!positionOverride()) {
       //intakeBall(-0.5*Robot.auxController.getRightStickY()); //Test these speeds!!
-      moveConveyor(0.5*Robot.auxController.getLeftStickY());
+      moveConveyor(0.55*Robot.auxController.getLeftStickY());
     } else {
       //intakeBall(0);
       moveConveyor(0);
     }
-    intakeBall(-0.5*Robot.auxController.getRightStickY());
+    intakeBall(-0.75*Robot.auxController.getRightStickY());
   }
 }
