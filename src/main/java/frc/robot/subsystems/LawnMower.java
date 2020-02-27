@@ -60,9 +60,11 @@ public class LawnMower extends SubsystemBase {
       shoot(speed);
   }
 
+  //  v  IMPORTANT LOGIC STATEMENT  v
+
   public boolean positionOverride() {
-    return (getCounter() < 4) && tof1.getEdge().equals("No ball") && 
-        (tof2.getEdge().equals("Center") || tof2.getEdge().equals("Trailing"));
+    return tof1.getEdge().equals("No ball") && (!tof2.getEdge().equals("No ball"));
+    
   }
 
   /* public void runMower(double speed) {
@@ -200,13 +202,12 @@ public class LawnMower extends SubsystemBase {
     }
 
     if (!positionOverride()) {
-      intakeBall(-0.5*Robot.auxController.getRightStickY()); //Test these speeds!!
+      //intakeBall(-0.5*Robot.auxController.getRightStickY()); //Test these speeds!!
       moveConveyor(0.5*Robot.auxController.getLeftStickY());
     } else {
-      intakeBall(0);
+      //intakeBall(0);
       moveConveyor(0);
     }
-
-    intakeBall(-Robot.auxController.getRightStickY());
+    intakeBall(-0.5*Robot.auxController.getRightStickY());
   }
 }
