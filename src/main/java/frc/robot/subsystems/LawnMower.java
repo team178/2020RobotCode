@@ -32,7 +32,7 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
   public int counter;
-  private boolean inTrigger, outTrigger, solenoidTrigger;
+  private boolean inTrigger, outTrigger, clearance;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
@@ -51,20 +51,24 @@ public class LawnMower extends SubsystemBase {
     counter = 0;
     inTrigger = true;
     outTrigger = false;
-    solenoidTrigger = false;
+    clearance = false;
   }
 
   public void ballDump(double speed) {
-      counter = 0;
+    if (clearance && !tof3.getEdge().equals("No ball")) {
+      moveConveyor(-0.2);
+      clearance = false;
+    } else {
       moveConveyor(speed);
       shoot(speed);
+    }
+    clearance = counter == 0;
   }
 
   //  v  IMPORTANT LOGIC STATEMENT  v
 
   public boolean positionOverride() {
     return tof1.getEdge().equals("No ball") && (!tof2.getEdge().equals("No ball"));
-    
   }
 
   /* public void runMower(double speed) {
@@ -193,6 +197,8 @@ public class LawnMower extends SubsystemBase {
   public void periodic() {
     Robot.auxController.y.whenPressed(() -> ballDump(0.7)).whenReleased(() -> ballDump(0));
 
+    Robot.auxController.b.whenPressed(() -> startBouncing()).whenReleased(() -> stopBouncing());
+
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();
     }
@@ -201,13 +207,14 @@ public class LawnMower extends SubsystemBase {
       retractIntake();
     }
 
-    if (!positionOverride()) {
-      //intakeBall(-0.5*Robot.auxController.getRightStickY()); //Test these speeds!!
-      moveConveyor(0.55*Robot.auxController.getLeftStickY());
-    } else {
-      //intakeBall(0);
-      moveConveyor(0);
+    if (!Robot.auxController.y.get()) {
+      if (!positionOverride()) {
+        moveConveyor(0.55*Robot.auxController.getLeftStickY());
+      } else {
+        moveConveyor(0);
+      }
     }
+    
     intakeBall(-0.75*Robot.auxController.getRightStickY());
   }
 }

@@ -60,6 +60,7 @@ public class Robot extends TimedRobot {
   public static ThrustmasterJoystick mainController;
   public static XboxController auxController;
   
+  public static SendableChooser<Boolean> match = new SendableChooser<>();
   public static SendableChooser<Command> autoModes = new SendableChooser<>();
   public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
   
@@ -121,17 +122,19 @@ public class Robot extends TimedRobot {
     preLoaded.addOption("1", 1);
     preLoaded.addOption("2", 2);
     preLoaded.addOption("3", 3);
+
+    match.setDefaultOption("Yes", true);
+    match.addOption("Yes", true);
+    match.addOption("No", false);
   }
 
   private void configButtonControls() {
     //Main buttons
-    mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.trigger.whenPressed(() -> drivetrain.toggleDriveDirection());
     mainController.rightPadBottom3.whenPressed(() -> lawnmower.resetCounter());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1));
-    auxController.b.whenPressed(() -> climber.windWinch(-0.1)).whenReleased(() -> climber.windWinch(0));
-    auxController.y.whenPressed(() -> lawnmower.ballDump(0.7)).whenReleased(() -> lawnmower.ballDump(0));
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
@@ -194,6 +197,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
     SmartDashboard.putData("Auto Chooser", autoModes);
     SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
+    SmartDashboard.putData("Match?", match);
+
+    if (match.getSelected() == false)
+      auxController.b.whenPressed(() -> climber.windWinch(-0.1)).whenReleased(() -> climber.windWinch(0));
 
     CommandScheduler.getInstance().run();
   }
