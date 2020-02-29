@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.*;
 import frc.robot.autonomous.AutoLeftShoot;
 import frc.robot.autonomous.AutoMiddleShoot;
@@ -63,6 +64,7 @@ public class Robot extends TimedRobot {
   public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
   
   //Declare autonomous command
+  private RamseteCommand trajectoryCommand;
   private Command autonomousCommand;
 
   //USB Camera declarations
