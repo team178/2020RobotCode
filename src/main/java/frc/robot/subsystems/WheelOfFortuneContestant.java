@@ -200,6 +200,9 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     if (Robot.auxController.getLeftTrigger() > 0) {
       spinContestant(Robot.auxController.getLeftTrigger(), true);
     }
+    Robot.auxController.a.whenPressed(() -> spinPC(1));
+    //Robot.auxController.x.whenPressed(() -> spinRC(1));
+    Robot.auxController.x.whenPressed(() -> spinContestant(1));
   }
 
 }

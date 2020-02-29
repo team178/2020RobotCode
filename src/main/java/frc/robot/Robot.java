@@ -20,9 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.*;
-import frc.robot.autonomous.AutoLeftShoot;
-import frc.robot.autonomous.AutoMiddleShoot;
-import frc.robot.autonomous.AutoRightShoot;
+import frc.robot.autonomous.BasicAuto;
 import frc.robot.subsystems.Climber;
 //import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
@@ -125,11 +123,6 @@ public class Robot extends TimedRobot {
     camera.setFPS(14);
     camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
-
-      autoModes.addOption("Left", new AutoLeftShoot());
-    autoModes.addOption("Middle", new AutoMiddleShoot());
-    autoModes.addOption("Right", new AutoRightShoot());
-
     preLoaded.addOption("0", 0);
     preLoaded.addOption("1", 1);
     preLoaded.addOption("2", 2);
@@ -146,8 +139,6 @@ public class Robot extends TimedRobot {
     mainController.rightPadBottom3.whenPressed(() -> lawnmower.resetCounter());
     
     //Aux buttons
-    auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1));
-    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
   }
@@ -212,6 +203,7 @@ public class Robot extends TimedRobot {
 
     if (match.getSelected() == false)
       auxController.b.whenPressed(() -> climber.windWinch(-0.1)).whenReleased(() -> climber.windWinch(0));
+
     CommandScheduler.getInstance().run();
   }
 
@@ -228,8 +220,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    lawnmower.counter = preLoaded.getSelected();
+  /*  lawnmower.counter = preLoaded.getSelected();
     autonomousCommand = autoModes.getSelected();
+  
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    } */
+    autonomousCommand = new BasicAuto();
   
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

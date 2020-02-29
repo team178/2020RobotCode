@@ -9,17 +9,17 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.AutoBallDump;
+import frc.robot.commands.AutoDrive;
+import frc.robot.commands.Move90Degrees;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class AutoMiddleShoot extends SequentialCommandGroup {
+public class BasicAuto extends SequentialCommandGroup {
   /**
-   * Creates a new AutoLeftShoot.
+   * Creates a new BasicAuto.
    */
-  public AutoMiddleShoot() {
-  //  super(PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleForward),
-  // new AutoBallDump(),
-  //  PossibleTrajectories.getRamseteCommand(PossibleTrajectories.TrajectoryMiddleBack));
+  public BasicAuto() {
+    super(new AutoDrive(1, 2.743), new AutoBallDump(), new Move90Degrees(), new Move90Degrees(), new AutoDrive(1, 2.743));
   }
 }
