@@ -32,7 +32,7 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
   public int counter;
-  private boolean inTrigger, outTrigger, clearance;
+  private boolean inTrigger, outTrigger;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
@@ -51,24 +51,17 @@ public class LawnMower extends SubsystemBase {
     counter = 0;
     inTrigger = true;
     outTrigger = false;
-    clearance = false;
   }
 
   public void ballDump(double speed) {
-    if (clearance && !tof3.getEdge().equals("No ball")) {
-      moveConveyor(-0.2);
-      clearance = false;
-    } else {
       moveConveyor(speed);
       shoot(speed);
     }
-    clearance = counter == 0;
-  }
 
   //  v  IMPORTANT LOGIC STATEMENT  v
 
   public boolean positionOverride() {
-    return tof1.getEdge().equals("No ball") && (!tof2.getEdge().equals("No ball"));
+    return (tof1.getEdge().equals("No ball") && !tof2.getEdge().equals("No ball")) || (tof1.getEdge().equals("No ball") && tof2.getEdge().equals("No ball"));
   }
 
   /* public void runMower(double speed) {
@@ -195,9 +188,11 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
-    Robot.auxController.y.whenPressed(() -> ballDump(0.7)).whenReleased(() -> ballDump(0));
+    Robot.auxController.y.whenPressed(() -> ballDump(1)).whenReleased(() -> ballDump(0));
 
-    Robot.auxController.b.whenPressed(() -> startBouncing()).whenReleased(() -> stopBouncing());
+    Robot.auxController.b.whenPressed(() -> moveConveyor(-0.2)).whenReleased(() -> moveConveyor(0));
+
+    //Robot.auxController.b.whenPressed(() -> startBouncing()).whenReleased(() -> stopBouncing());
 
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();

@@ -114,7 +114,19 @@ public class Robot extends TimedRobot {
     camera.setFPS(14);
     camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
-    autoModes.addOption("Left", new AutoLeftShoot());
+    camera = camserv.startAutomaticCapture("cam2", 2);
+    //camera.setResolution(160, 90);
+    camera.setFPS(14);
+    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+    
+    //Camera 1
+    camera = camserv.startAutomaticCapture("cam3", 3);
+    //camera.setResolution(160, 90);
+    camera.setFPS(14);
+    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+
+
+      autoModes.addOption("Left", new AutoLeftShoot());
     autoModes.addOption("Middle", new AutoMiddleShoot());
     autoModes.addOption("Right", new AutoRightShoot());
 
@@ -138,9 +150,6 @@ public class Robot extends TimedRobot {
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
-    auxController.leftBumper.whenPressed(() -> climber.extendHook());
-    auxController.rightBumper.whenPressed(() -> climber.retractHook());//.whileHeld(() -> climber.windWinch(0.4))
-      //.whenReleased(() -> climber.windWinch(0));
   }
 
   public void changeCamera(String newName, int newPort) {
@@ -188,12 +197,14 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
+    /*
     SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
     SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
     SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
     SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
     SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
     SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
+    */
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
     SmartDashboard.putData("Auto Chooser", autoModes);
     SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
@@ -201,7 +212,6 @@ public class Robot extends TimedRobot {
 
     if (match.getSelected() == false)
       auxController.b.whenPressed(() -> climber.windWinch(-0.1)).whenReleased(() -> climber.windWinch(0));
-
     CommandScheduler.getInstance().run();
   }
 
