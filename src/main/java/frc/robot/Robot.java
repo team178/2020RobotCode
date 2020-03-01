@@ -18,9 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.autonomous.BasicAuto;
+import frc.robot.autonomous.BasicLeftAuto;
+import frc.robot.autonomous.BasicMiddleAuto;
+import frc.robot.autonomous.BasicRightAuto;
+import frc.robot.commands.AutoDrive;
 import frc.robot.subsystems.Climber;
-//import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.LightStrip;
@@ -56,7 +58,7 @@ public class Robot extends TimedRobot {
   public static XboxController auxController;
   
   //Declare Shuffleboard Dropdowns for autonomous
-  public static SendableChooser<Command> autoModes = new SendableChooser<>();
+  public static SendableChooser<Command> startingLoc = new SendableChooser<>();
   public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
   
   //Declare autonomous command
@@ -114,6 +116,10 @@ public class Robot extends TimedRobot {
     camera.setFPS(14);
     camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
+    startingLoc.addOption("Left", new BasicLeftAuto());
+    startingLoc.addOption("Middle", new BasicMiddleAuto());
+    startingLoc.addOption("Right", new BasicRightAuto());
+    startingLoc.addOption("Opposite", new AutoDrive(1, -1.5));
     preLoaded.addOption("0", 0);
     preLoaded.addOption("1", 1);
     preLoaded.addOption("2", 2);
@@ -143,7 +149,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
-    SmartDashboard.putData("Auto Chooser", autoModes);
+    SmartDashboard.putData("Starting Location", startingLoc);
     SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
 
     CommandScheduler.getInstance().run();
@@ -162,13 +168,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-  /*  lawnmower.counter = preLoaded.getSelected();
-    autonomousCommand = autoModes.getSelected();
-  
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    } */
-    autonomousCommand = new BasicAuto();
+    
+    autonomousCommand = startingLoc.getSelected();
   
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
