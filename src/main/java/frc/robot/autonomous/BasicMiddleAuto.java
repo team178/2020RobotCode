@@ -15,11 +15,11 @@ import frc.robot.commands.Move90Degrees;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class BasicAuto extends SequentialCommandGroup {
+public class BasicMiddleAuto extends SequentialCommandGroup {
   /**
    * Creates a new BasicAuto.
    */
-  public BasicAuto() {
-    super(new AutoDrive(1, 2.743), new AutoBallDump(), new Move90Degrees(), new Move90Degrees(), new AutoDrive(1, 2.743));
+  public BasicMiddleAuto() {
+    super(new AutoDrive(1, -2.743), new AutoBallDump(), new AutoDrive(1, 0));
   }
 }
