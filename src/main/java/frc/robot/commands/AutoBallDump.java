@@ -14,9 +14,11 @@ import frc.robot.subsystems.LawnMower;
 public class AutoBallDump extends CommandBase {
   
   LawnMower lawnmower;
+  double time;
   
   public AutoBallDump() {
     addRequirements(Robot.lawnmower);
+    time = 0;
   }
 
   // Called when the command is initially scheduled.
@@ -29,6 +31,7 @@ public class AutoBallDump extends CommandBase {
   @Override
   public void execute() {
     lawnmower.ballDump(0.7);
+    time+=0.020;
   }
 
   // Called once the command ends or is interrupted.
@@ -39,6 +42,6 @@ public class AutoBallDump extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return lawnmower.counter == 0;
+    return lawnmower.counter == 0 || time >= 3;
   }
 }
