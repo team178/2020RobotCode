@@ -26,7 +26,6 @@ public class WheelOfFortuneContestant extends SubsystemBase {
   private double rot;
   private char initColor;
   private boolean countTrigger;
-  private boolean solenoidTrigger;
 
   public WheelOfFortuneContestant() {
     contestant = new TalonSRX(RobotMap.contestant);
@@ -35,7 +34,6 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     rot = 0;
     initColor = getColor();
     countTrigger = false;
-    solenoidTrigger = false;
   }
 
   // these are our test values, not the acutal competition values.
@@ -200,9 +198,6 @@ public class WheelOfFortuneContestant extends SubsystemBase {
     if (Robot.auxController.getLeftTrigger() > 0) {
       spinContestant(Robot.auxController.getLeftTrigger(), true);
     }
-    Robot.auxController.a.whenPressed(() -> spinPC(1));
-    //Robot.auxController.x.whenPressed(() -> spinRC(1));
-    Robot.auxController.x.whenPressed(() -> spinContestant(1));
   }
 
 }

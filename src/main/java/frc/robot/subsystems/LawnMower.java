@@ -64,21 +64,6 @@ public class LawnMower extends SubsystemBase {
     return (tof1.getEdge().equals("No ball") && !tof2.getEdge().equals("No ball")) || (tof1.getEdge().equals("No ball") && tof2.getEdge().equals("No ball"));
   }
 
-  /* public void runMower(double speed) {
-    if (getCounter() < 4) {
-      if (!tof1.getEdge().equals("No ball")) {
-        intakeBall(speed);
-        moveConveyor(speed);
-      } else if (tof2.getEdge().equals("Center")) {
-        intakeBall(0);
-        moveConveyor(0);
-      }
-    } else {
-      intakeBall(0.5*speed); //This might have to be 0...
-      moveConveyor(0.5*speed);
-    }
-  } */
-
   public void intakeBall(double speed) {
     intake.set(ControlMode.PercentOutput, speed);
   }
@@ -188,11 +173,6 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void periodic() {
-    Robot.auxController.y.whenPressed(() -> ballDump(1)).whenReleased(() -> ballDump(0));
-
-    Robot.auxController.b.whenPressed(() -> moveConveyor(-0.2)).whenReleased(() -> moveConveyor(0));
-
-    //Robot.auxController.b.whenPressed(() -> startBouncing()).whenReleased(() -> stopBouncing());
 
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();

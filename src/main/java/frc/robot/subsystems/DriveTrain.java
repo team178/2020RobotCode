@@ -182,7 +182,11 @@ public class DriveTrain extends SubsystemBase {
     yVal = Robot.mainController.getY() * yReduction;
     twistVal = Robot.mainController.getTwist() * twistReduction;
 
-    drive(yVal+twistVal, yVal-twistVal);
+    if (!Robot.mainController.trigger.get()) {
+      drive(yVal+twistVal, yVal-twistVal);
+    } else {
+      drive(-(yVal+twistVal), -(yVal-twistVal));
+    }
     
     //Path planning
     odometry.update(getAngle(), leftRate.get(), rightRate.get());
