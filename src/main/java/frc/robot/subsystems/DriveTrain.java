@@ -82,10 +82,10 @@ public class DriveTrain extends SubsystemBase {
     leftMaster.setSensorPhase(false);
     rightMaster.setSensorPhase(true);
     
-    leftPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
-    leftRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
-    rightPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //l
-    rightRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //l
+    leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
+    leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
+    rightPosition = () -> rightMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //l
+    rightRate = () -> rightMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //l
     
     headingDegrees = () -> -gyro.getAngle();
     headingRotation2d = () -> Rotation2d.fromDegrees(-gyro.getAngle());
@@ -189,7 +189,7 @@ public class DriveTrain extends SubsystemBase {
     }
     
     //Path planning
-    odometry.update(getAngle(), leftRate.get(), rightRate.get());
+    odometry.update(getAngle(), leftPosition.get(), rightPosition.get());
   }
 
   public double getGyroReading() {
