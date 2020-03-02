@@ -70,4 +70,20 @@ import frc.robot.Constants.PathConstants;
         }
         
     }
+        
+    public static RamseteCommand getRamseteCommand(Trajectory path) {
+        RamseteCommand getCommand = new RamseteCommand(
+            path,
+            driveTrain::getPoseMeters,
+            new RamseteController(PathConstants.kRamseteB, PathConstants.kRamseteZeta),
+            driveTrain.getFeedforward(),
+            driveTrain.getKinematics(),
+            driveTrain::getWheelSpeeds,
+            driveTrain.getLeftPIDController(),
+            driveTrain.getRightPIDController(),
+            driveTrain::driveVolts,
+            driveTrain
+        );
+        return getCommand;
+    }
 }
