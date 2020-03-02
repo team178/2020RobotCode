@@ -69,7 +69,10 @@ public class Robot extends TimedRobot {
 
   //USB Camera declarations
   public static CameraServer camserv;
-  public static UsbCamera camera;
+  public static UsbCamera camIntake;
+  public static UsbCamera camShooter;
+  public static UsbCamera camClimber;
+  public static UsbCamera camColorWheel;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -98,26 +101,7 @@ public class Robot extends TimedRobot {
     //Camera initializations
     camserv = CameraServer.getInstance();
 
-    //Camera 1
-    camera = camserv.startAutomaticCapture("cam1", 0);
-    //camera.setResolution(160, 90);
-    camera.setFPS(14);
-    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-    
-    camera = camserv.startAutomaticCapture("cam1", 1);
-    //camera.setResolution(160, 90);
-    camera.setFPS(14);
-    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-
-    camera = camserv.startAutomaticCapture("cam2", 2);
-    //camera.setResolution(160, 90);
-    camera.setFPS(14);
-    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-    
-    camera = camserv.startAutomaticCapture("cam3", 3);
-    //camera.setResolution(160, 90);
-    camera.setFPS(14);
-    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+   
 
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
@@ -164,6 +148,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     gameData = DriverStation.getInstance().getGameSpecificMessage();
+    changeCamera();
 
     //Gyro stuff
     if(drivetrain.getGyroReading()%360 == 0)
@@ -244,5 +229,39 @@ public class Robot extends TimedRobot {
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook());
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
+  }
+
+  public void changeCamera()
+  {
+    int camCounter = 0;
+    if(mainController.leftPadBottom3.get()){
+      if(camCounter == 0)
+        camIntake = camserv.startAutomaticCapture("cam1", 0);
+        //camera.setResolution(160, 90);
+        camIntake.setFPS(14);
+        camIntake.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter++;
+      } 
+      if(camCounter == 1){
+        camShooter = camserv.startAutomaticCapture("cam2", 2);
+        //camera.setResolution(160, 90);
+        camShooter.setFPS(14);
+        camShooter.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter++;
+      } 
+      if(camCounter == 2){
+        camClimber = camserv.startAutomaticCapture("cam3", 3);
+        //camera.setResolution(160, 90);
+        camClimber.setFPS(14);
+        camClimber.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter++;
+      }
+      if(camCounter == 3){
+        camColorWheel = camserv.startAutomaticCapture("cam4", 4);
+        //camera.setResolution(160, 90);
+        camColorWheel.setFPS(14);
+        camColorWheel.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 0;
+      }
   }
 }
