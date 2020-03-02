@@ -11,19 +11,25 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.*;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.autonomous.BasicLeftAuto;
+import frc.robot.autonomous.BasicMiddleAuto;
+import frc.robot.autonomous.BasicRightAuto;
+import frc.robot.autonomous.PathWeaverTrajectories;
+import frc.robot.commands.AutoDrive;
 import frc.robot.subsystems.Climber;
-//import frc.robot.autonomous.AutonomousSelector;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import frc.robot.subsystems.LightsArduino;
+import java.util.ArrayList;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
 
@@ -46,20 +52,25 @@ public class Robot extends TimedRobot {
   public static LightStrip lightStrip;
   public static Climber climber;
 
+  //FMS Game Data for Position Control
   public static String gameData;
-  public static double tof1Previous;
-  public static double tof2Previous;
 
   //Declare joysticks
   public static ThrustmasterJoystick mainController;
-	public static XboxController auxController;
+  public static XboxController auxController;
+  
+  //Declare Shuffleboard Dropdowns for autonomous
+  public static SendableChooser<Command> startingLoc = new SendableChooser<>();
+  public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
+//public static SendableChooser<String> alliance = new SendableChooser<>();
   
   //Declare autonomous command
-  //private Command autonomousCommand;
+  private Command autonomousCommand;
 
   //USB Camera declarations
   public static CameraServer camserv;
-  public static UsbCamera camera;
+  public static UsbCamera camPrimary;
+  public static UsbCamera camSecondary;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -78,10 +89,8 @@ public class Robot extends TimedRobot {
     
     
     drivetrain.calibrateGyro();
+    drivetrain.resetEncoders();
     gameData = "";
-    // m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    // m_chooser.addOption("My Auto", kCustomAuto);
-    // SmartDashboard.putData("Auto choices", m_chooser);
     
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
@@ -90,28 +99,41 @@ public class Robot extends TimedRobot {
 
     //Camera initializations
     camserv = CameraServer.getInstance();
+
+   
+
+    startingLoc.addOption("Left", new BasicLeftAuto());
+    startingLoc.addOption("Middle", new BasicMiddleAuto());
+    startingLoc.addOption("Right", new BasicRightAuto());
+    startingLoc.addOption("Opposite", new AutoDrive(-0.5, 1.5));
     
-    //Camera 1
-    camera = camserv.startAutomaticCapture("cam1", 0);
-    //camera.setResolution(160, 90);
-    camera.setFPS(14);
-    camera.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-  }
-
-  private void configButtonControls() {
-    //Aux buttons
-    auxController.y.whenPressed(() -> lawnmower.ballDump(0.7)).whenReleased(() -> lawnmower.ballDump(0));
-    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinContestant(1, false));
-    auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
-    auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
-    auxController.leftBumper.whenPressed(() -> climber.extendHook());
-    auxController.rightBumper.whenPressed(() -> climber.retractHook()).whileHeld(() -> climber.windWinch(1));
-  }
-
-  public void changeCamera(String newName, int newPort) {
-    camera = camserv.startAutomaticCapture(newName, newPort);
-    camera.setFPS(14);
-    camera.setPixelFormat(PixelFormat.kYUYV);
+    /*
+    startingLoc.addOption("Left", new SequentialCommandGroup(
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[0])),
+      new AutoBallDump(),
+      PathWeaverTrajecotires.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
+    ));
+    startingLoc.addOption("Middle", new SequentialCommandGroup(
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[1])),
+      new AutoBallDump(),
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
+    ));
+    startingLoc.addOption("Right", new SequentialCommandGroup(
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[2])),
+      new AutoBallDump(),
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
+    ));
+    */
+    
+    preLoaded.addOption("0", 0);
+    preLoaded.addOption("1", 1);
+    preLoaded.addOption("2", 2);
+    preLoaded.addOption("3", 3);
+    
+    /*
+    alliance.addOption("Blue", "Blue");
+    alliance.addOption("Red", "Red");
+    */
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -123,20 +145,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
-    //camera stuffb 
-    if (mainController.headLeft.get()) {
-      changeCamera("cam0", 0);
-    }
-
-    if (mainController.headBottom.get()) {
-      changeCamera("cam1", 1);
-    }
-
-    if (mainController.headRight.get()) {
-      changeCamera("cam2", 2);
-    }
     gameData = DriverStation.getInstance().getGameSpecificMessage();
+    changePrimaryCamera();
+    allCameraChange();
+
     //Gyro stuff
     if(drivetrain.getGyroReading()%360 == 0)
     {
@@ -145,21 +157,15 @@ public class Robot extends TimedRobot {
       currentAngle = Math.abs(drivetrain.getGyroReading()%360);
     }
 
-    climber.periodic();
-    drivetrain.periodic();
-    //lights.periodic();
-    lawnmower.periodic();
-    wheeloffortunecontestant.periodic();
-
     SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
-    SmartDashboard.putNumber("TOF 1 Reading", lawnmower.getTof1Distance());
-    SmartDashboard.putNumber("TOF 2 Reading", lawnmower.getTof2Distance());
-    SmartDashboard.putNumber("TOF 3 Reading", lawnmower.getTof3Distance());
-    SmartDashboard.putString("TOF 1 Edge", lawnmower.getTof1Edge());
-    SmartDashboard.putString("TOF 2 Edge", lawnmower.getTof2Edge());
-    SmartDashboard.putString("TOF 3 Edge", lawnmower.getTof3Edge());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
+    SmartDashboard.putData("Starting Location", startingLoc);
+    SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
+    SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
+    SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
+
+    CommandScheduler.getInstance().run();
   }
 
   /**
@@ -175,7 +181,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-  //  autonomousCommand = AutonomousSelector.getAutonomousCommand();
+    
+    autonomousCommand = startingLoc.getSelected();
+  
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   /**
@@ -184,6 +195,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void teleopInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
   }
 
   /**
@@ -203,5 +221,92 @@ public class Robot extends TimedRobot {
 
   public static double getCurrentAngle() {
     return currentAngle;
+  }
+
+  private void configButtonControls() {
+    //Main buttons
+    mainController.trigger.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.rightPadBottom3.whenPressed(() -> lawnmower.resetCounter());
+    
+    //Aux buttons
+    auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
+    auxController.b.whenPressed(() -> lawnmower.moveConveyor(-0.2)).whenReleased(() -> lawnmower.moveConveyor(0));
+    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
+    auxController.y.whenPressed(() -> lawnmower.ballDump(0.6)).whenReleased(() -> lawnmower.ballDump(0));
+    auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
+    auxController.back.whenPressed(() -> changeSecondaryCamera(4));
+    auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
+    Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook());
+    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
+    Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
+  }
+
+  public void changePrimaryCamera() //toggle between intake and shooter cameras
+  {
+    int camCounter = 0;
+    if(mainController.headLeft.get()){
+      if(camCounter == 0)
+        camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
+        //camera.setResolution(160, 90);
+        camPrimary.setFPS(14);
+        camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 1;
+      } 
+      if(camCounter == 1){
+        camPrimary = camserv.startAutomaticCapture("cam2", 2); //shooter
+        //camera.setResolution(160, 90);
+        camPrimary.setFPS(14);
+        camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 0;
+      } 
+  }
+
+  public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras
+  {
+      if(cam == 4) {
+        camSecondary = camserv.startAutomaticCapture("cam4", 4); //colorSensor
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+      if(cam == 3) {
+        camSecondary = camserv.startAutomaticCapture("cam3", 3); //climber
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+  }
+
+  public void allCameraChange()
+  {
+    int camCounter = 0;
+    if(mainController.headRight.get()) {
+      if(camCounter == 0) {
+        camSecondary = camserv.startAutomaticCapture("cam1", 0); //intake
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 1;
+      } 
+      if(camCounter == 1){
+        camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 0;
+      }
+      if(camCounter == 2) {
+        camSecondary = camserv.startAutomaticCapture("cam3", 3); //climber
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+      if(camCounter == 3) {
+        camSecondary = camserv.startAutomaticCapture("cam4", 4); //colorSensor
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+    }
   }
 }

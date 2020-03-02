@@ -28,6 +28,8 @@ public class Climber extends SubsystemBase {
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
     leveler = new TalonSRX(RobotMap.leveler);
+
+    retractHook();
   }
 
   public void extendHook() {
@@ -50,14 +52,6 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*windWinch(Robot.auxController.getRightTrigger());
-
-    if (Robot.auxController.leftBumper.get()) {
-      extendHook();
-    }
-    
-    if (Robot.auxController.rightBumper.get()) {
-      retractHook();
-    }*/
+    windWinch(Robot.auxController.getRightTrigger());
   }
 }

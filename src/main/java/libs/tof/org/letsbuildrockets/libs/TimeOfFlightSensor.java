@@ -42,7 +42,7 @@ public class TimeOfFlightSensor {
     private double[] values;
     private String lastEdge;
 
-    public final double MAX = 230; 
+    public final double MAX = 200; 
     public final double MIN = 100;
 
     public TimeOfFlightSensor(int ID) {

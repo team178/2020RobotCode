@@ -1,8 +1,8 @@
 {
   "lengthUnit": "Meter",
-  "maxVelocity": 3.6576,
+  "maxVelocity": 12.0,
   "maxAcceleration": 2.0,
-  "wheelBase": 7.239,
-  "gameName": "Destination: Deep Space",
+  "wheelBase": 23.75,
+  "gameName": "Infinite Recharge",
   "outputDir": ""
 }

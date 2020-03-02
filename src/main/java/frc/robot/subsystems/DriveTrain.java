@@ -66,6 +66,9 @@ public class DriveTrain extends SubsystemBase {
   //Gyro mehtods
   public Supplier<Double> headingDegrees;
   public Supplier<Rotation2d> headingRotation2d;
+
+  //Misc
+  private DriveDirection currentDirection = DriveDirection.FORWARD;
   
   public DriveTrain() {
     leftMaster = new WPI_TalonSRX(RobotMap.DMLeftMaster);
@@ -73,11 +76,11 @@ public class DriveTrain extends SubsystemBase {
     rightMaster = new WPI_TalonSRX(RobotMap.DMRightMaster);
     rightSlave = new WPI_VictorSPX(RobotMap.DMRightSlave);
     
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
     
     leftMaster.setSensorPhase(false);
-    rightMaster.setSensorPhase(true);
+    rightMaster.setSensorPhase(false);
     
     leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
     leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
@@ -125,6 +128,23 @@ public class DriveTrain extends SubsystemBase {
     rightSlave.setInverted(InvertType.FollowMaster);
   }
 
+  public void toggleDriveDirection() {
+    if (currentDirection == DriveDirection.FORWARD) {
+      leftMaster.setInverted(false);
+      rightMaster.setInverted(true);
+    } else {
+      leftMaster.setInverted(true);
+      rightMaster.setInverted(false);
+    }
+    leftSlave.setInverted(InvertType.FollowMaster);
+    rightSlave.setInverted(InvertType.FollowMaster);
+  }
+
+  public void resetEncoders() {
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
+  }
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
       leftRate.get(),
@@ -162,15 +182,19 @@ public class DriveTrain extends SubsystemBase {
   public void periodic() {
     //Joystick drive
     yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-    twistReduction = Robot.mainController.trigger.get() ? 0.4 : 1;
+    twistReduction = Robot.mainController.trigger.get() ? 0.4 : 0.5;
 
     yVal = Robot.mainController.getY() * yReduction;
     twistVal = Robot.mainController.getTwist() * twistReduction;
 
-    drive(yVal+twistVal, yVal-twistVal);
-
+    if (!Robot.mainController.trigger.get()) {
+      drive(yVal+twistVal, yVal-twistVal);
+    } else {
+      drive(-(yVal+twistVal), -(yVal-twistVal));
+    }
+    
     //Path planning
-    odometry.update(getAngle(), leftRate.get(), rightRate.get());
+    odometry.update(getAngle(), leftPosition.get(), rightPosition.get());
   }
 
   public double getGyroReading() {

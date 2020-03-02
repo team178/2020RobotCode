@@ -31,8 +31,8 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
-  private int counter;
-  private boolean inTrigger, outTrigger, solenoidTrigger;
+  public int counter;
+  private boolean inTrigger, outTrigger;
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
@@ -51,34 +51,18 @@ public class LawnMower extends SubsystemBase {
     counter = 0;
     inTrigger = true;
     outTrigger = false;
-    solenoidTrigger = false;
   }
 
   public void ballDump(double speed) {
-      counter = 0;
       moveConveyor(speed);
       shoot(speed);
-  }
+    }
+
+  //  v  IMPORTANT LOGIC STATEMENT  v
 
   public boolean positionOverride() {
-    return (getCounter() < 4) && tof1.getEdge().equals("No ball") && 
-        (tof2.getEdge().equals("Center") || tof2.getEdge().equals("Trailing"));
+    return (tof1.getEdge().equals("No ball") && !tof2.getEdge().equals("No ball")) || (tof1.getEdge().equals("No ball") && tof2.getEdge().equals("No ball"));
   }
-
-  /* public void runMower(double speed) {
-    if (getCounter() < 4) {
-      if (!tof1.getEdge().equals("No ball")) {
-        intakeBall(speed);
-        moveConveyor(speed);
-      } else if (tof2.getEdge().equals("Center")) {
-        intakeBall(0);
-        moveConveyor(0);
-      }
-    } else {
-      intakeBall(0.5*speed); //This might have to be 0...
-      moveConveyor(0.5*speed);
-    }
-  } */
 
   public void intakeBall(double speed) {
     intake.set(ControlMode.PercentOutput, speed);
@@ -184,12 +168,11 @@ public class LawnMower extends SubsystemBase {
     return counter;
   }
 
+  public void resetCounter() {
+    counter = 0;
+  }
+
   public void periodic() {
-    /*if (Robot.auxController.y.get()) {
-      ballDump(0.7);
-    } else {
-      ballDump(0);
-    }*/
 
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();
@@ -199,12 +182,14 @@ public class LawnMower extends SubsystemBase {
       retractIntake();
     }
 
-    if (!positionOverride()) {
-      moveConveyor(0.25*Robot.auxController.getLeftStickY());
-    } else {
-      moveConveyor(0);
+    if (!Robot.auxController.y.get()) {
+      if (!positionOverride()) {
+        moveConveyor(0.55*Robot.auxController.getLeftStickY());
+      } else {
+        moveConveyor(0);
+      }
     }
-
-    intakeBall(0.4*-Robot.auxController.getRightStickY());
+    
+    intakeBall(-0.75*Robot.auxController.getRightStickY());
   }
 }
