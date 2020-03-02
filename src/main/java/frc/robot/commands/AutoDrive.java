@@ -13,9 +13,9 @@ import frc.robot.subsystems.DriveTrain;
 
 public class AutoDrive extends CommandBase {
   
-  DriveTrain drivetrain;
-  double speed;
-  double distance;
+  private DriveTrain driveTrain;
+  private double speed;
+  private double distance;
   
   public AutoDrive(double speed, double distance) {
     addRequirements(Robot.drivetrain);
@@ -26,23 +26,24 @@ public class AutoDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    drivetrain = Robot.drivetrain;
+    driveTrain = Robot.drivetrain;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drivetrain.drive(speed, speed);
+    driveTrain.drive(speed, speed);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    driveTrain.drive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return distance == drivetrain.rightPosition.get();
+    return Math.abs(distance - driveTrain.rightPosition.get()) < PathConstants.kDriveTolerance;
   }
 }
