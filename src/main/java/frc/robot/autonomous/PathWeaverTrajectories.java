@@ -13,6 +13,7 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.Robot;
 import frc.robot.Constants.PathConstants;
 
@@ -74,15 +76,15 @@ import frc.robot.Constants.PathConstants;
     public static RamseteCommand getRamseteCommand(Trajectory path) {
         RamseteCommand getCommand = new RamseteCommand(
             path,
-            driveTrain::getPoseMeters,
+            Robot.drivetrain::getPoseMeters,
             new RamseteController(PathConstants.kRamseteB, PathConstants.kRamseteZeta),
-            driveTrain.getFeedforward(),
-            driveTrain.getKinematics(),
-            driveTrain::getWheelSpeeds,
-            driveTrain.getLeftPIDController(),
-            driveTrain.getRightPIDController(),
-            driveTrain::driveVolts,
-            driveTrain
+            Robot.drivetrain.getFeedforward(),
+            Robot.drivetrain.getKinematics(),
+            Robot.drivetrain::getWheelSpeeds,
+            Robot.drivetrain.getLeftPIDController(),
+            Robot.drivetrain.getRightPIDController(),
+            Robot.drivetrain::driveVolts,
+            Robot.drivetrain
         );
         return getCommand;
     }

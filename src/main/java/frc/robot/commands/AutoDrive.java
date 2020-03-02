@@ -7,8 +7,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
+import frc.robot.Constants.PathConstants;
 import frc.robot.subsystems.DriveTrain;
 
 public class AutoDrive extends CommandBase {
@@ -27,6 +29,7 @@ public class AutoDrive extends CommandBase {
   @Override
   public void initialize() {
     driveTrain = Robot.drivetrain;
+  //  startTime = Timer.getFPGATimestamp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,6 +47,6 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(distance - driveTrain.rightPosition.get()) < PathConstants.kDriveTolerance;
+   return Math.abs(distance - driveTrain.rightPosition.get()) < PathConstants.kDriveTolerance;
   }
 }

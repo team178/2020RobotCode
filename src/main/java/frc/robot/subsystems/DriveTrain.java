@@ -76,11 +76,11 @@ public class DriveTrain extends SubsystemBase {
     rightMaster = new WPI_TalonSRX(RobotMap.DMRightMaster);
     rightSlave = new WPI_VictorSPX(RobotMap.DMRightSlave);
     
-    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
-    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 10);
+    leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
+    rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
     
     leftMaster.setSensorPhase(false);
-    rightMaster.setSensorPhase(true);
+    rightMaster.setSensorPhase(false);
     
     leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
     leftRate = () -> leftMaster.getSelectedSensorVelocity(0) * PathConstants.kEncoderDPP * 10; //r
@@ -138,6 +138,11 @@ public class DriveTrain extends SubsystemBase {
     }
     leftSlave.setInverted(InvertType.FollowMaster);
     rightSlave.setInverted(InvertType.FollowMaster);
+  }
+
+  public void resetEncoders() {
+    leftMaster.setSelectedSensorPosition(0);
+    rightMaster.setSelectedSensorPosition(0);
   }
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
