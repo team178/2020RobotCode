@@ -56,7 +56,8 @@ public final class Constants {
         //Misc
         public static final double kWheelDiameterMeters = Units.inchesToMeters(6) * Math.PI;
         public static final double kEncoderTicks = 1024;
-        public static double kEncoderDPP = kWheelDiameterMeters / kEncoderTicks;
+        public static final double kEncoderDPP = kWheelDiameterMeters / kEncoderTicks;
+        public static final double kDriveTolerance = 10e-2;
 
         public static final double kTrackWidthMeters = Units.inchesToMeters(23.75);
         public static final double kMaxVelMPS = 0;

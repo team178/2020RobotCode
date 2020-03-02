@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.autonomous.BasicLeftAuto;
 import frc.robot.autonomous.BasicMiddleAuto;
 import frc.robot.autonomous.BasicRightAuto;
-import frc.robot.autonomous.PathWeaverTrajecotires;
+import frc.robot.autonomous.PathWeaverTrajectories;
 import frc.robot.commands.AutoDrive;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -89,6 +89,7 @@ public class Robot extends TimedRobot {
     
     
     drivetrain.calibrateGyro();
+    drivetrain.resetEncoders();
     gameData = "";
     
     //init joysticks
@@ -104,7 +105,7 @@ public class Robot extends TimedRobot {
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
     startingLoc.addOption("Right", new BasicRightAuto());
-    startingLoc.addOption("Opposite", new AutoDrive(1, -1.5));
+    startingLoc.addOption("Opposite", new AutoDrive(-0.5, 1.5));
     
     /*
     startingLoc.addOption("Left", new SequentialCommandGroup(
@@ -144,7 +145,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
     gameData = DriverStation.getInstance().getGameSpecificMessage();
     changePrimaryCamera();
     allCameraChange();
@@ -162,6 +162,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
     SmartDashboard.putData("Starting Location", startingLoc);
     SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
+    SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
+    SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
 
     CommandScheduler.getInstance().run();
   }
@@ -193,6 +195,13 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run();
+  }
+
+  @Override
+  public void teleopInit() {
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
+    }
   }
 
   /**
