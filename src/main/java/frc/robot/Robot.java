@@ -84,7 +84,7 @@ public class Robot extends TimedRobot {
     climber = new Climber();
 
     //lights
-    lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
+    lights = new LightsArduino(Port.kMXP, 4);
     
     
     drivetrain.calibrateGyro();
