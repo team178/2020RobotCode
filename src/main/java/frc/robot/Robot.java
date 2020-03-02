@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     climber = new Climber();
 
     //lights
-    //lights = new LightsArduino(Port.kOnboard, RobotMap.lightsI2CAddress);
+    lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
     //lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
     
     
@@ -183,11 +183,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
-    autonomousCommand = startingLoc.getSelected();
+    // autonomousCommand = startingLoc.getSelected();
   
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
-    }
+    // if (autonomousCommand != null) {
+    //   autonomousCommand.schedule();
+    // }
+    drivetrain.drive(.5, .5);
   }
 
   /**
@@ -195,7 +196,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    CommandScheduler.getInstance().run();
+    // CommandScheduler.getInstance().run();
   }
 
   @Override
