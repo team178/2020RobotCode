@@ -84,7 +84,8 @@ public class Robot extends TimedRobot {
     climber = new Climber();
 
     //lights
-    lights = new LightsArduino(Port.kMXP, 4);
+    lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
+    lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
     
     
     drivetrain.calibrateGyro();
@@ -99,7 +100,15 @@ public class Robot extends TimedRobot {
     //Camera initializations
     camserv = CameraServer.getInstance();
 
-   
+    camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
+    //camera.setResolution(160, 90);
+    camPrimary.setFPS(14);
+    camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+
+    camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
+    //camera.setResolution(160, 90);
+    camSecondary.setFPS(14);
+    camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
@@ -181,12 +190,11 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     
-    // autonomousCommand = startingLoc.getSelected();
+    autonomousCommand = startingLoc.getSelected();
   
-    // if (autonomousCommand != null) {
-    //   autonomousCommand.schedule();
-    // }
-    drivetrain.drive(.5, .5);
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
+    }
   }
 
   /**
@@ -194,7 +202,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    // CommandScheduler.getInstance().run();
+    CommandScheduler.getInstance().run();
   }
 
   @Override
@@ -241,7 +249,7 @@ public class Robot extends TimedRobot {
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
 
-  public void changePrimaryCamera() //toggle between intake and shooter cameras
+  public void changePrimaryCamera() //toggle between intake and shooter cameras with button
   {
     int camCounter = 0;
     if(mainController.headLeft.get()){
@@ -261,7 +269,7 @@ public class Robot extends TimedRobot {
       } 
   }
 
-  public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras
+  public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras automatically
   {
       if(cam == 4) {
         camSecondary = camserv.startAutomaticCapture("cam4", 4); //colorSensor
@@ -277,7 +285,7 @@ public class Robot extends TimedRobot {
       }
   }
 
-  public void allCameraChange()
+  public void allCameraChange() //switches between all cameras manually
   {
     int camCounter = 0;
     if(mainController.headRight.get()) {
