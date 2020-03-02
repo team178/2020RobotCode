@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.autonomous.BasicLeftAuto;
 import frc.robot.autonomous.BasicMiddleAuto;
 import frc.robot.autonomous.BasicRightAuto;
+import frc.robot.autonomous.PathWeaverTrajecotires;
 import frc.robot.commands.AutoDrive;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -28,6 +29,7 @@ import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import frc.robot.subsystems.LightsArduino;
+import java.util.ArrayList;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
 
@@ -60,6 +62,7 @@ public class Robot extends TimedRobot {
   //Declare Shuffleboard Dropdowns for autonomous
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
   public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
+//public static SendableChooser<String> alliance = new SendableChooser<>();
   
   //Declare autonomous command
   private Command autonomousCommand;
@@ -120,10 +123,34 @@ public class Robot extends TimedRobot {
     startingLoc.addOption("Middle", new BasicMiddleAuto());
     startingLoc.addOption("Right", new BasicRightAuto());
     startingLoc.addOption("Opposite", new AutoDrive(1, -1.5));
+    
+    /*
+    startingLoc.addOption("Left", new SequentialCommandGroup(
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[0])),
+      new AutoBallDump(),
+      PathWeaverTrajecotires.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
+    ));
+    startingLoc.addOption("Middle", new SequentialCommandGroup(
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[1])),
+      new AutoBallDump(),
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
+    ));
+    startingLoc.addOption("Right", new SequentialCommandGroup(
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[2])),
+      new AutoBallDump(),
+      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
+    ));
+    */
+    
     preLoaded.addOption("0", 0);
     preLoaded.addOption("1", 1);
     preLoaded.addOption("2", 2);
     preLoaded.addOption("3", 3);
+    
+    /*
+    alliance.addOption("Blue", "Blue");
+    alliance.addOption("Red", "Red");
+    */
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
