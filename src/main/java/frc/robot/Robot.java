@@ -69,10 +69,8 @@ public class Robot extends TimedRobot {
 
   //USB Camera declarations
   public static CameraServer camserv;
-  public static UsbCamera camIntake;
-  public static UsbCamera camShooter;
-  public static UsbCamera camClimber;
-  public static UsbCamera camColorWheel;
+  public static UsbCamera camPrimary;
+  public static UsbCamera camSecondary;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -148,7 +146,8 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
 
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    changeCamera();
+    changePrimaryCamera();
+    allCameraChange();
 
     //Gyro stuff
     if(drivetrain.getGyroReading()%360 == 0)
@@ -226,42 +225,79 @@ public class Robot extends TimedRobot {
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
     auxController.y.whenPressed(() -> lawnmower.ballDump(0.6)).whenReleased(() -> lawnmower.ballDump(0));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
+    auxController.back.whenPressed(() -> changeSecondaryCamera(4));
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook());
+    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
 
-  public void changeCamera()
+  public void changePrimaryCamera() //toggle between intake and shooter cameras
   {
     int camCounter = 0;
-    if(mainController.leftPadBottom3.get()){
+    if(mainController.headLeft.get()){
       if(camCounter == 0)
-        camIntake = camserv.startAutomaticCapture("cam1", 0);
+        camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
         //camera.setResolution(160, 90);
-        camIntake.setFPS(14);
-        camIntake.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter++;
+        camPrimary.setFPS(14);
+        camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 1;
       } 
       if(camCounter == 1){
-        camShooter = camserv.startAutomaticCapture("cam2", 2);
+        camPrimary = camserv.startAutomaticCapture("cam2", 2); //shooter
         //camera.setResolution(160, 90);
-        camShooter.setFPS(14);
-        camShooter.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter++;
+        camPrimary.setFPS(14);
+        camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 0;
       } 
-      if(camCounter == 2){
-        camClimber = camserv.startAutomaticCapture("cam3", 3);
+  }
+
+  public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras
+  {
+      if(cam == 4) {
+        camSecondary = camserv.startAutomaticCapture("cam4", 4); //colorSensor
         //camera.setResolution(160, 90);
-        camClimber.setFPS(14);
-        camClimber.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter++;
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
       }
-      if(camCounter == 3){
-        camColorWheel = camserv.startAutomaticCapture("cam4", 4);
+      if(cam == 3) {
+        camSecondary = camserv.startAutomaticCapture("cam3", 3); //climber
         //camera.setResolution(160, 90);
-        camColorWheel.setFPS(14);
-        camColorWheel.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+  }
+
+  public void allCameraChange()
+  {
+    int camCounter = 0;
+    if(mainController.headRight.get()) {
+      if(camCounter == 0) {
+        camSecondary = camserv.startAutomaticCapture("cam1", 0); //intake
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camCounter = 1;
+      } 
+      if(camCounter == 1){
+        camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
         camCounter = 0;
       }
+      if(camCounter == 2) {
+        camSecondary = camserv.startAutomaticCapture("cam3", 3); //climber
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+      if(camCounter == 3) {
+        camSecondary = camserv.startAutomaticCapture("cam4", 4); //colorSensor
+        //camera.setResolution(160, 90);
+        camSecondary.setFPS(14);
+        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+      }
+    }
   }
 }
