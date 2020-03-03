@@ -8,7 +8,7 @@
 package frc.robot;
 
 //import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.vision.USBCamera;
+import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -102,19 +102,19 @@ public class Robot extends TimedRobot {
     camserv = CameraServer.getInstance();
 
 //    camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
-    camPrimary = new USBCamera("cam1");
+    camPrimary = new UsbCamera("cam1", 1);
     //camera.setResolution(160, 90);
     camPrimary.setFPS(14);
     camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
 //    camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
-    camSecondary = new USBCamera("cam2");
+    camSecondary = new UsbCamera("cam2", 2);
     //camera.setResolution(160, 90);
     camSecondary.setFPS(14);
     camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
     
-    camPrimary.startCapture();
-    camSecondary.startCapture();
+    camPrimary.startAutomaticCapture();
+    camSecondary.startAutomaticCapture();
 
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
@@ -262,7 +262,7 @@ public class Robot extends TimedRobot {
     if(mainController.headLeft.get()){
       if(camCounter == 0)
         camPrimary.stopCapture();
-        camPrimary = new USBCamera("cam1"); //intake
+        camPrimary = new UsbCamera("cam1"); //intake
         camPrimary.startCapture();
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
@@ -271,8 +271,8 @@ public class Robot extends TimedRobot {
       } 
       if(camCounter == 1){
         camPrimary.stopCapture();
-        camPrimary = new USBCamera("cam2"); //shooter
-        camPrimary.startCapture();
+        camPrimary = new UsbCamera("cam2"); //shooter
+        camPrimary.startAutomaticCapture();
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
         camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras

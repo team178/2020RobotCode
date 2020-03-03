@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -96,8 +97,6 @@ public class DriveTrain extends SubsystemBase {
     leftMotors = new SpeedControllerGroup(leftMaster, leftSlave);
     rightMotors = new SpeedControllerGroup(leftMaster, leftSlave);
     
-    setDriveDirection(DriveDirection.FORWARD);
-    
     kinematics = new DifferentialDriveKinematics(PathConstants.kTrackWidthMeters);
     odometry = new DifferentialDriveOdometry(getAngle());
     feedforward = new SimpleMotorFeedforward(PathConstants.kS, PathConstants.kV, PathConstants.kA);
@@ -110,8 +109,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void drive(double leftPower, double rightPower) {
-    leftMaster.set(ControlMode.PercentOutput, leftPower);
-    rightMaster.set(ControlMode.PercentOutput, rightPower);
+    if (currentDirection == DriveDirection.FORWARD) {
+      leftMaster.set(ControlMode.PercentOutput, leftPower);
+      rightMaster.set(ControlMode.PercentOutput, rightPower);
+    } else {
+      leftMaster.set(ControlMode.PercentOutput, -rightPower);
+      rightMaster.set(ControlMode.PercentOutput, -leftPower);
+    }
   }
 
   public void driveVolts(double leftVolts, double rightVolts) {
@@ -119,28 +123,8 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setVoltage(rightVolts);
   }
 
-  public void setDriveDirection(DriveDirection driveDirection) {
-    if (driveDirection == DriveDirection.FORWARD) {
-      leftMaster.setInverted(false);
-      rightMaster.setInverted(true);
-    } else {
-      leftMaster.setInverted(true);
-      rightMaster.setInverted(false);
-    }
-    leftSlave.setInverted(InvertType.FollowMaster);
-    rightSlave.setInverted(InvertType.FollowMaster);
-  }
-
-  public void toggleDriveDirection() {
-    if (currentDirection == DriveDirection.FORWARD) {
-      leftMaster.setInverted(false);
-      rightMaster.setInverted(true);
-    } else {
-      leftMaster.setInverted(true);
-      rightMaster.setInverted(false);
-    }
-    leftSlave.setInverted(InvertType.FollowMaster);
-    rightSlave.setInverted(InvertType.FollowMaster);
+  public void toggleDriveDirection(DriveDirection driveDirection) {
+    driveDirection = driveDirection == DriveDirection.FORWARD ? DriveDirection.BACKWARD : DriveDirection.BACKWARD;
   }
 
   public void resetEncoders() {
