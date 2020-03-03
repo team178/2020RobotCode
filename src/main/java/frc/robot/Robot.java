@@ -200,6 +200,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    drivetrain.resetEncoders();
     
     autonomousCommand = startingLoc.getSelected();
     lawnmower.counter = preLoaded.getSelected();
@@ -247,6 +248,8 @@ public class Robot extends TimedRobot {
     //Main buttons
    mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
 //    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
+    mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders()
+    );
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));

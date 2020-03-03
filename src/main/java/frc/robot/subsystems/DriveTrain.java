@@ -113,6 +113,16 @@ public class DriveTrain extends SubsystemBase {
       leftMaster.set(ControlMode.PercentOutput, -rightPower);
       rightMaster.set(ControlMode.PercentOutput, -leftPower);
     }
+    System.out.println("left current: " + leftMaster.getSupplyCurrent());
+    System.out.println("right current: " + rightMaster.getSupplyCurrent());
+  }
+
+  public double getLeftCurrent() {
+    return leftMaster.getSupplyCurrent();
+  }
+
+  public double getRightCurrent() {
+    return rightMaster.getSupplyCurrent();
   }
 
   public void driveVolts(double leftVolts, double rightVolts) {

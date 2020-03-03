@@ -47,6 +47,6 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return Math.abs(Math.abs(distance) - Math.abs(driveTrain.rightPosition.get())) < PathConstants.kDriveTolerance;
+   return Math.abs(Math.abs(distance) - Math.abs(driveTrain.rightPosition.get())) < PathConstants.kDriveTolerance || Robot.drivetrain.getLeftCurrent() > 30 || Robot.drivetrain.getRightCurrent() > 30;
   }
 }
