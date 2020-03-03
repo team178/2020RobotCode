@@ -111,11 +111,6 @@ public class Robot extends TimedRobot {
     //Camera initializations
     camserv = CameraServer.getInstance();
 
-
-    camShooter = camserv.startAutomaticCapture("cam2", 1);
-    camIntake = camserv.startAutomaticCapture("cam1", 0);
-    camClimber = camserv.startAutomaticCapture("cam3", 2);
-    camColorSensor = camserv.startAutomaticCapture("cam4", 3);
   //  camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
   //  camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
@@ -281,7 +276,7 @@ public class Robot extends TimedRobot {
   {
     if(mainController.headLeft.get()){
       if(camPrimaryCounter == 0)
-        //camPrimary = camIntake;
+        camPrimary.close();
         camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
@@ -289,7 +284,7 @@ public class Robot extends TimedRobot {
         camPrimaryCounter = 1;
       } 
       if(camPrimaryCounter == 1){
-        //camPrimary = camShooter;
+        camPrimary.close();
         camPrimary = camserv.startAutomaticCapture("cam2", 1); //shooter
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
@@ -301,13 +296,14 @@ public class Robot extends TimedRobot {
   public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras automatically
   {
       if(cam == 4) {
+        camSecondary.close();
         camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
       }
       if(cam == 3) {
-        camSecondary = camClimber;
+        camSecondary.close();
         camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
@@ -319,6 +315,7 @@ public class Robot extends TimedRobot {
   {
     if(mainController.headRight.get()) {
       if(camSecondaryCounter == 0) {
+        camSecondary.close();
         camSecondary = getCamIntake(); //intake
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
@@ -326,6 +323,7 @@ public class Robot extends TimedRobot {
         camPrimaryCounter++;
       } 
       if(camSecondaryCounter == 1) {
+        camSecondary.close();
         camSecondary = getCamShooter(); //shooter
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
@@ -333,6 +331,7 @@ public class Robot extends TimedRobot {
         camPrimaryCounter++;
       }
       if(camSecondaryCounter == 2) {
+        camSecondary.close();
         camSecondary = getCamClimber();
         camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
@@ -341,6 +340,7 @@ public class Robot extends TimedRobot {
         camSecondaryCounter++;
       }
       if(camSecondaryCounter == 3) {
+        camSecondary.close();
         camSecondary = getCamColorSensor();
         camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
         //camera.setResolution(160, 90);
