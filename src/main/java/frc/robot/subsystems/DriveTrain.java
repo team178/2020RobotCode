@@ -16,16 +16,14 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.*;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.Constants.*;
@@ -96,8 +94,6 @@ public class DriveTrain extends SubsystemBase {
     leftMotors = new SpeedControllerGroup(leftMaster, leftSlave);
     rightMotors = new SpeedControllerGroup(leftMaster, leftSlave);
     
-    setDriveDirection(DriveDirection.FORWARD);
-    
     kinematics = new DifferentialDriveKinematics(PathConstants.kTrackWidthMeters);
     odometry = new DifferentialDriveOdometry(getAngle());
     feedforward = new SimpleMotorFeedforward(PathConstants.kS, PathConstants.kV, PathConstants.kA);
@@ -110,8 +106,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void drive(double leftPower, double rightPower) {
-    leftMaster.set(ControlMode.PercentOutput, leftPower);
-    rightMaster.set(ControlMode.PercentOutput, rightPower);
+    if (currentDirection == DriveDirection.FORWARD) {
+      leftMaster.set(ControlMode.PercentOutput, leftPower);
+      rightMaster.set(ControlMode.PercentOutput, rightPower);
+    } else {
+      leftMaster.set(ControlMode.PercentOutput, -rightPower);
+      rightMaster.set(ControlMode.PercentOutput, -leftPower);
+    }
   }
 
   public void driveVolts(double leftVolts, double rightVolts) {
@@ -119,28 +120,8 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setVoltage(rightVolts);
   }
 
-  public void setDriveDirection(DriveDirection driveDirection) {
-    if (driveDirection == DriveDirection.FORWARD) {
-      leftMaster.setInverted(false);
-      rightMaster.setInverted(true);
-    } else {
-      leftMaster.setInverted(true);
-      rightMaster.setInverted(false);
-    }
-    leftSlave.setInverted(InvertType.FollowMaster);
-    rightSlave.setInverted(InvertType.FollowMaster);
-  }
-
-  public void toggleDriveDirection() {
-    if (currentDirection == DriveDirection.FORWARD) {
-      leftMaster.setInverted(false);
-      rightMaster.setInverted(true);
-    } else {
-      leftMaster.setInverted(true);
-      rightMaster.setInverted(false);
-    }
-    leftSlave.setInverted(InvertType.FollowMaster);
-    rightSlave.setInverted(InvertType.FollowMaster);
+  public void toggleDriveDirection(DriveDirection driveDirection) {
+    driveDirection = driveDirection == DriveDirection.FORWARD ? DriveDirection.BACKWARD : DriveDirection.BACKWARD;
   }
 
   public void resetEncoders() {
@@ -183,19 +164,17 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //Joystick drive
-    yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-    twistReduction = Robot.mainController.trigger.get() ? 0.4 : 0.5;
-
-    yVal = Robot.mainController.getY() * yReduction;
-    twistVal = Robot.mainController.getTwist() * twistReduction;
-
-    if (!Robot.mainController.trigger.get()) {
-      drive(yVal+twistVal, yVal-twistVal);
-    } else {
-      drive(-(yVal+twistVal), -(yVal-twistVal));
-    }
+    if (RobotState.isOperatorControl()) {
+      //Joystick drive
+      yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
+      twistReduction = Robot.mainController.trigger.get() ? 0.4 : 0.5;
     
+      yVal = Robot.mainController.getY() * yReduction;
+      twistVal = Robot.mainController.getTwist() * twistReduction;
+
+      drive(yVal+twistVal, yVal-twistVal);
+    }
+
     //Path planning
     odometry.update(getAngle(), leftPosition.get(), rightPosition.get());
   }
