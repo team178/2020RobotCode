@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
+import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -70,8 +71,17 @@ public class Robot extends TimedRobot {
 
   //USB Camera declarations
   public static CameraServer camserv;
-//  public static USBCamera camPrimary;
-//  public static USBCamera camSecondary;
+  public static UsbCamera camPrimary;
+  public static UsbCamera camSecondary;
+
+  public static UsbCamera camShooter;
+  public static UsbCamera camIntake;
+  public static UsbCamera camColorSensor;
+  public static UsbCamera camClimber;
+
+  public static int camPrimaryCounter = 0;
+  public static int camSecondaryCounter = 0;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -101,20 +111,19 @@ public class Robot extends TimedRobot {
     //Camera initializations
     camserv = CameraServer.getInstance();
 
-//    camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
-//    camPrimary = new UsbCamera("cam1", 1);
+    camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
     //camera.setResolution(160, 90);
 //    camPrimary.setFPS(14);
 //    camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
-//    camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
-//    camSecondary = new UsbCamera("cam2", 2);
+    camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
+    camSecondary = new UsbCamera("cam2", 2);
     //camera.setResolution(160, 90);
-//    camSecondary.setFPS(14);
-//    camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-    
-//    camPrimary.startAutomaticCapture();
-//    camSecondary.startCapture();
+    camSecondary.setFPS(14);
+    camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for camera
+
+    camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+    camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
@@ -254,46 +263,40 @@ public class Robot extends TimedRobot {
 //    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
-/*
-  public int camCounter = 0;
   
   public void changePrimaryCamera() //toggle between intake and shooter cameras with button
   {
     if(mainController.headLeft.get()){
-      if(camCounter == 0)
-        camPrimary.stopCapture();
-        camPrimary = new UsbCamera("cam1"); //intake
-        camPrimary.startCapture();
+      if(camPrimaryCounter == 0)
+        camPrimary = camIntake;
+        camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
         camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter = 1;
+        camPrimaryCounter = 1;
       } 
-      if(camCounter == 1){
-        camPrimary.stopCapture();
-        camPrimary = new UsbCamera("cam2"); //shooter
-        camPrimary.startAutomaticCapture();
+      if(camPrimaryCounter == 1){
+        camPrimary = camShooter;
+        camPrimary = camserv.startAutomaticCapture("cam2", 1); //shooter
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
         camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter = 0;
+        camPrimaryCounter = 0;
       } 
   }
 
   public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras automatically
   {
       if(cam == 4) {
-        camSecondary.stopCapture();
-        camSecondary = new USBCamera("cam4"); //colorSensor
-        camSecondary.startCapture();
+        camSecondary = camColorSensor;
+        camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
       }
       if(cam == 3) {
-        camSecondary.stopCapture();
-        camSecondary = new USBCamera("cam3"); //climber
-        camSecondary.startCapture();
+        camSecondary = camClimber;
+        camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
@@ -303,39 +306,37 @@ public class Robot extends TimedRobot {
   public void allCameraChange() //switches between all cameras manually
   {
     if(mainController.headRight.get()) {
-      if(camCounter == 0) {
-        camSecondary.stopCapture();
-        camSecondary = new USBCamera("cam1"); //intake
-        camSecondary.startCapture();
+      if(camSecondaryCounter == 0) {
+        camSecondary = camIntake;
+        camSecondary = camserv.startAutomaticCapture("cam1", 0); //intake
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter = 1;
+        camPrimaryCounter++;
       } 
-      if(camCounter == 1) {
-        camSecondary.stopCapture();
-        camSecondary = new USBCamera("cam2"); //shooter
-        camSecondary.startCapture();
+      if(camSecondaryCounter == 1) {
+        camSecondary = camShooter;
+        camSecondary = camserv.startAutomaticCapture("cam2", 1); //shooter
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camCounter = 0;
+        camPrimaryCounter++;
       }
-      if(camCounter == 2) {
-        camSecondary.stopCapture();
-        camSecondary = new USBCamera("cam3"); //climber
-        camSecondary.startCapture();
+      if(camSecondaryCounter == 2) {
+        camSecondary = camClimber;
+        camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camSecondaryCounter++;
       }
-      if(camCounter == 3) {
-        camSecondary.stopCapture();
-        camSecondary = new USBCamera("cam4"); //colorSensor
-        camSecondary.startCapture();
+      if(camSecondaryCounter == 3) {
+        camSecondary = camColorSensor;
+        camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+        camSecondaryCounter = 0;
       }
     }
   } */
