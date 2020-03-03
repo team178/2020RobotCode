@@ -301,14 +301,14 @@ public class Robot extends TimedRobot {
   public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras automatically
   {
       if(cam == 4) {
-        camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
+        camSecondary = getCamColorSensor();
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
       }
       if(cam == 3) {
-        camSecondary = camClimber;
-        camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
+        camSecondary = getCamClimber();
+        //camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
@@ -334,7 +334,7 @@ public class Robot extends TimedRobot {
       }
       if(camSecondaryCounter == 2) {
         camSecondary = getCamClimber();
-        camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
+       // camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
@@ -342,7 +342,7 @@ public class Robot extends TimedRobot {
       }
       if(camSecondaryCounter == 3) {
         camSecondary = getCamColorSensor();
-        camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
+        //camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
