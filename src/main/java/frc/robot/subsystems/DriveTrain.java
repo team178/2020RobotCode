@@ -183,19 +183,17 @@ public class DriveTrain extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //Joystick drive
-    yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-    twistReduction = Robot.mainController.trigger.get() ? 0.4 : 0.5;
-
-    yVal = Robot.mainController.getY() * yReduction;
-    twistVal = Robot.mainController.getTwist() * twistReduction;
-
-    if (!Robot.mainController.trigger.get()) {
-      drive(yVal+twistVal, yVal-twistVal);
-    } else {
-      drive(-(yVal+twistVal), -(yVal-twistVal));
-    }
+    if (RobotState.isOperatorControl()) {
+      //Joystick drive
+      yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
+      twistReduction = Robot.mainController.trigger.get() ? 0.4 : 0.5;
     
+      yVal = Robot.mainController.getY() * yReduction;
+      twistVal = Robot.mainController.getTwist() * twistReduction;
+
+      drive(yVal+twistVal, yVal-twistVal);
+    }
+
     //Path planning
     odometry.update(getAngle(), leftPosition.get(), rightPosition.get());
   }
