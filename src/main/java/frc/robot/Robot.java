@@ -111,19 +111,13 @@ public class Robot extends TimedRobot {
     //Camera initializations
     camserv = CameraServer.getInstance();
 
-    camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
-    //camera.setResolution(160, 90);
-//    camPrimary.setFPS(14);
-//    camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
-    camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
-    camSecondary = new UsbCamera("cam2", 2);
-    //camera.setResolution(160, 90);
-    camSecondary.setFPS(14);
-    camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for camera
-
-    camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-    camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+    camShooter = camserv.startAutomaticCapture("cam2", 1);
+    camIntake = camserv.startAutomaticCapture("cam1", 0);
+    camClimber = camserv.startAutomaticCapture("cam3", 2);
+    camColorSensor = camserv.startAutomaticCapture("cam4", 3);
+  //  camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
+  //  camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
@@ -147,7 +141,7 @@ public class Robot extends TimedRobot {
       PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
     ));
     */
-    
+    preLoaded.setDefaultOption("0", 0);
     preLoaded.addOption("0", 0);
     preLoaded.addOption("1", 1);
     preLoaded.addOption("2", 2);
@@ -188,6 +182,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
 
+    lawnmower.counter = preLoaded.getSelected();
+
     CommandScheduler.getInstance().run();
   }
 
@@ -206,6 +202,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     
     autonomousCommand = startingLoc.getSelected();
+    lawnmower.counter = preLoaded.getSelected();
   
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -268,7 +265,7 @@ public class Robot extends TimedRobot {
   {
     if(mainController.headLeft.get()){
       if(camPrimaryCounter == 0)
-        camPrimary = camIntake;
+        //camPrimary = camIntake;
         camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);
@@ -276,7 +273,7 @@ public class Robot extends TimedRobot {
         camPrimaryCounter = 1;
       } 
       if(camPrimaryCounter == 1){
-        camPrimary = camShooter;
+        //camPrimary = camShooter;
         camPrimary = camserv.startAutomaticCapture("cam2", 1); //shooter
         //camera.setResolution(160, 90);
         camPrimary.setFPS(14);

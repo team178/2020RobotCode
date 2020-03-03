@@ -173,7 +173,7 @@ public class DriveTrain extends SubsystemBase {
       twistVal = Robot.mainController.getTwist() * twistReduction;
 
       drive(twistVal+yVal, twistVal-yVal);
-      System.out.println(currentDirection);
+      //System.out.println(currentDirection);
     }
 
     //Path planning

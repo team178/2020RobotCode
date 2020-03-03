@@ -43,7 +43,7 @@ public class Climber extends SubsystemBase {
   public void windWinch(double speed) {
     winchMaster.set(ControlMode.PercentOutput, speed);
     winchSlave.set(ControlMode.PercentOutput, speed);
-    System.out.println("Winch Speed:" + speed);
+  //  System.out.println("Winch Speed:" + speed);
   }
 
   public void moveAlongBar(double speed) {
