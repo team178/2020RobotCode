@@ -35,7 +35,7 @@ public class AutoDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.drive(speed, speed);
+    driveTrain.drive(speed, -speed);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,6 +47,6 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return Math.abs(distance - driveTrain.rightPosition.get()) < PathConstants.kDriveTolerance;
+   return Math.abs(Math.abs(distance) - Math.abs(driveTrain.rightPosition.get())) < PathConstants.kDriveTolerance;
   }
 }

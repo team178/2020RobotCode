@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-//import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -23,6 +22,7 @@ import frc.robot.autonomous.BasicLeftAuto;
 import frc.robot.autonomous.BasicMiddleAuto;
 import frc.robot.autonomous.BasicRightAuto;
 import frc.robot.autonomous.PathWeaverTrajectories;
+import frc.robot.commands.AutoBallDump;
 import frc.robot.commands.AutoDrive;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
@@ -70,8 +70,8 @@ public class Robot extends TimedRobot {
 
   //USB Camera declarations
   public static CameraServer camserv;
-  public static UsbCamera camPrimary;
-  public static UsbCamera camSecondary;
+//  public static USBCamera camPrimary;
+//  public static USBCamera camSecondary;
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -102,25 +102,25 @@ public class Robot extends TimedRobot {
     camserv = CameraServer.getInstance();
 
 //    camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
-    camPrimary = new UsbCamera("cam1", 1);
+//    camPrimary = new UsbCamera("cam1", 1);
     //camera.setResolution(160, 90);
-    camPrimary.setFPS(14);
-    camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+//    camPrimary.setFPS(14);
+//    camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
 
 //    camSecondary = camserv.startAutomaticCapture("cam2", 2); //shooter
-    camSecondary = new UsbCamera("cam2", 2);
+//    camSecondary = new UsbCamera("cam2", 2);
     //camera.setResolution(160, 90);
-    camSecondary.setFPS(14);
-    camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
+//    camSecondary.setFPS(14);
+//    camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
     
-    camPrimary.startAutomaticCapture();
-    camSecondary.startAutomaticCapture();
+//    camPrimary.startAutomaticCapture();
+//    camSecondary.startCapture();
 
     startingLoc.addOption("Left", new BasicLeftAuto());
     startingLoc.addOption("Middle", new BasicMiddleAuto());
     startingLoc.addOption("Right", new BasicRightAuto());
-    startingLoc.addOption("Opposite", new AutoDrive(-0.5, 1.5));
-    
+    startingLoc.addOption("Opposite", new AutoDrive(-0.5, 5));
+    startingLoc.addOption("Dump", new AutoBallDump());  
     /*
     startingLoc.addOption("Left", new SequentialCommandGroup(
       PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[0])),
@@ -239,8 +239,8 @@ public class Robot extends TimedRobot {
 
   private void configButtonControls() {
     //Main buttons
-    mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
-    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
+   mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+//    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
@@ -248,13 +248,13 @@ public class Robot extends TimedRobot {
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
     auxController.y.whenPressed(() -> lawnmower.ballDump(0.6)).whenReleased(() -> lawnmower.ballDump(0));
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
-    auxController.back.whenPressed(() -> changeSecondaryCamera(4));
+//    auxController.back.whenPressed(() -> changeSecondaryCamera(4));
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook());
-    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
+//    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
-
+/*
   public int camCounter = 0;
   
   public void changePrimaryCamera() //toggle between intake and shooter cameras with button
@@ -338,5 +338,5 @@ public class Robot extends TimedRobot {
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
       }
     }
-  }
+  } */
 }

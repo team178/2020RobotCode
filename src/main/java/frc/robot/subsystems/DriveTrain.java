@@ -120,8 +120,8 @@ public class DriveTrain extends SubsystemBase {
     rightMotors.setVoltage(rightVolts);
   }
 
-  public void toggleDriveDirection(DriveDirection driveDirection) {
-    driveDirection = driveDirection == DriveDirection.FORWARD ? DriveDirection.BACKWARD : DriveDirection.BACKWARD;
+  public void toggleDriveDirection() {
+    currentDirection = currentDirection == DriveDirection.FORWARD ? DriveDirection.BACKWARD : DriveDirection.FORWARD;
   }
 
   public void resetEncoders() {
@@ -172,7 +172,8 @@ public class DriveTrain extends SubsystemBase {
       yVal = Robot.mainController.getY() * yReduction;
       twistVal = Robot.mainController.getTwist() * twistReduction;
 
-      drive(yVal+twistVal, yVal-twistVal);
+      drive(twistVal+yVal, twistVal-yVal);
+      System.out.println(currentDirection);
     }
 
     //Path planning

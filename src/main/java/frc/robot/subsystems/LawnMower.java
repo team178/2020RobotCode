@@ -54,7 +54,7 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void ballDump(double speed) {
-      moveConveyor(1);
+      moveConveyor(speed);
       shoot(speed);
     }
 

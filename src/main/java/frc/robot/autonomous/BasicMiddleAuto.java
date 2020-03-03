@@ -20,6 +20,6 @@ public class BasicMiddleAuto extends SequentialCommandGroup {
    * Creates a new BasicAuto.
    */
   public BasicMiddleAuto() {
-  //  super(new AutoDrive(1, -2.743), new AutoBallDump(), new AutoDrive(1, 0));
+    super(new AutoDrive(-.5, 8), new AutoBallDump() /*, new AutoDrive(1, 0)*/);
   }
 }
