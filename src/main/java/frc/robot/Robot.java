@@ -211,6 +211,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    drivetrain.resetEncoders();
     
     autonomousCommand = startingLoc.getSelected();
     lawnmower.counter = preLoaded.getSelected();
@@ -258,6 +259,8 @@ public class Robot extends TimedRobot {
     //Main buttons
    mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
 //    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
+    mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders()
+    );
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
@@ -333,7 +336,7 @@ public class Robot extends TimedRobot {
       if(camSecondaryCounter == 2) {
         camSecondary.close();
         camSecondary = getCamClimber();
-        camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
+       // camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
@@ -342,7 +345,7 @@ public class Robot extends TimedRobot {
       if(camSecondaryCounter == 3) {
         camSecondary.close();
         camSecondary = getCamColorSensor();
-        camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
+        //camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
         //camera.setResolution(160, 90);
         camSecondary.setFPS(14);
         camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras

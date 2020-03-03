@@ -8,6 +8,7 @@
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoBallDump;
 import frc.robot.commands.AutoDrive;
 import frc.robot.commands.Move90Degrees;
@@ -20,6 +21,6 @@ public class BasicMiddleAuto extends SequentialCommandGroup {
    * Creates a new BasicAuto.
    */
   public BasicMiddleAuto() {
-    super(new AutoDrive(-.5, 8), new AutoBallDump() /*, new AutoDrive(1, 0)*/);
+    super(new AutoDrive(-.7, 9), new WaitCommand(0.2), new AutoBallDump() /*, new AutoDrive(1, 0)*/);
   }
 }
