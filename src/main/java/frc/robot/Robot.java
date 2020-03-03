@@ -142,7 +142,6 @@ public class Robot extends TimedRobot {
     alliance.addOption("Blue", "Blue");
     alliance.addOption("Red", "Red");
     */
-    CommandScheduler.getInstance().run();
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -196,7 +195,6 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
-    CommandScheduler.getInstance().run();
   }
 
   /**
@@ -212,7 +210,6 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    CommandScheduler.getInstance().run();
   }
 
   /**
