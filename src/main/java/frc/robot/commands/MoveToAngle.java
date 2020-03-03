@@ -35,7 +35,7 @@ public class MoveToAngle extends CommandBase {
     if(desiredAngle-10 < Robot.getCurrentAngle() + tolerance && desiredAngle-10 > Robot.getCurrentAngle() - tolerance) {
         drivetrain.drive(0, 0);
     } else {
-        drivetrain.drive(-0.5, 0.5);
+        drivetrain.drive(0.5, 0.5);
     }
     System.out.println(currentAngle);
   }
