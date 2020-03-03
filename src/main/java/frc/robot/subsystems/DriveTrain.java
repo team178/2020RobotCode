@@ -104,6 +104,9 @@ public class DriveTrain extends SubsystemBase {
 
     leftPIDController = new PIDController(PathConstants.kDriveP, 0, 0);
     leftPIDController = new PIDController(PathConstants.kDriveP, 0, 0);
+
+    leftMaster.setSafetyEnabled(false);
+    rightMaster.setSafetyEnabled(false);
   }
 
   public void drive(double leftPower, double rightPower) {

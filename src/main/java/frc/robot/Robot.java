@@ -84,8 +84,8 @@ public class Robot extends TimedRobot {
     climber = new Climber();
 
     //lights
-    lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
-    lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
+    //lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
+    //lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
     
     
     drivetrain.calibrateGyro();
@@ -142,6 +142,7 @@ public class Robot extends TimedRobot {
     alliance.addOption("Blue", "Blue");
     alliance.addOption("Red", "Red");
     */
+    CommandScheduler.getInstance().run();
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -154,8 +155,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    changePrimaryCamera();
-    allCameraChange();
+    //changePrimaryCamera();
+    //allCameraChange();
 
     //Gyro stuff
     if(drivetrain.getGyroReading()%360 == 0)
@@ -195,6 +196,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+    CommandScheduler.getInstance().run();
   }
 
   /**
@@ -210,6 +212,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    CommandScheduler.getInstance().run();
   }
 
   /**
@@ -233,8 +236,8 @@ public class Robot extends TimedRobot {
 
   private void configButtonControls() {
     //Main buttons
-    mainController.trigger.whenPressed(() -> drivetrain.toggleDriveDirection());
-    mainController.rightPadBottom3.whenPressed(() -> lawnmower.resetCounter());
+    mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
