@@ -175,7 +175,7 @@ public class DriveTrain extends SubsystemBase {
     if (RobotState.isOperatorControl()) {
       //Joystick drive
       yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-      twistReduction = Robot.mainController.trigger.get() ? 0.4 : 0.5;
+      twistReduction = Robot.mainController.trigger.get() ? 0.5 : 0.6;
     
       yVal = Robot.mainController.getY() * yReduction;
       twistVal = Robot.mainController.getTwist() * twistReduction;

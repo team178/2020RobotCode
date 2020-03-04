@@ -116,8 +116,8 @@ public class Robot extends TimedRobot {
 
     camserv = CameraServer.getInstance();
 
-    cam1 = camserv.startAutomaticCapture("intake", 0);
-    cam2 = camserv.startAutomaticCapture("shooter", 1);
+   // cam1 = camserv.startAutomaticCapture("shooter", 0);
+    cam2 = camserv.startAutomaticCapture("intake", 1);
 
 
 
@@ -283,5 +283,22 @@ public class Robot extends TimedRobot {
 //    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
+  /*
+  
+  public void getPrimaryCams(){
+    private int PrimeCounter = 0;
+    if(maincontroller.leftHead.get()){
+      PrimeCounter ++;
+    }
+    else{
+    PrimeCounter = 0;}
+
+    if(PrimeCounter == 0){
+
+    }
+
+  }
+  
+  */
   
 }
