@@ -100,44 +100,6 @@
               "_title": "Encoder left"
             }
           },
-          "0,1": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Camera Stream",
-              "_source0": "camera_server://cam1",
-              "_title": "cam1",
-              "Crosshair/Show crosshair": true,
-              "Crosshair/Crosshair color": "#FFFFFFFF",
-              "Controls/Show controls": true,
-              "Controls/Rotation": "NONE",
-              "compression": -1.0,
-              "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
-            }
-          },
-          "4,1": {
-            "size": [
-              4,
-              3
-            ],
-            "content": {
-              "_type": "Camera Stream",
-              "_source0": "camera_server://cam2",
-              "_title": "cam2",
-              "Crosshair/Show crosshair": true,
-              "Crosshair/Crosshair color": "#FFFFFFFF",
-              "Controls/Show controls": true,
-              "Controls/Rotation": "NONE",
-              "compression": -1.0,
-              "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
-            }
-          },
           "8,0": {
             "size": [
               1,
@@ -232,6 +194,44 @@
               "_type": "Text View",
               "_source0": "network_table:///SmartDashboard/DB/Slider 2",
               "_title": "DB/Slider 2"
+            }
+          },
+          "0,1": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://shooter",
+              "_title": "shooter",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": 10,
+              "imageWidth": 0,
+              "imageHeight": 0
+            }
+          },
+          "4,1": {
+            "size": [
+              4,
+              3
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://intake",
+              "_title": "intake",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": 10,
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           }
         }
@@ -374,6 +374,11 @@
                   "Visuals/Starting angle": 180.0,
                   "Visuals/Show tick mark ring": true,
                   "Visuals/Counter clockwise": false
+                },
+                {
+                  "_type": "PID Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PIDController[1]",
+                  "_title": "PIDController[1]"
                 }
               ]
             }

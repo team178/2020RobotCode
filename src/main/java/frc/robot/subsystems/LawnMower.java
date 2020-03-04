@@ -19,6 +19,8 @@ import libs.tof.org.letsbuildrockets.libs.*;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class LawnMower extends SubsystemBase {
   
   private static TalonSRX intake;
@@ -33,6 +35,7 @@ public class LawnMower extends SubsystemBase {
   private static TimeOfFlightSensor tof3;
   public int counter;
   private boolean inTrigger, outTrigger;
+  private Timer t = new Timer();
 
   public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
   public final double MIN = 60;
@@ -86,18 +89,14 @@ public class LawnMower extends SubsystemBase {
 
   public void extendIntake() {
     deployer.set(true);
+    t.delay(1);
+    bouncer.set(false);
   }
 
   public void retractIntake() {
     deployer.set(false);
-  }
-
-  public void startBouncing() {
+    t.delay(1);
     bouncer.set(true);
-  }
-
-  public void stopBouncing() {
-    bouncer.set(false);
   }
 
   public void updateTof1Distance() {

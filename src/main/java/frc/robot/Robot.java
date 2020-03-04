@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.cameraserver.CameraServer;
@@ -36,7 +37,6 @@ import java.util.ArrayList;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -51,37 +51,35 @@ public class Robot extends TimedRobot {
   public static LawnMower lawnmower;
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
-  public static LightsArduino lights; 
+  public static LightsArduino lights;
   public static LightStrip lightStrip;
   public static Climber climber;
 
-  //FMS Game Data for Position Control
+  // FMS Game Data for Position Control
   public static String gameData;
 
-  //Declare joysticks
+  // Declare joysticks
   public static ThrustmasterJoystick mainController;
   public static XboxController auxController;
-  
-  //Declare Shuffleboard Dropdowns for autonomous
+
+  // Declare Shuffleboard Dropdowns for autonomous
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
   public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
-//public static SendableChooser<String> alliance = new SendableChooser<>();
-  
-  //Declare autonomous command
+  // public static SendableChooser<String> alliance = new SendableChooser<>();
+
+  // Declare autonomous command
   private Command autonomousCommand;
 
-  //USB Camera declarations
+  // USB Camera declarations
+  public static UsbCamera cam1;
+  public static UsbCamera cam2;
+
   public static CameraServer camserv;
-  public static UsbCamera camPrimary;
-  public static UsbCamera camSecondary;
 
-  public static UsbCamera camShooter;
-  public static UsbCamera camIntake;
-  public static UsbCamera camColorSensor;
-  public static UsbCamera camClimber;
-
-  public static int camPrimaryCounter = 0;
-  public static int camSecondaryCounter = 0;
+//  public static UsbCamera camShooter;
+//  public static UsbCamera camIntake;
+//  public static UsbCamera camColorSensor;
+//  public static UsbCamera camClimber;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -94,6 +92,11 @@ public class Robot extends TimedRobot {
     lawnmower = new LawnMower();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
     climber = new Climber();
+
+//    camShooter = new UsbCamera("shooter", 1);
+//    camIntake = new UsbCamera("intake", 0);
+//    camColorSensor = new UsbCamera("color", 3);
+//  camClimber = new UsbCamera("climber", 2);
 
     //lights
     //lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
@@ -110,7 +113,13 @@ public class Robot extends TimedRobot {
     configButtonControls();
 
     //Camera initializations
+
     camserv = CameraServer.getInstance();
+
+    cam1 = camserv.startAutomaticCapture("intake", 0);
+    cam2 = camserv.startAutomaticCapture("shooter", 1);
+
+
 
   //  camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
   //  camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
@@ -241,6 +250,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
     CommandScheduler.getInstance().run();
   }
 
@@ -257,10 +267,9 @@ public class Robot extends TimedRobot {
 
   private void configButtonControls() {
     //Main buttons
-   mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
 //    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
-    mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders()
-    );
+      mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
@@ -275,102 +284,4 @@ public class Robot extends TimedRobot {
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
   
-  public void changePrimaryCamera() //toggle between intake and shooter cameras with button
-  {
-    if(mainController.headLeft.get()){
-      if(camPrimaryCounter == 0)
-        camPrimary.close();
-        camPrimary = camserv.startAutomaticCapture("cam1", 0); //intake
-        //camera.setResolution(160, 90);
-        camPrimary.setFPS(14);
-        camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camPrimaryCounter = 1;
-      } 
-      if(camPrimaryCounter == 1){
-        camPrimary.close();
-        camPrimary = camserv.startAutomaticCapture("cam2", 1); //shooter
-        //camera.setResolution(160, 90);
-        camPrimary.setFPS(14);
-        camPrimary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camPrimaryCounter = 0;
-      } 
-  }
-
-  public void changeSecondaryCamera(int cam) //toggle between colorsensor and climber cameras automatically
-  {
-      if(cam == 4) {
-        camSecondary.close();
-        camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
-        //camera.setResolution(160, 90);
-        camSecondary.setFPS(14);
-        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-      }
-      if(cam == 3) {
-        camSecondary.close();
-        camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
-        //camera.setResolution(160, 90);
-        camSecondary.setFPS(14);
-        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-      }
-  }
-
-  public void allCameraChange() //switches between all cameras manually
-  {
-    if(mainController.headRight.get()) {
-      if(camSecondaryCounter == 0) {
-        camSecondary.close();
-        camSecondary = getCamIntake(); //intake
-        //camera.setResolution(160, 90);
-        camSecondary.setFPS(14);
-        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camPrimaryCounter++;
-      } 
-      if(camSecondaryCounter == 1) {
-        camSecondary.close();
-        camSecondary = getCamShooter(); //shooter
-        //camera.setResolution(160, 90);
-        camSecondary.setFPS(14);
-        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camPrimaryCounter++;
-      }
-      if(camSecondaryCounter == 2) {
-        camSecondary.close();
-        camSecondary = getCamClimber();
-       // camSecondary = camserv.startAutomaticCapture("cam3", 2); //climber
-        //camera.setResolution(160, 90);
-        camSecondary.setFPS(14);
-        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camSecondaryCounter++;
-      }
-      if(camSecondaryCounter == 3) {
-        camSecondary.close();
-        camSecondary = getCamColorSensor();
-        //camSecondary = camserv.startAutomaticCapture("cam4", 3); //colorSensor
-        //camera.setResolution(160, 90);
-        camSecondary.setFPS(14);
-        camSecondary.setPixelFormat(PixelFormat.kYUYV); //formats video specifications for cameras
-        camSecondaryCounter = 0;
-      }
-    }
-  }
-
-  public UsbCamera getCamShooter()
-  {
-    return camShooter = camserv.startAutomaticCapture("cam2", 1);
-  }
-
-  public UsbCamera getCamIntake()
-  {
-    return camIntake = camserv.startAutomaticCapture("cam1", 0);
-  }
-
-  public UsbCamera getCamClimber()
-  {
-    return camClimber = camserv.startAutomaticCapture("cam3", 2);
-  }
-
-  public UsbCamera getCamColorSensor()
-  {
-    return camColorSensor = camserv.startAutomaticCapture("cam4", 3);
-  }
 }
