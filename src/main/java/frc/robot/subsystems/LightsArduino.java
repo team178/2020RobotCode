@@ -32,22 +32,6 @@ public class LightsArduino extends SubsystemBase {
     arduino = new I2C(port, address);
     ds = DriverStation.getInstance();
   }
-
-
-  
-  /** 
-   * @return boolean
-   */
-   public boolean sendMessage(String pattern) {
-    boolean sent = false;
-    String message = pattern.toLowerCase();
-    
-   System.out.println("Message Sent: " + message);
-    sent = !arduino.writeBulk(message.getBytes()); //Returns true if aborted, false if completed
-    System.out.println("Message Sent? " + arduino.addressOnly());
-
-    return sent;
-  }
   
 public boolean sendMessage(char message){
   byte[] bytearray=new byte[1];

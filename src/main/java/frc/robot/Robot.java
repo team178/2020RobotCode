@@ -32,7 +32,6 @@ import frc.robot.commands.MoveToAngle;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
-import frc.robot.subsystems.LightStrip;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import frc.robot.subsystems.LightsArduino;
 import java.util.ArrayList;
@@ -57,7 +56,6 @@ public class Robot extends TimedRobot {
   public static WheelOfFortuneContestant wheeloffortunecontestant;
   private static double currentAngle;
   public static LightsArduino lights;
-  public static LightStrip lightStrip;
   public static Climber climber;
 
   // FMS Game Data for Position Control
@@ -108,9 +106,7 @@ public class Robot extends TimedRobot {
     secondary.setSource(shooter);
 
     //lights
-    //lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
-    //lightStrip = new LightStrip(RobotMap.lightsPWM, RobotMap.numOfLEDs);
-    
+    lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
     
     drivetrain.calibrateGyro();
     drivetrain.resetEncoders();
@@ -205,8 +201,9 @@ public class Robot extends TimedRobot {
     // if(camSecondaryCounter == 3){
     //   getCamColorSensor();
     // }
-
+    
     CommandScheduler.getInstance().run();
+    lights.periodic();
   }
 
   /**
