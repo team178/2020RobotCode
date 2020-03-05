@@ -203,16 +203,16 @@
             ],
             "content": {
               "_type": "Camera Stream",
-              "_source0": "camera_server://shooter",
-              "_title": "shooter",
+              "_source0": "camera_server://primary",
+              "_title": "primary",
               "Crosshair/Show crosshair": true,
               "Crosshair/Crosshair color": "#FFFFFFFF",
               "Controls/Show controls": true,
               "Controls/Rotation": "NONE",
               "compression": -1.0,
-              "fps": 10,
-              "imageWidth": 0,
-              "imageHeight": 0
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
             }
           },
           "4,1": {
@@ -222,16 +222,16 @@
             ],
             "content": {
               "_type": "Camera Stream",
-              "_source0": "camera_server://intake",
-              "_title": "intake",
+              "_source0": "camera_server://secondary",
+              "_title": "secondary",
               "Crosshair/Show crosshair": true,
               "Crosshair/Crosshair color": "#FFFFFFFF",
               "Controls/Show controls": true,
               "Controls/Rotation": "NONE",
               "compression": -1.0,
-              "fps": 10,
-              "imageWidth": 0,
-              "imageHeight": 0
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
             }
           }
         }
@@ -379,6 +379,18 @@
                   "_type": "PID Controller",
                   "_source0": "network_table:///LiveWindow/Ungrouped/PIDController[1]",
                   "_title": "PIDController[1]"
+                },
+                {
+                  "_type": "PDP",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistributionPanel[14]",
+                  "_title": "/LiveWindow/Ungrouped/PowerDistributionPanel[14]",
+                  "Visuals/Show voltage and current values": true
+                },
+                {
+                  "_type": "PDP",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistributionPanel[13]",
+                  "_title": "LiveWindow/Ungrouped/PowerDistributionPanel[13]",
+                  "Visuals/Show voltage and current values": true
                 }
               ]
             }

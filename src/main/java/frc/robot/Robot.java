@@ -7,12 +7,14 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -46,6 +48,9 @@ import libs.IO.XboxController;
  */
 public class Robot extends TimedRobot {
 
+  //Declare PDP
+  public static PowerDistributionPanel pdp;
+
   // Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
@@ -71,15 +76,16 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   // USB Camera declarations
-  public static UsbCamera cam1;
-  public static UsbCamera cam2;
+  public UsbCamera intake = CameraServer.getInstance().startAutomaticCapture("intake", 0);
+  public UsbCamera shooter = CameraServer.getInstance().startAutomaticCapture("shooter", 1);
+  public UsbCamera climberCam = CameraServer.getInstance().startAutomaticCapture("climber", 2);
+  public UsbCamera color = CameraServer.getInstance().startAutomaticCapture("color", 3);
 
-  public static CameraServer camserv;
+  public MjpegServer primary = CameraServer.getInstance().addSwitchedCamera("primary");
+  public MjpegServer secondary = CameraServer.getInstance().addSwitchedCamera("secondary");
 
-//  public static UsbCamera camShooter;
-//  public static UsbCamera camIntake;
-//  public static UsbCamera camColorSensor;
-//  public static UsbCamera camClimber;
+  public boolean primaryTrigger = false;
+  public int secondaryTrigger = 1;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -88,6 +94,7 @@ public class Robot extends TimedRobot {
   
   @Override
   public void robotInit() {
+    pdp = new PowerDistributionPanel(RobotMap.PDP);
     drivetrain = new DriveTrain();
     lawnmower = new LawnMower();
     wheeloffortunecontestant = new WheelOfFortuneContestant();
@@ -97,6 +104,8 @@ public class Robot extends TimedRobot {
 //    camIntake = new UsbCamera("intake", 0);
 //    camColorSensor = new UsbCamera("color", 3);
 //  camClimber = new UsbCamera("climber", 2);
+    primary.setSource(intake);
+    secondary.setSource(shooter);
 
     //lights
     //lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);
@@ -113,12 +122,6 @@ public class Robot extends TimedRobot {
     configButtonControls();
 
     //Camera initializations
-
-    camserv = CameraServer.getInstance();
-
-   // cam1 = camserv.startAutomaticCapture("shooter", 0);
-    cam2 = camserv.startAutomaticCapture("intake", 1);
-
 
 
   //  camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
@@ -269,7 +272,10 @@ public class Robot extends TimedRobot {
     //Main buttons
     mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
 //    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
-      mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders());
+    mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders());
+    mainController.headLeft.whenPressed(() -> switchPrimaryCam());
+    mainController.headRight.whenPressed(() -> switchSecondaryCam());
+      mainController.leftPadTop1.whenPressed(() -> clearStickyFaults());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
@@ -300,5 +306,34 @@ public class Robot extends TimedRobot {
   }
   
   */
-  
+  public void switchPrimaryCam() {
+    if (!primaryTrigger) {
+      primary.setSource(shooter);
+      primaryTrigger = true;
+    } else {
+      primary.setSource(intake);
+      primaryTrigger = false;
+    }
+  }
+
+  public void switchSecondaryCam() {
+    if (secondaryTrigger == 0) {
+      secondary.setSource(shooter);
+      secondaryTrigger = 1;
+    } else if (secondaryTrigger == 1) {
+      secondary.setSource(climberCam);
+      secondaryTrigger = 2;
+    } else if (secondaryTrigger == 2) {
+      secondary.setSource(color);
+      secondaryTrigger = 3;
+    } else if (secondaryTrigger == 3) {
+      secondary.setSource(intake);
+      secondaryTrigger = 0;
+    }
+  }
+
+  public void clearStickyFaults() {
+    pdp.clearStickyFaults();
+    System.out.println(pdp.getVoltage());
+  }
 }

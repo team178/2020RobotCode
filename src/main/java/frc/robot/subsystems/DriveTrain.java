@@ -106,6 +106,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void drive(double leftPower, double rightPower) {
+    if (Math.abs(leftPower) < 0.1) {
+      leftPower = 0;
+    }
+    if (Math.abs(rightPower) < 0.1) {
+      rightPower = 0;
+    }
+
     if (currentDirection == DriveDirection.FORWARD) {
       leftMaster.set(ControlMode.PercentOutput, leftPower);
       rightMaster.set(ControlMode.PercentOutput, rightPower);

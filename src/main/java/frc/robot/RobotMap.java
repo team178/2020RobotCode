@@ -33,6 +33,8 @@ public class RobotMap {
     public static int encoderFeedbackDevice = 0;
     public static SPI.Port gyroPort = SPI.Port.kOnboardCS0;
 
+    public static int PDP = 13;
+
     //idk what to do with these
     public static int Encoder1 = 5;
     public static int Encoder2 = 6;
