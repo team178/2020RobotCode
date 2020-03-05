@@ -22,11 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.robot.autonomous.BasicLeftAuto;
-import frc.robot.autonomous.BasicMiddleAuto;
-import frc.robot.autonomous.BasicRightAuto;
-import frc.robot.autonomous.PathWeaverTrajectories;
-import frc.robot.commands.AutoBallDump;
+import frc.robot.autonomous.*;
 import frc.robot.commands.AutoDrive;
 import frc.robot.commands.MoveToAngle;
 import frc.robot.subsystems.Climber;
@@ -74,16 +70,9 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
 
   // USB Camera declarations
-  public UsbCamera intake = CameraServer.getInstance().startAutomaticCapture("intake", 0);
-  public UsbCamera shooter = CameraServer.getInstance().startAutomaticCapture("shooter", 1);
-  public UsbCamera climberCam = CameraServer.getInstance().startAutomaticCapture("climber", 2);
-  public UsbCamera color = CameraServer.getInstance().startAutomaticCapture("color", 3);
-
-  public MjpegServer primary = CameraServer.getInstance().addSwitchedCamera("primary");
-  public MjpegServer secondary = CameraServer.getInstance().addSwitchedCamera("secondary");
-
-  public boolean primaryTrigger = false;
-  public int secondaryTrigger = 1;
+  public UsbCamera primary;
+  public UsbCamera secondary;
+  public CameraServer camserv;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -98,12 +87,10 @@ public class Robot extends TimedRobot {
     wheeloffortunecontestant = new WheelOfFortuneContestant();
     climber = new Climber();
 
-//    camShooter = new UsbCamera("shooter", 1);
-//    camIntake = new UsbCamera("intake", 0);
-//    camColorSensor = new UsbCamera("color", 3);
-//  camClimber = new UsbCamera("climber", 2);
-    primary.setSource(intake);
-    secondary.setSource(shooter);
+    camserv = CameraServer.getInstance();
+
+    primary = camserv.startAutomaticCapture("intake", 1);
+    secondary = camserv.startAutomaticCapture("shooter", 2);
 
     //lights
     lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
@@ -203,7 +190,6 @@ public class Robot extends TimedRobot {
     // }
     
     CommandScheduler.getInstance().run();
-    lights.periodic();
   }
 
   /**
@@ -270,9 +256,7 @@ public class Robot extends TimedRobot {
     mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
 //    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
     mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders());
-    mainController.headLeft.whenPressed(() -> switchPrimaryCam());
-    mainController.headRight.whenPressed(() -> switchSecondaryCam());
-      mainController.leftPadTop1.whenPressed(() -> clearStickyFaults());
+      mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
@@ -303,31 +287,6 @@ public class Robot extends TimedRobot {
   }
   
   */
-  public void switchPrimaryCam() {
-    if (!primaryTrigger) {
-      primary.setSource(shooter);
-      primaryTrigger = true;
-    } else {
-      primary.setSource(intake);
-      primaryTrigger = false;
-    }
-  }
-
-  public void switchSecondaryCam() {
-    if (secondaryTrigger == 0) {
-      secondary.setSource(shooter);
-      secondaryTrigger = 1;
-    } else if (secondaryTrigger == 1) {
-      secondary.setSource(climberCam);
-      secondaryTrigger = 2;
-    } else if (secondaryTrigger == 2) {
-      secondary.setSource(color);
-      secondaryTrigger = 3;
-    } else if (secondaryTrigger == 3) {
-      secondary.setSource(intake);
-      secondaryTrigger = 0;
-    }
-  }
 
   public void clearStickyFaults() {
     pdp.clearStickyFaults();

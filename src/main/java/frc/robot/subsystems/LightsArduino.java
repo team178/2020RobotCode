@@ -33,12 +33,12 @@ public class LightsArduino extends SubsystemBase {
     ds = DriverStation.getInstance();
   }
   
-public boolean sendMessage(char message){
-  byte[] bytearray=new byte[1];
-  bytearray[0]=(byte)message;
-  sent=!arduino.writeBulk(bytearray);
-  return sent;
-}
+  public boolean sendMessage(char message){
+    byte[] bytearray=new byte[1];
+    bytearray[0]=(byte)message;
+    sent = !arduino.writeBulk(bytearray);
+    return sent;
+  }
   
   /** 
    * @param address
@@ -97,8 +97,9 @@ public boolean sendMessage(char message){
    * @return boolean
    */
   public boolean red() {
-    //System.out.println("red");
-    return sendMessage('r');
+    boolean messageSent = sendMessage('r');
+    System.out.println(messageSent);
+    return messageSent;
   }
 
   
@@ -131,8 +132,10 @@ public boolean sendMessage(char message){
 
   @Override
   public void periodic() {
-    ball(Robot.lawnmower.getCounter());
-    setAllianceColor();
+    //ball(Robot.lawnmower.getCounter());
+    //setAllianceColor();
+    System.out.println("lights");
+    red();
     
   }
 }
