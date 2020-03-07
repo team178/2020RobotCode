@@ -19,26 +19,33 @@ import libs.tof.org.letsbuildrockets.libs.*;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import edu.wpi.first.wpilibj.Timer;
-
 public class LawnMower extends SubsystemBase {
   
+  //Motor controller declaration
   private static TalonSRX intake;
   private static TalonSRX conveyorTop;
   private static TalonSRX conveyorBottom;
   private static TalonSRX shooterLeft;
   private static TalonSRX shooterRight;
+
+  //Pneumatic declaration
   private static Solenoid deployer;
   private static Solenoid bouncer;
+  
+  //Time of flight declaration
   private static TimeOfFlightSensor tof1;
   private static TimeOfFlightSensor tof2;
   private static TimeOfFlightSensor tof3;
+
+  //Misc
   public int counter;
   private boolean inTrigger, outTrigger;
-  private Timer t = new Timer();
 
-  public final double MAX = 150; //These values need to be refined based on the actual robot's dimmensions
+  public final double MAX = 150;
   public final double MIN = 60;
+
+  private int bouncerCounter = 0;
+  private boolean runBouncerCounter = false;
 
   public LawnMower() {
     intake = new TalonSRX(RobotMap.intake);
@@ -54,14 +61,16 @@ public class LawnMower extends SubsystemBase {
     counter = 0;
     inTrigger = true;
     outTrigger = false;
+
+    //Set default pneumatic positions
+    disableBouncer();
+    retractIntake();
   }
 
   public void ballDump(double speed) {
-      moveConveyor(speed);
+      moveConveyor(1);
       shoot(speed);
-    }
-
-  //  v  IMPORTANT LOGIC STATEMENT  v
+  }
 
   public boolean positionOverride() {
     return (tof1.getEdge().equals("No ball") && !tof2.getEdge().equals("No ball")) || (tof1.getEdge().equals("No ball") && tof2.getEdge().equals("No ball"));
@@ -87,18 +96,24 @@ public class LawnMower extends SubsystemBase {
     shoot(speed);
   }
 
+  //Pneumatics
   public void extendIntake() {
     deployer.set(true);
-    t.delay(1);
-    bouncer.set(false);
+  }
+
+  public void enableBouncer() {
+    bouncer.set(true); //Robbie was never here idk what you're talking about
   }
 
   public void retractIntake() {
     deployer.set(false);
-    t.delay(1);
-    bouncer.set(true);
   }
 
+  public void disableBouncer() {
+    bouncer.set(false);
+  }
+
+  //Time of flight distance update
   public void updateTof1Distance() {
     tof1.updateDistance();
   }
@@ -111,6 +126,7 @@ public class LawnMower extends SubsystemBase {
     tof3.updateDistance();
   }
 
+  //Time of flight edge
   public String getTof1Edge() {
     return tof1.getEdge();
   }
@@ -123,6 +139,7 @@ public class LawnMower extends SubsystemBase {
     return tof3.getEdge();
   }
 
+  //Time of flight distance
   public double getTof1Distance() {
     return tof1.getDistance();
   }
@@ -156,7 +173,7 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void counterFixer() {
-    if(counter < 0) {
+    if (counter < 0) {
       counter ++;
     }
   }
@@ -171,24 +188,42 @@ public class LawnMower extends SubsystemBase {
     counter = 0;
   }
 
+  @Override
   public void periodic() {
-
+    //Intake pneumatics
     if (Robot.auxController.getDirection() == Direction.TOP) {
       extendIntake();
+      runBouncerCounter = true;
     }
 
     if (Robot.auxController.getDirection() == Direction.BOTTOM) {
+      disableBouncer();
       retractIntake();
+    } 
+
+    //Bouncer counter
+    if (runBouncerCounter) {
+      counter++;
+      System.out.println("counter (on): " + counter);
+    } else {
+      // System.out.println("counter (off): " + counter);
     }
 
+    if (bouncerCounter >= 50) {
+      enableBouncer();
+      runBouncerCounter = false;
+      bouncerCounter = 0;
+    }
+
+    //Intake motors
     if (!Robot.auxController.y.get()) {
       if (!positionOverride()) {
-        moveConveyor(0.55*Robot.auxController.getLeftStickY());
+        moveConveyor(0.55 * Robot.auxController.getLeftStickY());
       } else {
         moveConveyor(0);
       }
     }
     
-    intakeBall(-0.75*Robot.auxController.getRightStickY());
+    intakeBall(-0.75 * Robot.auxController.getRightStickY());
   }
 }

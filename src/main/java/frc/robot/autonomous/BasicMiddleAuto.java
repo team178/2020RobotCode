@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoBallDump;
 import frc.robot.commands.AutoDrive;
-import frc.robot.commands.Move90Degrees;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

@@ -11,7 +11,6 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
@@ -113,13 +112,8 @@ public class DriveTrain extends SubsystemBase {
       rightPower = 0;
     }
 
-    if (currentDirection == DriveDirection.FORWARD) {
-      leftMaster.set(ControlMode.PercentOutput, leftPower);
-      rightMaster.set(ControlMode.PercentOutput, rightPower);
-    } else {
-      leftMaster.set(ControlMode.PercentOutput, -rightPower);
-      rightMaster.set(ControlMode.PercentOutput, -leftPower);
-    }
+    leftMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.FORWARD ? leftPower : rightPower);
+    rightMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.FORWARD ? rightPower : leftPower);
   }
 
   public double getLeftCurrent() {
@@ -180,15 +174,19 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     if (RobotState.isOperatorControl()) {
-      //Joystick drive
-      yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-      twistReduction = Robot.mainController.trigger.get() ? 0.5 : 0.6;
-    
-      yVal = Robot.mainController.getY() * yReduction;
-      twistVal = Robot.mainController.getTwist() * twistReduction;
-
-      drive(twistVal+yVal, twistVal-yVal);
-      //System.out.println(currentDirection);
+      // if (!Robot.backupMainBeingUsed) {
+        //Joystick drive
+        yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
+        twistReduction = Robot.mainController.trigger.get() ? 0.5 : 0.6;
+      
+        yVal = Robot.mainController.getY() * yReduction;
+        twistVal = Robot.mainController.getTwist() * twistReduction;
+  
+        drive(twistVal+yVal, twistVal-yVal);
+      // } else {
+      //   //Xbox drive
+      //   drive(Robot.backupMainController.getLeftStickY(), Robot.backupMainController.getRightStickY());
+      // }
     }
 
     //Path planning

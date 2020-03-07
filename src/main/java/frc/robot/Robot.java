@@ -7,30 +7,22 @@
 
 package frc.robot;
 
-import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
-import edu.wpi.cscore.VideoSource.ConnectionStrategy;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.autonomous.*;
 import frc.robot.commands.AutoDrive;
-import frc.robot.commands.MoveToAngle;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.WheelOfFortuneContestant;
-import frc.robot.subsystems.LightsArduino;
-import java.util.ArrayList;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
 
@@ -43,41 +35,34 @@ import libs.IO.XboxController;
  */
 public class Robot extends TimedRobot {
 
-  //Declare PDP
+  //Declare PDP & subsystems
   public static PowerDistributionPanel pdp;
-
-  // Declare subsystems
   public static DriveTrain drivetrain;
   public static LawnMower lawnmower;
   public static WheelOfFortuneContestant wheeloffortunecontestant;
-  private static double currentAngle;
-  public static LightsArduino lights;
+  // public static LightsArduino lights;
   public static Climber climber;
-
-  // FMS Game Data for Position Control
-  public static String gameData;
-
+  
   // Declare joysticks
   public static ThrustmasterJoystick mainController;
   public static XboxController auxController;
-
+  // public static XboxController backupMainController;
+  // public static boolean backupMainBeingUsed = false;
+  
   // Declare Shuffleboard Dropdowns for autonomous
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
   public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
-  // public static SendableChooser<String> alliance = new SendableChooser<>();
-
+  
   // Declare autonomous command
   private Command autonomousCommand;
-
+  
   // USB Camera declarations
+  public CameraServer camserv;
   public UsbCamera primary;
   public UsbCamera secondary;
-  public CameraServer camserv;
-
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
+  
+  public static String gameData;
+  private static double currentAngle;
   
   @Override
   public void robotInit() {
@@ -90,10 +75,15 @@ public class Robot extends TimedRobot {
     camserv = CameraServer.getInstance();
 
     primary = camserv.startAutomaticCapture("intake", 1);
-    secondary = camserv.startAutomaticCapture("shooter", 2);
+    primary.setFPS(14);
+    primary.setPixelFormat(PixelFormat.kYUYV);
+
+    secondary = camserv.startAutomaticCapture("shooter", 0);
+    secondary.setFPS(14);
+    secondary.setPixelFormat(PixelFormat.kYUYV);
 
     //lights
-    lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
+    // lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
     
     drivetrain.calibrateGyro();
     drivetrain.resetEncoders();
@@ -102,6 +92,7 @@ public class Robot extends TimedRobot {
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
     auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
+    // backupMainController = new XboxController(RobotMap.JoystickBackupMain);
     configButtonControls();
 
     //Camera initializations
@@ -135,11 +126,6 @@ public class Robot extends TimedRobot {
     preLoaded.addOption("1", 1);
     preLoaded.addOption("2", 2);
     preLoaded.addOption("3", 3);
-    
-    /*
-    alliance.addOption("Blue", "Blue");
-    alliance.addOption("Red", "Red");
-    */
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -156,8 +142,7 @@ public class Robot extends TimedRobot {
     //allCameraChange();
 
     //Gyro stuff
-    if(drivetrain.getGyroReading()%360 == 0)
-    {
+    if(drivetrain.getGyroReading()%360 == 0) {
       currentAngle = drivetrain.getGyroReading();
     } else {
       currentAngle = Math.abs(drivetrain.getGyroReading()%360);
@@ -172,22 +157,6 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
 
     lawnmower.counter = preLoaded.getSelected();
-
-    // if(camSecondaryCounter == 0){
-    //   getCamIntake();
-    // }
-
-    // if(camSecondaryCounter == 1){
-    //   getCamShooter();
-    // }
-
-    // if(camSecondaryCounter == 2){
-    //   getCamClimber();
-    // }
-
-    // if(camSecondaryCounter == 3){
-    //   getCamColorSensor();
-    // }
     
     CommandScheduler.getInstance().run();
   }
@@ -216,9 +185,6 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
   @Override
   public void autonomousPeriodic() {
     CommandScheduler.getInstance().run();
@@ -231,18 +197,12 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
   @Override
   public void teleopPeriodic() {
 
     CommandScheduler.getInstance().run();
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
   @Override
   public void testPeriodic() {
   }
@@ -253,43 +213,29 @@ public class Robot extends TimedRobot {
 
   private void configButtonControls() {
     //Main buttons
-    mainController.rightPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
-//    mainController.rightPadBottom2.whenPressed(() -> lawnmower.resetCounter());
-    mainController.rightPadTop3.whenPressed(() -> drivetrain.resetEncoders());
-      mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
+    mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    //mainController.rightPadTop2.whenPressed(() -> toggleBackupMainUsage());
+    mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
+    //backupMainController.x.whenPressed(() -> drivetrain.toggleDriveDirection());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
     auxController.b.whenPressed(() -> lawnmower.moveConveyor(-0.2)).whenReleased(() -> lawnmower.moveConveyor(0));
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
     auxController.y.whenPressed(() -> lawnmower.ballDump(0.6)).whenReleased(() -> lawnmower.ballDump(0));
+
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
-//    auxController.back.whenPressed(() -> changeSecondaryCamera(4));
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
     Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook());
-//    Robot.auxController.leftBumper.whenPressed(() -> changeSecondaryCamera(3));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
-  /*
-  
-  public void getPrimaryCams(){
-    private int PrimeCounter = 0;
-    if(maincontroller.leftHead.get()){
-      PrimeCounter ++;
-    }
-    else{
-    PrimeCounter = 0;}
-
-    if(PrimeCounter == 0){
-
-    }
-
-  }
-  
-  */
 
   public void clearStickyFaults() {
     pdp.clearStickyFaults();
     System.out.println(pdp.getVoltage());
   }
+
+  // public void toggleBackupMainUsage() {
+  //   backupMainBeingUsed = backupMainBeingUsed ? false : true;
+  // }
 }

@@ -71,26 +71,26 @@ public class XboxController {
     }
 
     public double getLeftStickX() {
-	return controller.getRawAxis(0);
+	    return controller.getRawAxis(0);
     }
 	
     public double getLeftStickY() {
-	return controller.getRawAxis(1);
+	    return controller.getRawAxis(1);
     }
 	
     public double getRightStickX() {
-	return controller.getRawAxis(4);
+	    return controller.getRawAxis(4);
     }
 	
     public double getRightStickY() {
-	return controller.getRawAxis(5);
+	    return controller.getRawAxis(5);
     }
 	
     public double getLeftTrigger() {
-	return controller.getRawAxis(2);
+	    return controller.getRawAxis(2);
     }
 	
     public double getRightTrigger() {
-    return controller.getRawAxis(3);
+        return controller.getRawAxis(3);
     }
 }

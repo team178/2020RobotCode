@@ -27,7 +27,6 @@ public class Climber extends SubsystemBase {
     elevator = new Solenoid(RobotMap.hookThurst);
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
-    leveler = new TalonSRX(RobotMap.leveler);
 
     retractHook();
   }
@@ -43,7 +42,6 @@ public class Climber extends SubsystemBase {
   public void windWinch(double speed) {
     winchMaster.set(ControlMode.PercentOutput, speed);
     winchSlave.set(ControlMode.PercentOutput, speed);
-  //  System.out.println("Winch Speed:" + speed);
   }
 
   public void moveAlongBar(double speed) {

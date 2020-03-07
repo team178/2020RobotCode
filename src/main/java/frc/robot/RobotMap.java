@@ -55,4 +55,5 @@ public class RobotMap {
     //Computer USB ports
     public static int ActualJoystick = 0;
     public static int JoystickPortXBoxAux = 1; 
+    public static int JoystickBackupMain = 2;
 }

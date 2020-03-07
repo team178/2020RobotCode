@@ -8,9 +8,6 @@
 package frc.robot.autonomous;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.AutoBallDump;
-import frc.robot.commands.AutoDrive;
-import frc.robot.commands.MoveToAngle;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
