@@ -53,7 +53,7 @@ public class DriveTrain extends SubsystemBase {
   private static double twistVal;
   private static double yReduction;
   private static double twistReduction;
-  private static double xboxReduction;
+  // private static double xboxReduction;
 
   //Encoder methods
   public Supplier<Double> leftPosition;

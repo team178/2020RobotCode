@@ -32,13 +32,13 @@ public class AutoBallDump extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    lawnMower.ballDump(0.7);
+    lawnMower.ballDump(1, 0.7);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    lawnMower.ballDump(0);
+    lawnMower.ballDump(0, 0); 
   }
 
   // Returns true when the command should end.

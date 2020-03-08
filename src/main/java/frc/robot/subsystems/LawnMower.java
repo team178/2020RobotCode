@@ -67,13 +67,9 @@ public class LawnMower extends SubsystemBase {
     retractIntake();
   }
 
-  public void ballDump(double speed) {
-    if (Robot.mainController.leftPadBottom1.get()) {
-      shoot(0.6*speed);
-    } else {
-      shoot(speed);
-    }
-    moveConveyor(speed);
+  public void ballDump(double conveyorSpeed, double shootSpeed) {
+    moveConveyor(conveyorSpeed);
+    shoot(shootSpeed);
   }
 
   public boolean positionOverride() {

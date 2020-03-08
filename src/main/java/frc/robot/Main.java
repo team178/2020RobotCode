@@ -33,6 +33,16 @@ public final class Main {
     //BEN ZINK?!?!?!?!
     //Niranth Chamarty (electron lad)
     //Enzo Mangiafico
+    //Vanden Haviland
+    //Ian Witt
+    //Laura Hofmann
+    //Patrickk Brennan
+    //Daniel Espinosa
+    //Hannah Zink
+    //Emma Nollman :3
+    //LizaKurchavykh
+    //Director of Hype (Nidhish Shanmugasundaram)
+    //David Marimekalala(Person)
 
     /*
      * MENTOR SIGNATURES 
@@ -40,6 +50,14 @@ public final class Main {
     //Danielle Parkinson (YODAnielle)
     //Lisa Nollman
     //Mark IMUrFather Hofmann
+    //Tuhan Nguyen (you're all nerds)
+
+    /**
+     * GAME ANNOUNCER DUDES
+     */
+    //TD-8584 Trevor Deming
+    //Malay Shashank (MC Waterbury District 2020)
+    //
   }
 
   /**

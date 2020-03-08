@@ -16,10 +16,10 @@ public class RobotMap {
 
     //CAN
     public static int PCM = 0;
-    public static int DMLeftMaster = 4; //4
-    public static int DMLeftSlave = 3; //3
-    public static int DMRightMaster = 2; //2
-    public static int DMRightSlave = 1; //1
+    public static int DMLeftMaster = 4;
+    public static int DMLeftSlave = 3;
+    public static int DMRightMaster = 2;
+    public static int DMRightSlave = 1;
     public static int intake = 5;
     public static int conveyorTop = 6;
     public static int conveyorBottom = 7;

@@ -119,6 +119,7 @@ public class Robot extends TimedRobot {
   //  camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
     // startingLoc.addOption("Side", new BasicLeftAuto());
+    startingLoc.setDefaultOption("Yeet n dump", new BasicMiddleAuto());
     startingLoc.addOption("Yeet n dump", new BasicMiddleAuto());
     startingLoc.addOption("Just yeet", new AutoDrive(-0.5, 5));
     /*
@@ -232,9 +233,9 @@ public class Robot extends TimedRobot {
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
-    auxController.b.whenPressed(() -> lawnmower.ballDump(.6)).whenReleased(() -> lawnmower.ballDump(0));
+    auxController.b.whenPressed(() -> lawnmower.ballDump(1, .6)).whenReleased(() -> lawnmower.ballDump(0, 0));
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
-    auxController.y.whenPressed(() -> lawnmower.ballDump(1)).whenReleased(() -> lawnmower.ballDump(0));
+    auxController.y.whenPressed(() -> lawnmower.ballDump(1, 1)).whenReleased(() -> lawnmower.ballDump(0, 0));
 
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
