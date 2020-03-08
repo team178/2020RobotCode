@@ -16,8 +16,30 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Main {
   private Main() {
-    //👳🏾
+    /*
+     * TEAM MEMBER SIGNATURES
+     */
+    //👳🏾 -- vivek
     // :) -Han Brolo (Alyssa)
+    // Robert M. Fishel (Hello Seth!)
+    //Safety Man(Varun)
+    //BROba Fett (Darren K.)
+    //Tyler Gove
+    //Mr. Ziad (Ziad)
+    //Seth Frank (HELLO ROBBIE!!!!)
+    //Evan Czerwinski(Progo boi)
+    //Raven:)
+    //Vid-Dude123
+    //BEN ZINK?!?!?!?!
+    //Niranth Chamarty (electron lad)
+    //Enzo Mangiafico
+
+    /*
+     * MENTOR SIGNATURES 
+     */
+    //Danielle Parkinson (YODAnielle)
+    //Lisa Nollman
+    //Mark IMUrFather Hofmann
   }
 
   /**

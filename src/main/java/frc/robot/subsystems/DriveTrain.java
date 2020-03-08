@@ -53,6 +53,7 @@ public class DriveTrain extends SubsystemBase {
   private static double twistVal;
   private static double yReduction;
   private static double twistReduction;
+  private static double xboxReduction;
 
   //Encoder methods
   public Supplier<Double> leftPosition;
@@ -60,7 +61,7 @@ public class DriveTrain extends SubsystemBase {
   public Supplier<Double> leftRate;
   public Supplier<Double> rightRate;
   
-  //Gyro mehtods
+  //Gyro methods
   public Supplier<Double> headingDegrees;
   public Supplier<Rotation2d> headingRotation2d;
 
@@ -76,7 +77,7 @@ public class DriveTrain extends SubsystemBase {
     leftMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
     rightMaster.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 10);
     
-    leftMaster.setSensorPhase(false);
+    leftMaster.setSensorPhase(true);
     rightMaster.setSensorPhase(false);
     
     leftPosition = () -> leftMaster.getSelectedSensorPosition(0) * PathConstants.kEncoderDPP; //r
@@ -122,6 +123,10 @@ public class DriveTrain extends SubsystemBase {
 
   public double getRightCurrent() {
     return rightMaster.getSupplyCurrent();
+  }
+
+  public double getAverageCurrent() {
+    return (leftMaster.getSupplyCurrent() + rightMaster.getSupplyCurrent()) / 2;
   }
 
   public void driveVolts(double leftVolts, double rightVolts) {
@@ -177,7 +182,7 @@ public class DriveTrain extends SubsystemBase {
       // if (!Robot.backupMainBeingUsed) {
         //Joystick drive
         yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-        twistReduction = Robot.mainController.trigger.get() ? 0.5 : 0.6;
+        twistReduction = Robot.mainController.trigger.get() ? 0.2 : 0.3;
       
         yVal = Robot.mainController.getY() * yReduction;
         twistVal = Robot.mainController.getTwist() * twistReduction;
@@ -185,9 +190,12 @@ public class DriveTrain extends SubsystemBase {
         drive(twistVal+yVal, twistVal-yVal);
       // } else {
       //   //Xbox drive
-      //   drive(Robot.backupMainController.getLeftStickY(), Robot.backupMainController.getRightStickY());
+      //   xboxReduction = Robot.auxController.getLeftTrigger() > 0.1 || Robot.auxController.getRightTrigger() > 0.1 ? 0.4 : 1;
+      //   drive(-Robot.backupMainController.getLeftStickY() * xboxReduction, -Robot.backupMainController.getRightStickY() * xboxReduction);
       // }
     }
+    System.out.println("left current: " + getLeftCurrent());
+    System.out.println("right current: " + getRightCurrent());
 
     //Path planning
     odometry.update(getAngle(), leftPosition.get(), rightPosition.get());

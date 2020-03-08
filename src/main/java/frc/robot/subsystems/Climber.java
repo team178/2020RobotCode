@@ -27,12 +27,17 @@ public class Climber extends SubsystemBase {
     elevator = new Solenoid(RobotMap.hookThurst);
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
-
-    retractHook();
+    // retractHook();
   }
 
-  public void extendHook() {
-    elevator.set(true);
+  public void extendHook(boolean doubleButtonRestrict) {
+    if (doubleButtonRestrict) {
+      if (Robot.mainController.leftPadTop1.get()) {
+        elevator.set(true);
+      }
+    } else {
+      elevator.set(true);
+    } 
   }
 
   public void retractHook() {
@@ -52,4 +57,5 @@ public class Climber extends SubsystemBase {
   public void periodic() {
     windWinch(Robot.auxController.getRightTrigger());
   }
+
 }

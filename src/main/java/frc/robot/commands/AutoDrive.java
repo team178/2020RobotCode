@@ -17,11 +17,13 @@ public class AutoDrive extends CommandBase {
   private DriveTrain driveTrain;
   private double speed;
   private double distance;
+  // private double delay;
   
   public AutoDrive(double speed, double distance) {
     addRequirements(Robot.drivetrain);
     this.speed = speed;
     this.distance = distance;
+    // this.delay = delay * 50;
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +36,11 @@ public class AutoDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.drive(speed, -speed);
+    // if (delay > 0) {
+    //   delay--;
+    // } else {
+      driveTrain.drive(speed, -speed);
+    // }
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +52,7 @@ public class AutoDrive extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return Math.abs(Math.abs(distance) - Math.abs(driveTrain.rightPosition.get())) < PathConstants.kDriveTolerance || Robot.drivetrain.getLeftCurrent() > 30 || Robot.drivetrain.getRightCurrent() > 30;
+    //return Robot.drivetrain.getLeftCurrent() > 30 || Robot.drivetrain.getRightCurrent() > 30;
+    return Math.abs(Math.abs(distance) - Math.abs(driveTrain.rightPosition.get())) < PathConstants.kDriveTolerance || Robot.drivetrain.getLeftCurrent() > 30 || Robot.drivetrain.getRightCurrent() > 30;
   }
 }

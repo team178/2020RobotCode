@@ -68,8 +68,12 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void ballDump(double speed) {
-      moveConveyor(1);
+    if (Robot.mainController.leftPadBottom1.get()) {
+      shoot(0.6*speed);
+    } else {
       shoot(speed);
+    }
+    moveConveyor(speed);
   }
 
   public boolean positionOverride() {
@@ -203,13 +207,10 @@ public class LawnMower extends SubsystemBase {
 
     //Bouncer counter
     if (runBouncerCounter) {
-      counter++;
-      System.out.println("counter (on): " + counter);
-    } else {
-      // System.out.println("counter (off): " + counter);
+      bouncerCounter++;
     }
 
-    if (bouncerCounter >= 50) {
+    if (bouncerCounter >= 100) {
       enableBouncer();
       runBouncerCounter = false;
       bouncerCounter = 0;

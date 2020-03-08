@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
   
   // Declare Shuffleboard Dropdowns for autonomous
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
-  public static SendableChooser<Integer> preLoaded = new SendableChooser<>();
+  // public static SendableChooser<Integer> delay = new SendableChooser<>();
   
   // Declare autonomous command
   private Command autonomousCommand;
@@ -98,12 +98,29 @@ public class Robot extends TimedRobot {
     //Camera initializations
 
 
+    // delay.addOption("0", 0);
+    // delay.addOption("1", 1);
+    // delay.addOption("2", 2);
+    // delay.addOption("3", 3);
+    // delay.addOption("4", 4);
+    // delay.addOption("5", 5);
+    // delay.addOption("6", 6);
+    // delay.addOption("7", 7);
+    // delay.addOption("8", 8);
+    // delay.addOption("9", 9);
+    // delay.addOption("10", 10);
+    // delay.addOption("11", 11);
+    // delay.addOption("12", 12);
+    // delay.addOption("13", 13);
+    // delay.addOption("14", 14);
+    // delay.addOption("15", 15);
+    // delay.setDefaultOption("0", 0);
   //  camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
   //  camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
 
-    startingLoc.addOption("Side", new BasicLeftAuto());
-    startingLoc.addOption("Middle", new BasicMiddleAuto());
-    startingLoc.addOption("Opposite", new AutoDrive(-0.5, 5));
+    // startingLoc.addOption("Side", new BasicLeftAuto());
+    startingLoc.addOption("Yeet n dump", new BasicMiddleAuto());
+    startingLoc.addOption("Just yeet", new AutoDrive(-0.5, 5));
     /*
     startingLoc.addOption("Left", new SequentialCommandGroup(
       PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[0])),
@@ -111,7 +128,8 @@ public class Robot extends TimedRobot {
       PathWeaverTrajecotires.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
     ));
     startingLoc.addOption("Middle", new SequentialCommandGroup(
-      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[1])),
+      PathWeaverTrajectories.getR
+      amseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[1])),
       new AutoBallDump(),
       PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
     ));
@@ -121,11 +139,6 @@ public class Robot extends TimedRobot {
       PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
     ));
     */
-    preLoaded.setDefaultOption("0", 0);
-    preLoaded.addOption("0", 0);
-    preLoaded.addOption("1", 1);
-    preLoaded.addOption("2", 2);
-    preLoaded.addOption("3", 3);
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -148,15 +161,13 @@ public class Robot extends TimedRobot {
       currentAngle = Math.abs(drivetrain.getGyroReading()%360);
     }
 
-    SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
+    // SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
     SmartDashboard.putData("Starting Location", startingLoc);
-    SmartDashboard.putData("Balls Pre-Loaded", preLoaded);
+    // // SmartDashboard.putData("Auto Delay", delay);
     SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
-
-    lawnmower.counter = preLoaded.getSelected();
     
     CommandScheduler.getInstance().run();
   }
@@ -178,7 +189,7 @@ public class Robot extends TimedRobot {
     drivetrain.resetGyro();
     
     autonomousCommand = startingLoc.getSelected();
-    lawnmower.counter = preLoaded.getSelected();
+    lawnmower.counter = 3;
   
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -195,6 +206,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
   }
 
   @Override
@@ -216,17 +228,17 @@ public class Robot extends TimedRobot {
     mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
     //mainController.rightPadTop2.whenPressed(() -> toggleBackupMainUsage());
     mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
-    //backupMainController.x.whenPressed(() -> drivetrain.toggleDriveDirection());
+    // backupMainController.x.whenPressed(() -> drivetrain.toggleDriveDirection());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
-    auxController.b.whenPressed(() -> lawnmower.moveConveyor(-0.2)).whenReleased(() -> lawnmower.moveConveyor(0));
+    auxController.b.whenPressed(() -> lawnmower.ballDump(.6)).whenReleased(() -> lawnmower.ballDump(0));
     auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
-    auxController.y.whenPressed(() -> lawnmower.ballDump(0.6)).whenReleased(() -> lawnmower.ballDump(0));
+    auxController.y.whenPressed(() -> lawnmower.ballDump(1)).whenReleased(() -> lawnmower.ballDump(0));
 
     auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
     auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
-    Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook());
+    Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook(true));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
 

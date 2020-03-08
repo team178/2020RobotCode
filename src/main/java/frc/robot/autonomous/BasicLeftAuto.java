@@ -19,6 +19,6 @@ public class BasicLeftAuto extends SequentialCommandGroup {
    * Creates a new BasicLeftAuto.
    */
   public BasicLeftAuto() {
-    super(new AutoDrive(-.7, 10), new AutoBallDump());
+    super(new AutoDrive(-.5, 10), new AutoBallDump());
   }
 }
