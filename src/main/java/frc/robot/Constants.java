@@ -60,9 +60,11 @@ public final class Constants {
         public static final double kDriveTolerance = 10e-2;
 
         public static final double kTrackWidthMeters = Units.inchesToMeters(23.75);
-        public static final double kMaxVelMPS = 0;
-        public static final double kMaxAccelMPSPS = 0;
-        public static final double kMaxVoltage = 10;
+        
+        //hannah's comment that she so badly wants me to make
+        public static final double kMaxVelMPS = 14;
+        public static final double kMaxAccelMPSPS = 8;
+        public static final double kMaxVoltage = 11;
 
         //Feedforward gains
         public static final double kS = 0;
@@ -73,7 +75,7 @@ public final class Constants {
         public static final double kDriveP = 0;
 
         //Ramsete
-        public static final double kRamseteB = 0;
-        public static final double kRamseteZeta = 0;
+        public static final double kRamseteB = 2.0;
+        public static final double kRamseteZeta = 0.7;
     }
 }

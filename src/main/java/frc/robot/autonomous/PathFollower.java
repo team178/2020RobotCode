@@ -35,7 +35,7 @@ public class PathFollower {
 
     private static DriveTrain driveTrain = Robot.drivetrain;
 
-    public static Command getAutonomousCommand() {
+    public static Command trajectoryToCommand(Trajectory trajectory, boolean reversed) {
         //Creating autonomous voltage constraint
         DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
             driveTrain.getFeedforward(), 
@@ -49,7 +49,7 @@ public class PathFollower {
             PathConstants.kMaxAccelMPSPS
         )
         .setKinematics(driveTrain.getKinematics())
-        .setReversed(false)
+        .setReversed(reversed)
         .addConstraint(voltageConstraint);
 
         //Nithin's test trajectory
@@ -73,7 +73,7 @@ public class PathFollower {
 
         //Create a ramsete command based off RamseteController & params
         RamseteCommand ramseteCommand = new RamseteCommand(
-            nithinsTestTrajectory,
+            nithinsTestTrajectory, //replace with just trajectory
             driveTrain::getPoseMeters,
             new RamseteController(PathConstants.kRamseteB, PathConstants.kRamseteZeta),
             driveTrain.getFeedforward(),
