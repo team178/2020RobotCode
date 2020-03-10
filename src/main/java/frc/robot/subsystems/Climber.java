@@ -30,7 +30,6 @@ public class Climber extends SubsystemBase {
     elevator = new Solenoid(RobotMap.hookThurst);
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
-    // retractHook();
   }
 
   public void extendHook(boolean doubleButtonRestrict) {
@@ -60,10 +59,17 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    windWinch(Robot.auxController.getRightTrigger());
+    //Climbing controls for aux
+    if (Robot.auxController.getRightTrigger() > 0) {
+      if (elevator.get()) {
+        retractHook();
+      }
+      windWinch(Robot.auxController.getRightTrigger());
+    }
+    
+    //Endgame timer restriction
     if (Timer.getMatchTime() < 29) {
       enableClimber = true;
     }
   }
-
 }
