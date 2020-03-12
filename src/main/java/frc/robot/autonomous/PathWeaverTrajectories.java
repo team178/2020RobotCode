@@ -54,11 +54,11 @@ import frc.robot.Constants.PathConstants;
             PathConstants.kMaxVelMPS, 
             PathConstants.kMaxAccelMPSPS
         )
-        .setKinematics(Robot.drivetrain.getKinematics())
+        .setKinematics(Robot.driveTrain.getKinematics())
         .setReversed(false)
         .addConstraint(new DifferentialDriveVoltageConstraint(
-            Robot.drivetrain.getFeedforward(), 
-            Robot.drivetrain.getKinematics(), 
+            Robot.driveTrain.getFeedforward(), 
+            Robot.driveTrain.getKinematics(), 
             PathConstants.kMaxVoltage)
         ));
 
@@ -76,15 +76,15 @@ import frc.robot.Constants.PathConstants;
     public static RamseteCommand getRamseteCommand(Trajectory path) {
         RamseteCommand getCommand = new RamseteCommand(
             path,
-            Robot.drivetrain::getPoseMeters,
+            Robot.driveTrain::getPoseMeters,
             new RamseteController(PathConstants.kRamseteB, PathConstants.kRamseteZeta),
-            Robot.drivetrain.getFeedforward(),
-            Robot.drivetrain.getKinematics(),
-            Robot.drivetrain::getWheelSpeeds,
-            Robot.drivetrain.getLeftPIDController(),
-            Robot.drivetrain.getRightPIDController(),
-            Robot.drivetrain::driveVolts,
-            Robot.drivetrain
+            Robot.driveTrain.getFeedforward(),
+            Robot.driveTrain.getKinematics(),
+            Robot.driveTrain::getWheelSpeeds,
+            Robot.driveTrain.getLeftPIDController(),
+            Robot.driveTrain.getRightPIDController(),
+            Robot.driveTrain::driveVolts,
+            Robot.driveTrain
         );
         return getCommand;
     }

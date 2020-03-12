@@ -26,7 +26,7 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class PossibleTrajectories {
 
-    private static DriveTrain driveTrain = Robot.drivetrain;
+    private static DriveTrain driveTrain = Robot.driveTrain;
 
     private static DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
         driveTrain.getFeedforward(), 

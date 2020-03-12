@@ -43,6 +43,10 @@ public final class Main {
     //LizaKurchavykh
     //Director of Hype (Nidhish Shanmugasundaram)
     //David Marimekalala(Person)
+    //Olivia Hofmann
+    //Brandon Demkowicz
+    //Andy Cheng =D
+    //Meeshaw (Misha)
 
     /*
      * MENTOR SIGNATURES 
@@ -51,6 +55,10 @@ public final class Main {
     //Lisa Nollman
     //Mark IMUrFather Hofmann
     //Tuhan Nguyen (you're all nerds)
+    //Michele (Mama-Wan Kenobi) 
+    //Tim Barron
+    //Charles Forstbauer
+    //Mark Sims (Marky Mark)
 
     /**
      * GAME ANNOUNCER DUDES

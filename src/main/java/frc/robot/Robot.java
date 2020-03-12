@@ -41,9 +41,9 @@ public class Robot extends TimedRobot {
 
   //Declare PDP & subsystems
   public static PowerDistributionPanel pdp;
-  public static DriveTrain drivetrain;
-  public static LawnMower lawnmower;
-  public static WheelOfFortuneContestant wheeloffortunecontestant;
+  public static DriveTrain driveTrain;
+  public static LawnMower lawnMower;
+  public static WheelOfFortuneContestant wheelOfFortuneContestant;
   // public static LightsArduino lights;
   public static Climber climber;
   
@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
   public UsbCamera secondary;
   public UsbCamera climberCam;
 
+  //Fields
   public boolean primaryTrigger;
   public int secondaryIndex;
   
@@ -82,9 +83,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     pdp = new PowerDistributionPanel(RobotMap.PDP);
-    drivetrain = new DriveTrain();
-    lawnmower = new LawnMower();
-    wheeloffortunecontestant = new WheelOfFortuneContestant();
+    driveTrain = new DriveTrain();
+    lawnMower = new LawnMower();
+    wheelOfFortuneContestant = new WheelOfFortuneContestant();
     climber = new Climber();
 
     camserv1 = CameraServer.getInstance().getServer();
@@ -111,8 +112,8 @@ public class Robot extends TimedRobot {
     //lights
     // lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
     
-    drivetrain.calibrateGyro();
-    drivetrain.resetEncoders();
+    driveTrain.calibrateGyro();
+    driveTrain.resetEncoders();
     gameData = "";
     
     //init joysticks
@@ -121,32 +122,8 @@ public class Robot extends TimedRobot {
     // backupMainController = new XboxController(RobotMap.JoystickBackupMain);
     configButtonControls();
 
-    //Camera initializations
-
-
-    // delay.addOption("0", 0);
-    // delay.addOption("1", 1);
-    // delay.addOption("2", 2);
-    // delay.addOption("3", 3);
-    // delay.addOption("4", 4);
-    // delay.addOption("5", 5);
-    // delay.addOption("6", 6);
-    // delay.addOption("7", 7);
-    // delay.addOption("8", 8);
-    // delay.addOption("9", 9);
-    // delay.addOption("10", 10);
-    // delay.addOption("11", 11);
-    // delay.addOption("12", 12);
-    // delay.addOption("13", 13);
-    // delay.addOption("14", 14);
-    // delay.addOption("15", 15);
-    // delay.setDefaultOption("0", 0);
-  //  camShooter.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-  //  camIntake.setConnectionStrategy(ConnectionStrategy.kKeepOpen);
-
-    // startingLoc.addOption("Side", new BasicLeftAuto());
-    startingLoc.setDefaultOption("Yeet n dump", new BasicMiddleAuto());
-    startingLoc.addOption("Yeet n dump", new BasicMiddleAuto());
+    startingLoc.setDefaultOption("Yeet n dump", Autos.BasicMiddleAuto);
+    startingLoc.addOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Just yeet", new AutoDrive(-0.5, 5));
     /*
     startingLoc.addOption("Left", new SequentialCommandGroup(
@@ -169,6 +146,7 @@ public class Robot extends TimedRobot {
     gettingValues = false;
 
   }
+  
   /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
@@ -184,10 +162,10 @@ public class Robot extends TimedRobot {
     //allCameraChange();
 
     //Gyro stuff
-    if(drivetrain.getGyroReading()%360 == 0) {
-      currentAngle = drivetrain.getGyroReading();
+    if(driveTrain.getGyroReading()%360 == 0) {
+      currentAngle = driveTrain.getGyroReading();
     } else {
-      currentAngle = Math.abs(drivetrain.getGyroReading()%360);
+      currentAngle = Math.abs(driveTrain.getGyroReading()%360);
     }
 
     if (limelightTable.getEntry("tv").getDouble(0.0) == 0) {
@@ -201,8 +179,8 @@ public class Robot extends TimedRobot {
     area = limelightTable.getEntry("ta").getDouble(0.0);
 
     // SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
-    SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
-    SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
+    SmartDashboard.putNumber("Balls in Lawn Mower", lawnMower.getCounter());
+    SmartDashboard.putBoolean("Conveyor Not Moving", lawnMower.positionOverride());
     SmartDashboard.putData("Starting Location", startingLoc);
     // // SmartDashboard.putData("Auto Delay", delay);
     SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
@@ -228,11 +206,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    drivetrain.resetEncoders();
-    drivetrain.resetGyro();
+    driveTrain.resetEncoders();
+    driveTrain.resetGyro();
     
     autonomousCommand = startingLoc.getSelected();
-    lawnmower.counter = 3;
+    lawnMower.counter = 3;
   
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
@@ -268,7 +246,7 @@ public class Robot extends TimedRobot {
 
   private void configButtonControls() {
     //Main buttons
-    mainController.leftPadBottom3.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.leftPadBottom3.whenPressed(() -> driveTrain.toggleDriveDirection());
     //mainController.rightPadTop2.whenPressed(() -> toggleBackupMainUsage());
     mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
     // backupMainController.x.whenPressed(() -> drivetrain.toggleDriveDirection());
@@ -276,13 +254,13 @@ public class Robot extends TimedRobot {
     mainController.headRight.whenPressed(() -> toggleSecondary());
     
     //Aux buttons
-    auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
-    auxController.b.whenPressed(() -> lawnmower.ballDump(1, .6)).whenReleased(() -> lawnmower.ballDump(0, 0));
-    auxController.x.whenPressed(() -> wheeloffortunecontestant.spinRC(1)).whenReleased(() -> wheeloffortunecontestant.spinRC(0));
-    auxController.y.whenPressed(() -> lawnmower.ballDump(1, 1)).whenReleased(() -> lawnmower.ballDump(0, 0));
+    auxController.a.whenPressed(() -> wheelOfFortuneContestant.spinPC(1)).whenReleased(() -> wheelOfFortuneContestant.spinPC(0));
+    auxController.b.whenPressed(() -> lawnMower.ballDump(1, .6)).whenReleased(() -> lawnMower.ballDump(0, 0));
+    auxController.x.whenPressed(() -> wheelOfFortuneContestant.spinRC(1)).whenReleased(() -> wheelOfFortuneContestant.spinRC(0));
+    auxController.y.whenPressed(() -> lawnMower.ballDump(1, 1)).whenReleased(() -> lawnMower.ballDump(0, 0));
 
-    auxController.back.whenPressed(() -> wheeloffortunecontestant.extendContestant());
-    auxController.start.whenPressed(() -> wheeloffortunecontestant.retractContestant());
+    auxController.back.whenPressed(() -> wheelOfFortuneContestant.extendContestant());
+    auxController.start.whenPressed(() -> wheelOfFortuneContestant.retractContestant());
     Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook(true));
     Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }

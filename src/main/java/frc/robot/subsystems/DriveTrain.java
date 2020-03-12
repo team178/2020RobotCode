@@ -65,6 +65,12 @@ public class DriveTrain extends SubsystemBase {
   public Supplier<Double> headingDegrees;
   public Supplier<Rotation2d> headingRotation2d;
 
+  //Other suppliers
+  public Supplier<Double> leftCurrent;
+  public Supplier<Double> rightCurrent;
+  public Supplier<Boolean> hasLeftCrashed;
+  public Supplier<Boolean> hasRightCrashed;
+
   //Misc
   private DriveDirection currentDirection = DriveDirection.FORWARD;
   
@@ -87,6 +93,11 @@ public class DriveTrain extends SubsystemBase {
     
     headingDegrees = () -> -gyro.getAngle();
     headingRotation2d = () -> Rotation2d.fromDegrees(-gyro.getAngle());
+
+    leftCurrent = () -> leftMaster.getSupplyCurrent();
+    rightCurrent = () -> rightMaster.getSupplyCurrent();
+    hasLeftCrashed = () -> leftCurrent.get() > 30;
+    hasRightCrashed = () -> leftCurrent.get() > 30;
     
     leftSlave.follow(leftMaster);
     rightSlave.follow(rightMaster);
@@ -115,18 +126,6 @@ public class DriveTrain extends SubsystemBase {
 
     leftMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.FORWARD ? leftPower : rightPower);
     rightMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.FORWARD ? rightPower : leftPower);
-  }
-
-  public double getLeftCurrent() {
-    return leftMaster.getSupplyCurrent();
-  }
-
-  public double getRightCurrent() {
-    return rightMaster.getSupplyCurrent();
-  }
-
-  public double getAverageCurrent() {
-    return (leftMaster.getSupplyCurrent() + rightMaster.getSupplyCurrent()) / 2;
   }
 
   public void driveVolts(double leftVolts, double rightVolts) {
@@ -194,8 +193,8 @@ public class DriveTrain extends SubsystemBase {
       //   drive(-Robot.backupMainController.getLeftStickY() * xboxReduction, -Robot.backupMainController.getRightStickY() * xboxReduction);
       // }
     }
-    System.out.println("left current: " + getLeftCurrent());
-    System.out.println("right current: " + getRightCurrent());
+    System.out.println("left current: " + leftCurrent.get());
+    System.out.println("right current: " + rightCurrent.get());
 
     //Path planning
     odometry.update(getAngle(), leftPosition.get(), rightPosition.get());

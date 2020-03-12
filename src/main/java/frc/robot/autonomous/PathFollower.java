@@ -33,9 +33,9 @@ import frc.robot.subsystems.DriveTrain;
  */
 public class PathFollower {
 
-    private static DriveTrain driveTrain = Robot.drivetrain;
+    private static DriveTrain driveTrain = Robot.driveTrain;
 
-    public static Command trajectoryToCommand(Trajectory trajectory, boolean reversed) {
+    public static Command trajectoryToRamseteCommand(Trajectory trajectory, boolean reversed) {
         //Creating autonomous voltage constraint
         DifferentialDriveVoltageConstraint voltageConstraint = new DifferentialDriveVoltageConstraint(
             driveTrain.getFeedforward(), 

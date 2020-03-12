@@ -18,14 +18,14 @@ public class AutoBallDump extends CommandBase {
   private double startTime;
   
   public AutoBallDump() {
-    addRequirements(Robot.lawnmower);
+    addRequirements(Robot.lawnMower);
     startTime = 0;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    lawnMower = Robot.lawnmower;
+    lawnMower = Robot.lawnMower;
     startTime = Timer.getFPGATimestamp();
   }
 
