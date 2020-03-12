@@ -58,20 +58,17 @@ public final class Main {
     //TD-8584 Trevor Deming
     //Malay Shashank (MC Waterbury District 2020)
     //
+
+    /**
+     * ADMINISTRATOR SIGNATURES
+     */
+    //
     
     /**
-     * JERRY'S SIGNATURE
+     * SPECIAL THANKS SIGNATURES
      */
     //Jer-Bear
-    
-    /**
-    * LILLIAN'S SIGNATURE
-    */
     //lillian
-    
-    /**
-    * NITHIN'S SIGNATURE
-    */
     //Nithin :)
   }
 

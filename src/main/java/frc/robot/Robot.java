@@ -11,6 +11,9 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -69,6 +72,12 @@ public class Robot extends TimedRobot {
   
   public static String gameData;
   private static double currentAngle;
+
+  public NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  public boolean gettingValues;
+  public double xValue;
+  public double yValue;
+  public double area;
   
   @Override
   public void robotInit() {
@@ -157,6 +166,8 @@ public class Robot extends TimedRobot {
       PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
     ));
     */
+    gettingValues = false;
+
   }
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -179,6 +190,16 @@ public class Robot extends TimedRobot {
       currentAngle = Math.abs(drivetrain.getGyroReading()%360);
     }
 
+    if (limelightTable.getEntry("tv").getDouble(0.0) == 0) {
+      gettingValues = false;
+    } else {
+      gettingValues = true;
+    }
+
+    xValue = limelightTable.getEntry("tx").getDouble(0.0);
+    yValue = limelightTable.getEntry("ty").getDouble(0.0);
+    area = limelightTable.getEntry("ta").getDouble(0.0);
+
     // SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnmower.getCounter());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnmower.positionOverride());
@@ -186,6 +207,10 @@ public class Robot extends TimedRobot {
     // // SmartDashboard.putData("Auto Delay", delay);
     SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
+    SmartDashboard.putBoolean("Limelight Detecting Objects", gettingValues);
+    SmartDashboard.putNumber("Limelight X", xValue);
+    SmartDashboard.putNumber("Limelight Y", yValue);
+    SmartDashboard.putNumber("Limelight Area", area);
     
     CommandScheduler.getInstance().run();
   }
