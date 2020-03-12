@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -57,9 +58,14 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   
   // USB Camera declarations
-  public CameraServer camserv;
+  public VideoSink camserv1;
+  public VideoSink camserv2;
   public UsbCamera primary;
   public UsbCamera secondary;
+  public UsbCamera climberCam;
+
+  public boolean primaryTrigger;
+  public int secondaryIndex;
   
   public static String gameData;
   private static double currentAngle;
@@ -72,15 +78,26 @@ public class Robot extends TimedRobot {
     wheeloffortunecontestant = new WheelOfFortuneContestant();
     climber = new Climber();
 
-    camserv = CameraServer.getInstance();
+    camserv1 = CameraServer.getInstance().getServer();
+    camserv2 = CameraServer.getInstance().getServer();
 
-    primary = camserv.startAutomaticCapture("intake", 1);
+    primary = CameraServer.getInstance().startAutomaticCapture("intake", 1);
     primary.setFPS(14);
     primary.setPixelFormat(PixelFormat.kYUYV);
 
-    secondary = camserv.startAutomaticCapture("shooter", 0);
+    secondary = CameraServer.getInstance().startAutomaticCapture("shooter", 0);
     secondary.setFPS(14);
     secondary.setPixelFormat(PixelFormat.kYUYV);
+
+    climberCam = CameraServer.getInstance().startAutomaticCapture("climber", 2);
+    climberCam.setFPS(14);
+    climberCam.setPixelFormat(PixelFormat.kYUYV);
+
+    primaryTrigger = true;
+    secondaryIndex = 0;
+
+    camserv1.setSource(primary);
+    camserv2.setSource(secondary);
 
     //lights
     // lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
@@ -230,6 +247,8 @@ public class Robot extends TimedRobot {
     //mainController.rightPadTop2.whenPressed(() -> toggleBackupMainUsage());
     mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
     // backupMainController.x.whenPressed(() -> drivetrain.toggleDriveDirection());
+    mainController.headLeft.whenPressed(() -> togglePrimary());
+    mainController.headRight.whenPressed(() -> toggleSecondary());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheeloffortunecontestant.spinPC(1)).whenReleased(() -> wheeloffortunecontestant.spinPC(0));
@@ -246,6 +265,29 @@ public class Robot extends TimedRobot {
   public void clearStickyFaults() {
     pdp.clearStickyFaults();
     System.out.println(pdp.getVoltage());
+  }
+
+  public void togglePrimary() {
+    if (!primaryTrigger) {
+      camserv1.setSource(secondary);
+      primaryTrigger = true;
+    } else if (primaryTrigger) {
+      camserv1.setSource(primary);
+      primaryTrigger = false;
+    }
+  }
+
+  public void toggleSecondary() {
+    if (secondaryIndex == 0) {
+      camserv2.setSource(climberCam);
+      secondaryIndex = 1;
+    } else if (secondaryIndex == 1) {
+      camserv2.setSource(primary);
+      secondaryIndex = 2;
+    } else if (secondaryIndex == 2) {
+      camserv2.setSource(secondary);
+      secondaryIndex = 0;
+    }
   }
 
   // public void toggleBackupMainUsage() {

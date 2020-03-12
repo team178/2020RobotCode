@@ -11,9 +11,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
 
-/**
- * Add your docs here.
- */
 public class Autos {
     //Basic autos
     public static SequentialCommandGroup BasicLeftAuto = new SequentialCommandGroup(new AutoDrive(-.5, 10), new AutoBallDump());
