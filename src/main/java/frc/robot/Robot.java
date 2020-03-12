@@ -183,8 +183,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnMower.positionOverride());
     SmartDashboard.putData("Starting Location", startingLoc);
     // // SmartDashboard.putData("Auto Delay", delay);
-    SmartDashboard.putNumber("Encoder left", drivetrain.leftPosition.get());
-    SmartDashboard.putNumber("Encoder right", drivetrain.rightPosition.get());
+    SmartDashboard.putNumber("Encoder left", driveTrain.leftPosition.get());
+    SmartDashboard.putNumber("Encoder right", driveTrain.rightPosition.get());
     SmartDashboard.putBoolean("Limelight Detecting Objects", gettingValues);
     SmartDashboard.putNumber("Limelight X", xValue);
     SmartDashboard.putNumber("Limelight Y", yValue);
