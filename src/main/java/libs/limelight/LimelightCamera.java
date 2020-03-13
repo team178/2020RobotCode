@@ -162,8 +162,8 @@ public class LimelightCamera {
 
     /**
      * @param snapshot allows users to take snapshots during a match
-     * kon - Stop taking snapshots
-     * koff - Take two snapshots per second
+     * kOn - Stop taking snapshots
+     * kOff - Take two snapshots per second
      */
     public void setSnapshot(Snapshot snapshot) {
         table.getEntry("snapshot").setValue(snapshot.getValue());
@@ -181,33 +181,33 @@ public class LimelightCamera {
      * in normalized screen space (-1 to 1) rather than degrees.
      */
 
-    public double getAdvancedRotationToTarget(Advanced_Target raw) {
+    public double getAdvancedRotationToTarget(AdvancedTarget raw) {
         return table.getEntry("tx" + Integer.toString(raw.getValue())).getDouble(0.0);
     }
 
-    public double getAdvancedDegVerticalToTarget(Advanced_Target raw) {
+    public double getAdvancedDegVerticalToTarget(AdvancedTarget raw) {
         return table.getEntry("ty" + Integer.toString(raw.getValue())).getDouble(0.0);
     }
 
-    public double getAdvancedTargetArea(Advanced_Target raw) {
+    public double getAdvancedTargetArea(AdvancedTarget raw) {
         return table.getEntry("ta" + Integer.toString(raw.getValue())).getDouble(0.0);
     }
     
-    public double getAdvancedSkewRotation(Advanced_Target raw) {
+    public double getAdvancedSkewRotation(AdvancedTarget raw) {
         return table.getEntry("ts" + Integer.toString(raw.getValue())).getDouble(0.0);
     }
 
     //Raw Crosshairs: If you are using raw targeting data, you can still utilize your calibrated crosshairs
-    public double[] getAdvancedRawCrosshair(Advanced_Crosshair raw) {
+    public double[] getAdvancedRawCrosshair(AdvancedCrosshair raw) {
         double[] crosshars = {getAdvancedRawCrosshairX(raw), getAdvancedRawCrosshairY(raw)};
         return crosshars;
     }
 	
-    public double getAdvancedRawCrosshairX(Advanced_Crosshair raw) {
+    public double getAdvancedRawCrosshairX(AdvancedCrosshair raw) {
         return table.getEntry("cx" + Integer.toString(raw.getValue())).getDouble(0.0);
     }
 
-    public double getAdvancedRawCrosshairY(Advanced_Crosshair raw) {
+    public double getAdvancedRawCrosshairY(AdvancedCrosshair raw) {
         return table.getEntry("cy" + Integer.toString(raw.getValue())).getDouble(0.0);
     }
 }
