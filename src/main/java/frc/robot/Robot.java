@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -49,13 +48,9 @@ public class Robot extends TimedRobot {
   // Declare joysticks
   public static ThrustmasterJoystick mainController;
   public static XboxController auxController;
-  // public static XboxController backupMainController;
-  // public static boolean backupMainBeingUsed = false;
   
-  // Declare Shuffleboard Dropdowns for autonomous
+  //Declare autonomous members
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
-  
-  // Declare autonomous command
   private Command autonomousCommand;
   
   // USB Camera declarations
@@ -66,8 +61,7 @@ public class Robot extends TimedRobot {
   public UsbCamera climberCam;
 
   //Fields
-  public boolean primaryTrigger;
-  public int secondaryIndex;
+  public int cameraIndex;
   
   public static String gameData;
   private static double currentAngle;
@@ -95,15 +89,11 @@ public class Robot extends TimedRobot {
     climberCam = CameraServer.getInstance().startAutomaticCapture("climber", 2);
     climberCam.setFPS(14);
     climberCam.setPixelFormat(PixelFormat.kYUYV);
-
-    primaryTrigger = true;
-    secondaryIndex = 0;
+    
+    cameraIndex = 0;
 
     camserv1.setSource(primary);
     camserv2.setSource(secondary);
-
-    //lights
-    // lights = new LightsArduino(Port.kMXP, RobotMap.lightsI2CAddress);    
     
     driveTrain.calibrateGyro();
     driveTrain.resetEncoders();
@@ -112,7 +102,6 @@ public class Robot extends TimedRobot {
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
     auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
-    // backupMainController = new XboxController(RobotMap.JoystickBackupMain);
     configButtonControls();
 
     startingLoc.setDefaultOption("Yeet n dump", Autos.BasicMiddleAuto);
@@ -145,9 +134,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Encoder left", driveTrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", driveTrain.rightPosition.get());
     SmartDashboard.putBoolean("Limelight Detecting Objects", limelight.isTargetFound());
-    SmartDashboard.putNumber("Limelight X", limelight.getHorizontalDegToTarget());
-    SmartDashboard.putNumber("Limelight Y", limelight.getVerticalDegToTarget());
-    SmartDashboard.putNumber("Limelight Area", limelight.getTargetArea());
+    SmartDashboard.putNumber("tx", limelight.getHorizontalDegToTarget());
+    SmartDashboard.putNumber("ty", limelight.getVerticalDegToTarget());
+    SmartDashboard.putNumber("area", limelight.getTargetArea());
     
     CommandScheduler.getInstance().run();
   }
@@ -206,17 +195,13 @@ public class Robot extends TimedRobot {
   private void configButtonControls() {
     //Main buttons
     mainController.leftPadBottom3.whenPressed(() -> driveTrain.toggleDriveDirection());
-    //mainController.rightPadTop2.whenPressed(() -> toggleBackupMainUsage());
     mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
-    // backupMainController.x.whenPressed(() -> drivetrain.toggleDriveDirection());
-    mainController.headLeft.whenPressed(() -> togglePrimary());
-    mainController.headRight.whenPressed(() -> toggleSecondary());
+    mainController.headBottom.whenPressed(() -> toggleCameraStream());
     
     //Aux buttons
     auxController.a.whenPressed(() -> wheelOfFortuneContestant.spinPC(1)).whenReleased(() -> wheelOfFortuneContestant.spinPC(0));
-    auxController.b.whenPressed(() -> lawnMower.ballDump(1, .6)).whenReleased(() -> lawnMower.ballDump(0, 0));
     auxController.x.whenPressed(() -> wheelOfFortuneContestant.spinRC(1)).whenReleased(() -> wheelOfFortuneContestant.spinRC(0));
-    auxController.y.whenPressed(() -> lawnMower.ballDump(1, 1)).whenReleased(() -> lawnMower.ballDump(0, 0));
+    auxController.y.whenPressed(() -> lawnMower.ballDump(0.7, 1)).whenReleased(() -> lawnMower.ballDump(0, 0));
 
     auxController.back.whenPressed(() -> wheelOfFortuneContestant.extendContestant());
     auxController.start.whenPressed(() -> wheelOfFortuneContestant.retractContestant());
@@ -229,30 +214,16 @@ public class Robot extends TimedRobot {
     System.out.println(pdp.getVoltage());
   }
 
-  public void togglePrimary() {
-    if (!primaryTrigger) {
-      camserv1.setSource(secondary);
-      primaryTrigger = true;
-    } else if (primaryTrigger) {
-      camserv1.setSource(primary);
-      primaryTrigger = false;
-    }
-  }
-
-  public void toggleSecondary() {
-    if (secondaryIndex == 0) {
+  public void toggleCameraStream() {
+    if (cameraIndex == 0) {
       camserv2.setSource(climberCam);
-      secondaryIndex = 1;
-    } else if (secondaryIndex == 1) {
+      cameraIndex = 1;
+    } else if (cameraIndex == 1) {
       camserv2.setSource(primary);
-      secondaryIndex = 2;
-    } else if (secondaryIndex == 2) {
+      cameraIndex = 2;
+    } else if (cameraIndex == 2) {
       camserv2.setSource(secondary);
-      secondaryIndex = 0;
+      cameraIndex = 0;
     }
   }
-
-  // public void toggleBackupMainUsage() {
-  //   backupMainBeingUsed = backupMainBeingUsed ? false : true;
-  // }
 }

@@ -47,6 +47,9 @@ public class LawnMower extends SubsystemBase {
   private int bouncerCounter = 0;
   private boolean runBouncerCounter = false;
 
+  private int ballPresestCounter = 0;
+  private boolean presettingBalls = false;
+
   public LawnMower() {
     intake = new TalonSRX(RobotMap.intake);
     conveyorTop = new TalonSRX(RobotMap.conveyorTop);
@@ -68,8 +71,26 @@ public class LawnMower extends SubsystemBase {
   }
 
   public void ballDump(double conveyorSpeed, double shootSpeed) {
-    moveConveyor(conveyorSpeed);
+    if (ballPresestCounter < 10) {
+      presettingBalls = true;
+      ballPresestCounter++;
+      moveConveyor(-0.2);
+    }
+    if (presettingBalls && ballPresestCounter == 10) {
+      moveConveyor(0);
+      ballPresestCounter = 0;
+    }
+    if (presettingBalls) {
+      if (ballPresestCounter < 10) {
+        ballPresestCounter++;
+        shoot(-0.2);
+      } else {
+        presettingBalls = false;
+      }
+    }
+    
     shoot(shootSpeed);
+    moveConveyor(conveyorSpeed);
   }
 
   public boolean positionOverride() {
@@ -215,12 +236,12 @@ public class LawnMower extends SubsystemBase {
     //Intake motors
     if (!Robot.auxController.y.get()) {
       if (!positionOverride()) {
-        moveConveyor(0.55 * Robot.auxController.getLeftStickY());
+        moveConveyor(0.45 * Robot.auxController.getLeftStickY());
       } else {
         moveConveyor(0);
       }
     }
     
-    intakeBall(-0.75 * Robot.auxController.getRightStickY());
+    intakeBall(-0.85 * Robot.auxController.getRightStickY());
   }
 }

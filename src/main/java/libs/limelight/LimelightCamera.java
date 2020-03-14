@@ -52,7 +52,7 @@ public class LimelightCamera {
      * @return whether or not the limelight has any valid targets
      */
     public boolean isTargetFound() {
-        return table.getEntry("tv").getDouble(0) == 0f;
+        return !(table.getEntry("tv").getDouble(0) == 0f); // changed this to "not" as it was returning opposite
     }
 	
     /**
