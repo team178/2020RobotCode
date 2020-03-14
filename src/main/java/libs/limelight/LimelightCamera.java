@@ -17,7 +17,7 @@ public class LimelightCamera {
     private double hearBeatPeriod = 0.1;
 
     class PeriodicRunnable implements Runnable {
-	public void run() {
+	    public void run() {
             resetPipelineLatency();
             try {
                 Thread.sleep(50);
@@ -27,21 +27,21 @@ public class LimelightCamera {
             isConnected = getPipelineLatency() == 0.0;
         }
     }
-    Notifier hearBeat = new Notifier(new PeriodicRunnable());
+    Notifier notifier = new Notifier(new PeriodicRunnable());
    
-    public LimeLight() {
+    public LimelightCamera() {
         table = NetworkTableInstance.getDefault().getTable("limelight");
-        hearBeat.startPeriodic(hearBeatPeriod);
+        notifier.startPeriodic(hearBeatPeriod);
     }
 
-    public LimeLight(String name) {
+    public LimelightCamera(String name) {
         table = NetworkTableInstance.getDefault().getTable(name);
-        hearBeat.startPeriodic(hearBeatPeriod);
+        notifier.startPeriodic(hearBeatPeriod);
     }
 
-    public LimeLight(NetworkTable table) {
+    public LimelightCamera(NetworkTable table) {
         this.table = table;
-        hearBeat.startPeriodic(hearBeatPeriod);
+        notifier.startPeriodic(hearBeatPeriod);
     }
 
     public boolean isConnected() {
@@ -77,14 +77,14 @@ public class LimelightCamera {
     }
 	
     /**
-     * @return skew or rotation (-90 degrees to 0 degrees)
+     * @return skew or rotation (-90 to 0 degrees)
      */
     public double getSkewRotation() {
         return table.getEntry("ts").getDouble(0);
     }
 
     /**
-     * @return current pipeline’s latency contribution (ms) Add at least 11ms for image capture latency.
+     * @return current pipeline’s latency contribution (ms). Add at least 11ms for image capture latency.
      */
     public double getPipelineLatency() {
         return table.getEntry("tl").getDouble(0);
@@ -95,9 +95,6 @@ public class LimelightCamera {
     }
     
     /**
-     *  kon
-     *  koff
-     *  kblink
      * @param ledMode the limelight’s current LED state
      */
     public void setLEDMode(LedMode ledMode) {
@@ -119,7 +116,7 @@ public class LimelightCamera {
     }
 
     /**
-     * @return current Cam mode of the Lime Light
+     * @return current camMode of the Lime Light
      */
     public CamMode getCamMode() {
         return CamMode.getByValue(table.getEntry("camMode").getDouble(0.0));
@@ -199,8 +196,8 @@ public class LimelightCamera {
 
     //Raw Crosshairs: If you are using raw targeting data, you can still utilize your calibrated crosshairs
     public double[] getAdvancedRawCrosshair(AdvancedCrosshair raw) {
-        double[] crosshars = {getAdvancedRawCrosshairX(raw), getAdvancedRawCrosshairY(raw)};
-        return crosshars;
+        double[] crosshairs = {getAdvancedRawCrosshairX(raw), getAdvancedRawCrosshairY(raw)};
+        return crosshairs;
     }
 	
     public double getAdvancedRawCrosshairX(AdvancedCrosshair raw) {

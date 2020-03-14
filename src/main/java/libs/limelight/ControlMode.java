@@ -6,13 +6,12 @@ import java.util.Map;
 public class ControlMode {
 
     public enum LedMode {
-        private double value;
-        
-        kPipeline(0),   //0	use the LED Mode set in the current pipeline
-        kForceOff(1),   //1	force off
-        kForceBlink(2), //2	force blink
-        kForceOn(3);    //3	force on 
+        kPipeline(0),
+        kForceOff(1),
+        kForceBlink(2),
+        kForceOn(3);
 
+        double value;
         private static final Map<Double, LedMode> MAP = new HashMap<Double, LedMode>();
         
         static {
@@ -40,11 +39,10 @@ public class ControlMode {
 
     
     public enum CamMode {
-        private double value;
-        
         kVision(0),
         kDriver(1);
-    
+        
+        double value;
         private static final Map<Double, CamMode> MAP = new HashMap<Double, CamMode>();
   
         static {
@@ -71,12 +69,11 @@ public class ControlMode {
     }
 
     public enum StreamType {
-        private double value;
-        
         kStandard(0),
         kPiPMain(1),
         kPiPSecondary(2);
-    
+        
+        double value;
         private static final Map<Double, StreamType> MAP = new HashMap<Double, StreamType>();
         
         static {
@@ -103,11 +100,10 @@ public class ControlMode {
     }
 
     public enum Snapshot {
-        private double value;
-        
         kOff(0),
         kOn(1);
-      
+        
+        double value;
         private static final Map<Double, Snapshot> MAP = new HashMap<Double, Snapshot>();
         
         static {
@@ -134,12 +130,11 @@ public class ControlMode {
     }
       
     public enum AdvancedTarget {
-        private int value;
-          
         kOne(0), 
-        kTwo(1)
+        kTwo(1),
         kThree(2);
-      
+        
+        int value;
         private static final Map<Integer, AdvancedTarget> MAP = new HashMap<Integer, AdvancedTarget>();
         
         static {
@@ -166,12 +161,11 @@ public class ControlMode {
     }
     
     public enum AdvancedCrosshair {
-        private int value;
-          
         kOne(0),
         kTwo(1);
-      
-        private static final Map<Integer, Advanced_Crosshair> MAP = new HashMap<Integer, Advanced_Crosshair>();
+        
+        int value;
+        private static final Map<Integer, AdvancedCrosshair> MAP = new HashMap<Integer, AdvancedCrosshair>();
         
         static {
             for (AdvancedCrosshair advancedCrosshair : values()) {

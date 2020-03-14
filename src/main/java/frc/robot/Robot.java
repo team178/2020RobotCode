@@ -11,9 +11,6 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -29,6 +26,7 @@ import frc.robot.subsystems.LawnMower;
 import frc.robot.subsystems.WheelOfFortuneContestant;
 import libs.IO.ThrustmasterJoystick;
 import libs.IO.XboxController;
+import libs.limelight.LimelightCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,8 +42,8 @@ public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
   public static LawnMower lawnMower;
   public static WheelOfFortuneContestant wheelOfFortuneContestant;
-  // public static LightsArduino lights;
   public static Climber climber;
+  public static LimelightCamera limelight;
   
   // Declare joysticks
   public static ThrustmasterJoystick mainController;
@@ -55,7 +53,6 @@ public class Robot extends TimedRobot {
   
   // Declare Shuffleboard Dropdowns for autonomous
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
-  // public static SendableChooser<Integer> delay = new SendableChooser<>();
   
   // Declare autonomous command
   private Command autonomousCommand;
@@ -73,12 +70,6 @@ public class Robot extends TimedRobot {
   
   public static String gameData;
   private static double currentAngle;
-
-  public NetworkTable limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
-  public boolean gettingValues;
-  public double xValue;
-  public double yValue;
-  public double area;
   
   @Override
   public void robotInit() {
@@ -87,6 +78,7 @@ public class Robot extends TimedRobot {
     lawnMower = new LawnMower();
     wheelOfFortuneContestant = new WheelOfFortuneContestant();
     climber = new Climber();
+    limelight = new LimelightCamera();
 
     camserv1 = CameraServer.getInstance().getServer();
     camserv2 = CameraServer.getInstance().getServer();
@@ -125,26 +117,6 @@ public class Robot extends TimedRobot {
     startingLoc.setDefaultOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Just yeet", new AutoDrive(-0.5, 5));
-    /*
-    startingLoc.addOption("Left", new SequentialCommandGroup(
-      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[0])),
-      new AutoBallDump(),
-      PathWeaverTrajecotires.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
-    ));
-    startingLoc.addOption("Middle", new SequentialCommandGroup(
-      PathWeaverTrajectories.getR
-      amseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[1])),
-      new AutoBallDump(),
-      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
-    ));
-    startingLoc.addOption("Right", new SequentialCommandGroup(
-      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[2])),
-      new AutoBallDump(),
-      PathWeaverTrajectories.getRamseteCommand(createTrajectory(PathWeaverTrajectories.BlueTrajectories[3]))
-    ));
-    */
-    gettingValues = false;
-
   }
   
   /**
@@ -158,8 +130,6 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-    //changePrimaryCamera();
-    //allCameraChange();
 
     //Gyro stuff
     if(driveTrain.getGyroReading()%360 == 0) {
@@ -168,27 +138,15 @@ public class Robot extends TimedRobot {
       currentAngle = Math.abs(driveTrain.getGyroReading()%360);
     }
 
-    if (limelightTable.getEntry("tv").getDouble(0.0) == 0) {
-      gettingValues = false;
-    } else {
-      gettingValues = true;
-    }
-
-    xValue = limelightTable.getEntry("tx").getDouble(0.0);
-    yValue = limelightTable.getEntry("ty").getDouble(0.0);
-    area = limelightTable.getEntry("ta").getDouble(0.0);
-
-    // SmartDashboard.putNumber("Gyro Reading", drivetrain.getGyroReading());
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnMower.getCounter());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnMower.positionOverride());
     SmartDashboard.putData("Starting Location", startingLoc);
-    // // SmartDashboard.putData("Auto Delay", delay);
     SmartDashboard.putNumber("Encoder left", driveTrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", driveTrain.rightPosition.get());
-    SmartDashboard.putBoolean("Limelight Detecting Objects", gettingValues);
-    SmartDashboard.putNumber("Limelight X", xValue);
-    SmartDashboard.putNumber("Limelight Y", yValue);
-    SmartDashboard.putNumber("Limelight Area", area);
+    SmartDashboard.putBoolean("Limelight Detecting Objects", limelight.isTargetFound());
+    SmartDashboard.putNumber("Limelight X", limelight.getHorizontalDegToTarget());
+    SmartDashboard.putNumber("Limelight Y", limelight.getVerticalDegToTarget());
+    SmartDashboard.putNumber("Limelight Area", limelight.getTargetArea());
     
     CommandScheduler.getInstance().run();
   }
