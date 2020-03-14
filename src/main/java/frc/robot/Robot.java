@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.VideoSink;
 import edu.wpi.cscore.VideoMode.PixelFormat;
@@ -58,8 +59,8 @@ public class Robot extends TimedRobot {
   private Command autonomousCommand;
   
   // USB Camera declarations
-  public VideoSink camserv1;
-  public VideoSink camserv2;
+  public MjpegServer camserv1;
+  public MjpegServer camserv2;
   public UsbCamera primary;
   public UsbCamera secondary;
   public UsbCamera climberCam;
@@ -80,8 +81,8 @@ public class Robot extends TimedRobot {
     climber = new Climber();
     limelight = new LimelightCamera();
 
-    camserv1 = CameraServer.getInstance().getServer();
-    camserv2 = CameraServer.getInstance().getServer();
+    camserv1 = CameraServer.getInstance().addSwitchedCamera("primary");
+    camserv2 = CameraServer.getInstance().addSwitchedCamera("secondary");
 
     primary = CameraServer.getInstance().startAutomaticCapture("intake", 1);
     primary.setFPS(14);
