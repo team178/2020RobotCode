@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.*;
  * */
 public class WiiRemote {
 
-    public static Joystick wiimote; 
+    public static Joystick wiiMote; 
 
     //main wiimote buttons 
     public Button a; 
@@ -36,51 +36,41 @@ public class WiiRemote {
 
     public boolean isNunchuck; 
 
-    public WiiRemote (int port, boolean isNunchuck)
-    {
-        wiimote = new Joystick(port);
+    public WiiRemote(int port, boolean isNunchuck) {
+        wiiMote = new Joystick(port);
 
-        if(isNunchuck)
-        {
-            a = new JoystickButton(wiimote, 1);
-            b = new JoystickButton(wiimote, 2);
-            c = new JoystickButton(wiimote, 3);
-            z = new JoystickButton(wiimote, 4);
-            one = new JoystickButton(wiimote, 5);
-            two = new JoystickButton(wiimote, 6);
-            plus = new JoystickButton(wiimote, 7);
-            minus = new JoystickButton(wiimote, 8);
-        }
-        else
-        {
-            a = new JoystickButton(wiimote, 3);
-            b = new JoystickButton(wiimote, 4);
-            plus = new JoystickButton(wiimote, 5);
-            minus = new JoystickButton(wiimote, 6);
-            one = new JoystickButton(wiimote, 1);
-            two = new JoystickButton(wiimote, 2); 
+        if(isNunchuck) {
+            a = new JoystickButton(wiiMote, 1);
+            b = new JoystickButton(wiiMote, 2);
+            c = new JoystickButton(wiiMote, 3);
+            z = new JoystickButton(wiiMote, 4);
+            one = new JoystickButton(wiiMote, 5);
+            two = new JoystickButton(wiiMote, 6);
+            plus = new JoystickButton(wiiMote, 7);
+            minus = new JoystickButton(wiiMote, 8);
+        } else {
+            a = new JoystickButton(wiiMote, 3);
+            b = new JoystickButton(wiiMote, 4);
+            plus = new JoystickButton(wiiMote, 5);
+            minus = new JoystickButton(wiiMote, 6);
+            one = new JoystickButton(wiiMote, 1);
+            two = new JoystickButton(wiiMote, 2); 
         }
     }
 
-    public double getXRot()
-    {
-        return wiimote.getRawAxis(3);
+    public double getXRot() {
+        return wiiMote.getRawAxis(3);
     }
 
-    public double getYRot()//inverted (forward tilt is 0)
-    {
-        return wiimote.getRawAxis(4);
+    public double getYRot() { //inverted (forward tilt is 0)
+        return wiiMote.getRawAxis(4);
     }
-
-    public double getNunchuckX()
-    {
-        return wiimote.getRawAxis(1);
-    }
-
-    public double getNunchuckY()
-    {
-        return wiimote.getRawAxis(2);
-    }
-
     
+    public double getNunchuckX() {
+        return isNunchuck ? wiiMote.getRawAxis(1) : 0;
+    }
+
+    public double getNunchuckY() {
+        return isNunchuck ? wiiMote.getRawAxis(2) : 0;
+    }
 }
