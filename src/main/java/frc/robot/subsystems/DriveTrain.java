@@ -186,12 +186,18 @@ public class DriveTrain extends SubsystemBase {
         yVal = Robot.mainController.getY() * yReduction;
         twistVal = Robot.mainController.getTwist() * twistReduction;
   
-        drive(twistVal+yVal, twistVal-yVal);
+      
       // } else {
       //   //Xbox drive
       //   xboxReduction = Robot.auxController.getLeftTrigger() > 0.1 || Robot.auxController.getRightTrigger() > 0.1 ? 0.4 : 1;
       //   drive(-Robot.backupMainController.getLeftStickY() * xboxReduction, -Robot.backupMainController.getRightStickY() * xboxReduction);
       // }
+
+      //wiimote drive cause vivek said it would be a good idea to test it on the main bot 
+      //yVal = -Robot.wiiRemote.getYRot();
+      //twistVal = Robot.wiiRemote.getXRot();
+
+      drive(twistVal+yVal, twistVal-yVal);
     }
     System.out.println("left current: " + leftCurrent.get());
     System.out.println("right current: " + rightCurrent.get());

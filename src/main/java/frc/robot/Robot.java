@@ -48,6 +48,7 @@ public class Robot extends TimedRobot {
   // Declare joysticks
   public static ThrustmasterJoystick mainController;
   public static XboxController auxController;
+  //public static WiiRemote wiiRemote;
   
   //Declare autonomous members
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
@@ -107,6 +108,8 @@ public class Robot extends TimedRobot {
     startingLoc.setDefaultOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Just yeet", new AutoDrive(-0.5, 5));
+
+    //wiiRemote = new WiiRemote(RobotMap.WiiRemote, false);//no nunchuck for now
   }
   
   /**
