@@ -178,29 +178,22 @@ public class DriveTrain extends SubsystemBase {
   @Override
   public void periodic() {
     if (RobotState.isOperatorControl()) {
-      // if (!Robot.backupMainBeingUsed) {
-        //Joystick drive
-        yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
-        twistReduction = Robot.mainController.trigger.get() ? 0.2 : 0.3;
+      //Joystick drive
+      yReduction = Robot.mainController.trigger.get() ? 0.5 : 1;
+      twistReduction = Robot.mainController.trigger.get() ? 0.2 : 0.3;
       
-        yVal = Robot.mainController.getY() * yReduction;
-        twistVal = Robot.mainController.getTwist() * twistReduction;
-  
-      
-      // } else {
-      //   //Xbox drive
-      //   xboxReduction = Robot.auxController.getLeftTrigger() > 0.1 || Robot.auxController.getRightTrigger() > 0.1 ? 0.4 : 1;
-      //   drive(-Robot.backupMainController.getLeftStickY() * xboxReduction, -Robot.backupMainController.getRightStickY() * xboxReduction);
-      // }
+      yVal = Robot.mainController.getY() * yReduction;
+      twistVal = Robot.mainController.getTwist() * twistReduction;
 
-      //wiimote drive cause vivek said it would be a good idea to test it on the main bot 
+      //wiimote drive cause vivek said it would be a good idea to test it on the main bot
+      //yReduction = Robot.wiiRemote.two.get() ? 0.5 : 1;
+      //twistReduction = Robot.wiiRemote.two.get() ? 0.2 : 0.5;
+      
       //yVal = -Robot.wiiRemote.getYRot();
       //twistVal = Robot.wiiRemote.getXRot();
 
       drive(twistVal+yVal, twistVal-yVal);
     }
-    System.out.println("left current: " + leftCurrent.get());
-    System.out.println("right current: " + rightCurrent.get());
 
     //Path planning
     odometry.update(getAngle(), leftPosition.get(), rightPosition.get());
