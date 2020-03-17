@@ -19,38 +19,30 @@ import frc.robot.RobotMap;
 
 public class Climber extends SubsystemBase {
   
-  private static Solenoid elevator;
+  private static Solenoid thruster;
   private static VictorSPX winchMaster;
   private static VictorSPX winchSlave;
   private static TalonSRX leveler;
 
-  private boolean enableClimber = false;
-
   public Climber() {
-    elevator = new Solenoid(RobotMap.hookThurst);
+    thruster = new Solenoid(RobotMap.hookThurst);
     winchMaster = new VictorSPX(RobotMap.winchMaster);
     winchSlave = new VictorSPX(RobotMap.winchSlave);
+    winchSlave.follow(winchMaster);
   }
 
-  public void extendHook(boolean doubleButtonRestrict) {
-    if (enableClimber) {
-      if (doubleButtonRestrict) {
-        if (Robot.mainController.leftPadTop1.get()) {
-          elevator.set(true);
-        }
-      } else {
-        elevator.set(true);
-      } 
+  public void extendHook(boolean doubleButtonRstrict) {
+    if (Timer.getMatchTime() < 28 && Robot.mainController.leftPadTop1.get()) {
+      thruster.set(true);
     }
   }
 
   public void retractHook() {
-    elevator.set(false);
+    thruster.set(false);
   }
 
   public void windWinch(double speed) {
     winchMaster.set(ControlMode.PercentOutput, speed);
-    winchSlave.set(ControlMode.PercentOutput, speed);
   }
 
   public void moveAlongBar(double speed) {
@@ -59,17 +51,11 @@ public class Climber extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //Climbing controls for aux
-    if (Robot.auxController.getRightTrigger() > 0) {
-      if (elevator.get()) {
+    if (Robot.auxController.getRightTrigger() > 0.05) {
+      if (thruster.get()) {
         retractHook();
       }
       windWinch(Robot.auxController.getRightTrigger());
-    }
-    
-    //Endgame timer restriction
-    if (Timer.getMatchTime() < 29) {
-      enableClimber = true;
     }
   }
 }
