@@ -19,22 +19,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.autonomous.*;
-import frc.robot.commands.AutoDrive;
-import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.LawnMower;
-import frc.robot.subsystems.WheelOfFortuneContestant;
-import libs.IO.ThrustmasterJoystick;
-import libs.IO.XboxController;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+import libs.IO.*;
 import libs.limelight.LimelightCamera;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project....
- */
 public class Robot extends TimedRobot {
 
   //Declare PDP & subsystems
@@ -45,27 +34,26 @@ public class Robot extends TimedRobot {
   public static Climber climber;
   public static LimelightCamera limelight;
   
-  // Declare joysticks
+  //Declare joysticks
   public static ThrustmasterJoystick mainController;
   public static XboxController auxController;
-  //public static WiiRemote wiiRemote;
+  public static WiiRemote wiiRemote;
   
   //Declare autonomous members
   public static SendableChooser<Command> startingLoc = new SendableChooser<>();
   private Command autonomousCommand;
   
-  // USB Camera declarations
+  //USB Camera declarations
   public MjpegServer camserv1;
   public MjpegServer camserv2;
   public UsbCamera primary;
   public UsbCamera secondary;
   public UsbCamera climberCam;
-
-  //Fields
-  public int cameraIndex;
+  public UsbCamera[] cams = {primary, secondary, climberCam};
+  public int cameraIndex = 1;
   
+  //Misc
   public static String gameData;
-  private static double currentAngle;
   
   @Override
   public void robotInit() {
@@ -90,8 +78,6 @@ public class Robot extends TimedRobot {
     climberCam = CameraServer.getInstance().startAutomaticCapture("climber", 2);
     climberCam.setFPS(14);
     climberCam.setPixelFormat(PixelFormat.kYUYV);
-    
-    cameraIndex = 0;
 
     camserv1.setSource(primary);
     camserv2.setSource(secondary);
@@ -103,58 +89,33 @@ public class Robot extends TimedRobot {
     //init joysticks
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
     auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
+    wiiRemote = new WiiRemote(RobotMap.WiiRemote, false); //no nunchuck for now
     configButtonControls();
 
     startingLoc.setDefaultOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Yeet n dump", Autos.BasicMiddleAuto);
     startingLoc.addOption("Just yeet", new AutoDrive(-0.5, 5));
-
-    //wiiRemote = new WiiRemote(RobotMap.WiiRemote, false);//no nunchuck for now
   }
   
-  /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
   @Override
   public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
     gameData = DriverStation.getInstance().getGameSpecificMessage();
-
-    //Gyro stuff
-    if(driveTrain.getGyroReading()%360 == 0) {
-      currentAngle = driveTrain.getGyroReading();
-    } else {
-      currentAngle = Math.abs(driveTrain.getGyroReading()%360);
-    }
-
+    
+    //General widgets
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnMower.getCounter());
     SmartDashboard.putBoolean("Conveyor Not Moving", lawnMower.positionOverride());
     SmartDashboard.putData("Starting Location", startingLoc);
     SmartDashboard.putNumber("Encoder left", driveTrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", driveTrain.rightPosition.get());
+    
+    //Limelight widgets
     SmartDashboard.putBoolean("Limelight Detecting Objects", limelight.isTargetFound());
     SmartDashboard.putNumber("tx", limelight.getHorizontalDegToTarget());
     SmartDashboard.putNumber("ty", limelight.getVerticalDegToTarget());
     SmartDashboard.putNumber("area", limelight.getTargetArea());
-    
-    CommandScheduler.getInstance().run();
   }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
-   */
   @Override
   public void autonomousInit() {
     driveTrain.resetEncoders();
@@ -178,21 +139,15 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-
   }
 
   @Override
   public void teleopPeriodic() {
-
     CommandScheduler.getInstance().run();
   }
 
   @Override
   public void testPeriodic() {
-  }
-
-  public static double getCurrentAngle() {
-    return currentAngle;
   }
 
   private void configButtonControls() {
@@ -205,28 +160,19 @@ public class Robot extends TimedRobot {
     auxController.a.whenPressed(() -> wheelOfFortuneContestant.spinPC(1)).whenReleased(() -> wheelOfFortuneContestant.spinPC(0));
     auxController.x.whenPressed(() -> wheelOfFortuneContestant.spinRC(1)).whenReleased(() -> wheelOfFortuneContestant.spinRC(0));
     auxController.y.whenPressed(() -> lawnMower.ballDump(0.7, 1)).whenReleased(() -> lawnMower.ballDump(0, 0));
-
+    
     auxController.back.whenPressed(() -> wheelOfFortuneContestant.extendContestant());
     auxController.start.whenPressed(() -> wheelOfFortuneContestant.retractContestant());
-    Robot.auxController.leftBumper.whenPressed(() -> climber.extendHook(true));
-    Robot.auxController.rightBumper.whenPressed(() -> climber.retractHook());
+    auxController.leftBumper.whenPressed(() -> climber.extendHook(true));
+    auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
 
   public void clearStickyFaults() {
     pdp.clearStickyFaults();
-    System.out.println(pdp.getVoltage());
   }
 
   public void toggleCameraStream() {
-    if (cameraIndex == 0) {
-      camserv2.setSource(climberCam);
-      cameraIndex = 1;
-    } else if (cameraIndex == 1) {
-      camserv2.setSource(primary);
-      cameraIndex = 2;
-    } else if (cameraIndex == 2) {
-      camserv2.setSource(secondary);
-      cameraIndex = 0;
-    }
+    cameraIndex = cameraIndex == cams.length ? 0 : cameraIndex + 1;
+    camserv2.setSource(cams[cameraIndex]);
   }
 }
