@@ -163,7 +163,7 @@ public class Robot extends TimedRobot {
     
     auxController.back.whenPressed(() -> wheelOfFortuneContestant.extendContestant());
     auxController.start.whenPressed(() -> wheelOfFortuneContestant.retractContestant());
-    auxController.leftBumper.whenPressed(() -> climber.extendHook(true));
+    auxController.leftBumper.whenPressed(() -> climber.extendHook());
     auxController.rightBumper.whenPressed(() -> climber.retractHook());
   }
 
