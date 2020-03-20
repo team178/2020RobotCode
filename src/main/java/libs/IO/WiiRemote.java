@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.*;
 
 /**
- * When holding the remote horizontally with Wii logo facing upward, tilting forward and backward will let you drive the robot accordingly 
- * */
+ * When holding the remote horizontally with Wii logo facing upward, tilting forward and backward 
+ * will let you drive the robot accordingly.
+ */
 public class WiiRemote {
 
     public static Joystick wiiMote; 
@@ -33,13 +34,16 @@ public class WiiRemote {
     //x,y,l,r,zl,zr
 
     //can add DPAD code too
+    
+    public boolean hasNunchuck;
+    public boolean hasBalanceBoard;
 
-    public boolean isNunchuck; 
-
-    public WiiRemote(int port, boolean isNunchuck) {
+    public WiiRemote(int port, boolean hasNunchuck, boolean hasBalanceBoard) {
         wiiMote = new Joystick(port);
+        this.hasNunchuck = hasNunchuck;
+        this.hasBalanceBoard = hasBalanceBoard;
 
-        if(isNunchuck) {
+        if (hasNunchuck) {
             a = new JoystickButton(wiiMote, 1);
             b = new JoystickButton(wiiMote, 2);
             c = new JoystickButton(wiiMote, 3);
@@ -54,7 +58,7 @@ public class WiiRemote {
             plus = new JoystickButton(wiiMote, 5);
             minus = new JoystickButton(wiiMote, 6);
             one = new JoystickButton(wiiMote, 1);
-            two = new JoystickButton(wiiMote, 2); 
+            two = new JoystickButton(wiiMote, 2);
         }
     }
 
@@ -67,22 +71,18 @@ public class WiiRemote {
     }
     
     public double getNunchuckX() {
-        return isNunchuck ? wiiMote.getRawAxis(1) : 0;
+        return hasNunchuck ? wiiMote.getRawAxis(1) : 0;
     }
 
     public double getNunchuckY() {
-        return isNunchuck ? wiiMote.getRawAxis(2) : 0;
+        return hasNunchuck ? wiiMote.getRawAxis(2) : 0;
     }
 
-    public double getBalanceBoardX()
-    {
-        return wiiMote.getRawAxis(1);
+    public double getBalanceBoardX() {
+        return hasBalanceBoard ? wiiMote.getRawAxis(1) : 0;
     }
 
-    public double getBalanceBoardY()
-    {
-        return -wiiMote.getRawAxis(2);
+    public double getBalanceBoardY() {
+        return hasBalanceBoard ? -wiiMote.getRawAxis(2) : 0;
     }
-
-    
 }
