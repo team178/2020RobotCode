@@ -53,8 +53,7 @@ public class DriveTrain extends SubsystemBase {
   private static double twistVal;
   private static double yReduction;
   private static double twistReduction;
-  // private static double xboxReduction;
-
+  
   //Encoder methods
   public Supplier<Double> leftPosition;
   public Supplier<Double> rightPosition;
@@ -72,7 +71,7 @@ public class DriveTrain extends SubsystemBase {
   public Supplier<Boolean> hasRightCrashed;
 
   //Misc
-  private DriveDirection currentDirection = DriveDirection.FORWARD;
+  private DriveDirection currentDirection = DriveDirection.INTAKE;
   
   public DriveTrain() {
     leftMaster = new WPI_TalonSRX(RobotMap.DMLeftMaster);
@@ -124,8 +123,8 @@ public class DriveTrain extends SubsystemBase {
       rightPower = 0;
     }
 
-    leftMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.FORWARD ? leftPower : rightPower);
-    rightMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.FORWARD ? rightPower : leftPower);
+    leftMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.INTAKE ? leftPower : rightPower);
+    rightMaster.set(ControlMode.PercentOutput, currentDirection == DriveDirection.INTAKE ? rightPower : leftPower);
   }
 
   public void driveVolts(double leftVolts, double rightVolts) {
@@ -134,7 +133,15 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void toggleDriveDirection() {
-    currentDirection = currentDirection == DriveDirection.FORWARD ? DriveDirection.BACKWARD : DriveDirection.FORWARD;
+    currentDirection = currentDirection == DriveDirection.INTAKE ? DriveDirection.SHOOTER : DriveDirection.INTAKE;
+  }
+  
+  public void setDriveDirection(DriveDirection requestedDirection) {
+    currentDirection = requestedDirection;
+  }
+  
+  public DriveDirection getCurrentDriveDirection() {
+    return currentDirection;
   }
 
   public void resetEncoders() {
@@ -150,7 +157,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   /*
-   * gyro methods
+   * Gyro methods
    */
   public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(-gyro.getAngle());
@@ -165,7 +172,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   /*
-   * odometry methods
+   * Odometry methods
    */
   public Pose2d getPoseMeters() {
     return odometry.getPoseMeters();
@@ -186,8 +193,8 @@ public class DriveTrain extends SubsystemBase {
       twistVal = Robot.mainController.getTwist() * twistReduction;
 
       //wiimote drive cause vivek said it would be a good idea to test it on the main bot
-      //yReduction = Robot.wiiRemote.two.get() ? 0.5 : 1;
-      //twistReduction = Robot.wiiRemote.two.get() ? 0.2 : 0.5;
+      //yReduction = Robot.wiiRemote.b.get() ? 0.5 : 1;
+      //twistReduction = Robot.wiiRemote.b.get() ? 0.2 : 0.5;
       
       //yVal = -Robot.wiiRemote.getYRot();
       //twistVal = Robot.wiiRemote.getXRot();
@@ -227,7 +234,7 @@ public class DriveTrain extends SubsystemBase {
   }
 
   enum DriveDirection {
-    FORWARD,
-    BACKWARD
+    INTAKE,
+    SHOOTER
   }
 }
