@@ -31,10 +31,8 @@ public class Climber extends SubsystemBase {
     winchSlave.follow(winchMaster);
   }
 
-  public void extendHook(boolean doubleButtonRstrict) {
-    if (Timer.getMatchTime() < 28 && Robot.mainController.leftPadTop1.get()) {
-      thruster.set(true);
-    }
+  public void extendHook() {
+    thruster.set(Timer.getMatchTime() < 29 && Robot.mainController.leftPadTop1.get());
   }
 
   public void retractHook() {
