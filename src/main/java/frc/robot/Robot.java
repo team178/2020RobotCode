@@ -86,10 +86,10 @@ public class Robot extends TimedRobot {
     driveTrain.resetEncoders();
     gameData = "";
     
-    //init joysticks
+    //init joysticks && controls
     mainController = new ThrustmasterJoystick(RobotMap.ActualJoystick);
     auxController = new XboxController(RobotMap.JoystickPortXBoxAux);
-    wiiRemote = new WiiRemote(RobotMap.WiiRemote, false); //no nunchuck for now
+    wiiRemote = new WiiRemote(RobotMap.WiiRemote, false, false); //no nunchuck or wii balance board for now
     configButtonControls();
 
     startingLoc.setDefaultOption("Yeet n dump", Autos.BasicMiddleAuto);
@@ -104,8 +104,6 @@ public class Robot extends TimedRobot {
     
     //General widgets
     SmartDashboard.putNumber("Balls in Lawn Mower", lawnMower.getCounter());
-    SmartDashboard.putBoolean("Conveyor Not Moving", lawnMower.positionOverride());
-    SmartDashboard.putData("Starting Location", startingLoc);
     SmartDashboard.putNumber("Encoder left", driveTrain.leftPosition.get());
     SmartDashboard.putNumber("Encoder right", driveTrain.rightPosition.get());
     
@@ -163,16 +161,24 @@ public class Robot extends TimedRobot {
     
     auxController.back.whenPressed(() -> wheelOfFortuneContestant.extendContestant());
     auxController.start.whenPressed(() -> wheelOfFortuneContestant.retractContestant());
+    
     auxController.leftBumper.whenPressed(() -> climber.extendHook());
+    auxController.leftBumper.whenPressed(() -> setCam(2));
     auxController.rightBumper.whenPressed(() -> climber.retractHook());
+    auxController.rightBumper.whenPressed(() -> setCam(1));
   }
-
-  public void clearStickyFaults() {
-    pdp.clearStickyFaults();
-  }
-
+  
   public void toggleCameraStream() {
     cameraIndex = cameraIndex == cams.length ? 0 : cameraIndex + 1;
     camserv2.setSource(cams[cameraIndex]);
+  }
+  
+  public void setCam(int cameraIndex) {
+    this.cameraIndex = cameraIndex >= cams.length ? cams.length - 1 : cameraIndex;
+    camserv2.setSource(cams[this.cameraIndex]);
+  }
+  
+  public void clearStickyFaults() {
+    pdp.clearStickyFaults();
   }
 }
