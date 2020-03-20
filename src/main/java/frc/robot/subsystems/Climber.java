@@ -32,7 +32,7 @@ public class Climber extends SubsystemBase {
   }
 
   public void extendHook() {
-    thruster.set(Timer.getMatchTime() < 29 && Robot.mainController.leftPadTop1.get());
+    thruster.set(Timer.getMatchTime() < 29 && Robot.mainController.leftPadBottom1.get());
   }
 
   public void retractHook() {
