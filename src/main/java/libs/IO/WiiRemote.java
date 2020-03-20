@@ -73,4 +73,16 @@ public class WiiRemote {
     public double getNunchuckY() {
         return isNunchuck ? wiiMote.getRawAxis(2) : 0;
     }
+
+    public double getBalanceBoardX()
+    {
+        return wiiMote.getRawAxis(1);
+    }
+
+    public double getBalanceBoardY()
+    {
+        return -wiiMote.getRawAxis(2);
+    }
+
+    
 }
