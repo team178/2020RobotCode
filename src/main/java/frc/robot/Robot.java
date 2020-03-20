@@ -118,6 +118,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     driveTrain.resetEncoders();
     driveTrain.resetGyro();
+    driveTrain.setDriveDirection(DriveDirection.INTAKE);
     
     autonomousCommand = startingLoc.getSelected();
     lawnMower.counter = 3;
@@ -150,22 +151,27 @@ public class Robot extends TimedRobot {
 
   private void configButtonControls() {
     //Main buttons
-    mainController.leftPadBottom3.whenPressed(() -> driveTrain.toggleDriveDirection());
-    mainController.leftPadTop3.whenPressed(() -> clearStickyFaults());
+    mainController.headLeft.whenPressed(() -> pdp.clearStickyFaults());
+    mainController.headRight.whenPressed(() -> pdp.clearStickyFaults());
     mainController.headBottom.whenPressed(() -> toggleCameraStream());
     
+    mainController.leftPadTop1.whenPressed(new Command()).whenReleased(new Command()); //Gyro align to climber (on button hold)
+    mainController.leftPadTop2.whenPressed(new Command()).whenReleased(new Command()); //Vision align to high port (on button hold)
+    mainController.leftPadTop3.whenPressed(new Command()).whenReleased(new Command()); //Gyro align parallel to wall (on button hold)
+    mainController.leftPadBottom2.whenPressed(new Command()).whenReleased(new Command()); //Auto lemon detector (on button hold)
+    mainController.leftPadBottom3.whenPressed(() -> driveTrain.toggleDriveDirection());
+    
     //Aux buttons
-    auxController.a.whenPressed(() -> wheelOfFortuneContestant.spinPC(1)).whenReleased(() -> wheelOfFortuneContestant.spinPC(0));
-    auxController.x.whenPressed(() -> wheelOfFortuneContestant.spinRC(1)).whenReleased(() -> wheelOfFortuneContestant.spinRC(0));
     auxController.y.whenPressed(() -> lawnMower.ballDump(0.7, 1)).whenReleased(() -> lawnMower.ballDump(0, 0));
+    auxController.b.whenPressed(() -> lawnMower.ballDump(0.5, 0.7)).whenReleased(() -> lawnMower.ballDump(0, 0));
     
     auxController.back.whenPressed(() -> wheelOfFortuneContestant.extendContestant());
     auxController.start.whenPressed(() -> wheelOfFortuneContestant.retractContestant());
+    auxController.a.whenPressed(() -> wheelOfFortuneContestant.spinPC(1)).whenReleased(() -> wheelOfFortuneContestant.spinPC(0));
+    auxController.x.whenPressed(() -> wheelOfFortuneContestant.spinRC(1)).whenReleased(() -> wheelOfFortuneContestant.spinRC(0));
     
-    auxController.leftBumper.whenPressed(() -> climber.extendHook());
-    auxController.leftBumper.whenPressed(() -> setCam(2));
-    auxController.rightBumper.whenPressed(() -> climber.retractHook());
-    auxController.rightBumper.whenPressed(() -> setCam(1));
+    auxController.leftBumper.whenPressed(new ParallelCommandGroup(() -> climber.extendHook(mainController.leftPadBottom1.get()), () -> setCam(2)));
+    auxController.rightBumper.whenPressed(new ParallelCommandGroup(() -> climber.retractHook(), () -> setCam(1)));
   }
   
   public void toggleCameraStream() {
@@ -176,9 +182,5 @@ public class Robot extends TimedRobot {
   public void setCam(int cameraIndex) {
     this.cameraIndex = cameraIndex >= cams.length ? cams.length - 1 : cameraIndex;
     camserv2.setSource(cams[this.cameraIndex]);
-  }
-  
-  public void clearStickyFaults() {
-    pdp.clearStickyFaults();
   }
 }
