@@ -14,23 +14,14 @@ import java.util.List;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.geometry.*;
+import edu.wpi.first.wpilibj.trajectory.*;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
-import frc.robot.Constants.PathConstants;
+import frc.robot.Constants.*;
 import frc.robot.subsystems.DriveTrain;
 
-/**
- * Add your docs here.
- */
 public class PathFollower {
 
     private static DriveTrain driveTrain = Robot.driveTrain;
@@ -52,7 +43,7 @@ public class PathFollower {
         .setReversed(reversed)
         .addConstraint(voltageConstraint);
 
-        //Nithin's test trajectory
+        //Nithin's test trajectory -- temporary
         Trajectory nithinsTestTrajectory = TrajectoryGenerator.generateTrajectory(
             //Start pose
             new Pose2d(0, 0, new Rotation2d(0)),
@@ -73,7 +64,7 @@ public class PathFollower {
 
         //Create a ramsete command based off RamseteController & params
         RamseteCommand ramseteCommand = new RamseteCommand(
-            nithinsTestTrajectory, //replace with just trajectory
+            nithinsTestTrajectory, //replace with trajectory after testing
             driveTrain::getPoseMeters,
             new RamseteController(PathConstants.kRamseteB, PathConstants.kRamseteZeta),
             driveTrain.getFeedforward(),
@@ -84,8 +75,10 @@ public class PathFollower {
             driveTrain::driveVolts,
             driveTrain
         );
-
-        return ramseteCommand.andThen(() -> driveTrain.driveVolts(0, 0));
+        
+        //Added crash detection in parallel w/ ramsete command to end path if robot crashes into a wall -- yet to be tested
+        //return ramseteCommand.andThen(() -> driveTrain.driveVolts(0, 0));
+        return (new ParallelRaceGroup(ramseteCommand, () -> driveTrain.parallelDetectCrash())).andThen(() -> driveTrain.driveVolts(0, 0));
     }
 
     public Trajectory loadTrajectoryFromPathWeaver(String trajectoryJSONPath) {
