@@ -131,6 +131,12 @@ public class DriveTrain extends SubsystemBase {
     leftMotors.setVoltage(leftVolts);
     rightMotors.setVoltage(rightVolts);
   }
+  
+  public void parallelDetectCrash() {
+    while (!hasLeftCrashed.get() && !hasRightCrashed.get()) {
+      //meant to be run in a separate thread IN PARALLEL to autonomous commands -- not tested
+    }
+  }
 
   public void toggleDriveDirection() {
     currentDirection = currentDirection == DriveDirection.INTAKE ? DriveDirection.SHOOTER : DriveDirection.INTAKE;
